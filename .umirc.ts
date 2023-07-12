@@ -1,5 +1,5 @@
 import { defineConfig } from '@umijs/max';
-import routes from './routes';
+import routes from './config/routes';
 
 export default defineConfig({
   antd: {},
@@ -13,7 +13,7 @@ export default defineConfig({
   },
   links: [{ rel: 'icon', href: 'images/UST.jpg' }],
   title: 'K-Quant',
-
+  devtool: process.env.NODE_ENV === 'development' ? 'eval' : false,
   routes,
   npmClient: 'npm',
 });
