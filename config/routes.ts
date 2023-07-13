@@ -30,8 +30,8 @@ const routes = [
       },
       {
         name: 'K-Quant',
-        path: '/table3',
-        component: './Table',
+        path: '/kquant',
+        component: './KQuant',
       },
       {
         name: 'Explainer',
@@ -40,8 +40,8 @@ const routes = [
       },
       {
         name: 'More Information',
-        path: '/table5',
-        component: './Table',
+        path: '/more',
+        component: './More',
       },
     ],
   },

@@ -1,20 +1,25 @@
+import Footer from '@/components/Footer';
 import 'bootstrap/dist/css/bootstrap.css';
 import React from 'react';
 
 interface PropsType {
   [key: string]: unknown;
+  backgroundColor?: string;
   children: any;
 }
 
 const BasicLayout: React.FC<PropsType> = (props) => {
-  const { children } = props;
+  const { backgroundColor = '#fff', children } = props;
   return (
-    <div
-      className="container pb-5 "
-      id="kg-page"
-      style={{ height: '100%', marginTop: '50px' }}
-    >
-      {children}
+    <div style={{ backgroundColor, position: 'relative' }}>
+      <div
+        className="container pb-5 "
+        id="kg-page"
+        style={{ minHeight: '600px', marginTop: '50px', paddingBottom: 0 }}
+      >
+        {children}
+      </div>
+      <Footer />
     </div>
   );
 };
