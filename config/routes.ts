@@ -43,6 +43,12 @@ const routes = [
         path: '/more',
         component: './More',
       },
+      {
+        name: '404',
+        path: '/*',
+        component: './404',
+        hideInMenu: true,
+      },
     ],
   },
 ];

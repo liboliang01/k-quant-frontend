@@ -1,3 +1,4 @@
+import { Link } from '@umijs/max';
 import 'bootstrap/dist/css/bootstrap.css';
 import React from 'react';
 
@@ -18,13 +19,12 @@ const HomePage: React.FC = () => {
                 <br /> Backtesting, Stock Selection, Robotic Portifolio,
                 Portifolio Scoring.
               </p>
-              <a
-                href="demo.html"
+              <Link
+                to="/kquant"
                 className="btn btn-primary pb-2 pe-4 ps-4 pt-2"
-                target="_blank"
               >
                 Start Now
-              </a>
+              </Link>
             </div>
           </div>
         </div>
@@ -85,13 +85,12 @@ const HomePage: React.FC = () => {
               <p className="fw-light"></p>
             </div>
             <div className="col-lg-auto ms-auto">
-              {' '}
-              <a
-                href="KG-visualization/kgQuery.html"
+              <Link
+                to="/Query"
                 className="btn btn-outline-primary pb-2 pe-4 ps-4 pt-2"
               >
                 Read More
-              </a>
+              </Link>
             </div>
           </div>
         </div>
@@ -196,13 +195,12 @@ const HomePage: React.FC = () => {
               <p className="fw-light"></p>
             </div>
             <div className="col-lg-auto ms-auto">
-              {' '}
-              <a
-                href="datasource.html"
+              <Link
+                to="/datasources"
                 className="btn btn-outline-primary pb-2 pe-4 ps-4 pt-2"
               >
                 Read More
-              </a>
+              </Link>
             </div>
           </div>
           <div className="row">

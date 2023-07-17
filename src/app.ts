@@ -18,6 +18,7 @@ export const layout = () => {
     fixedHeader: true,
     rightRender: () => null,
     contentStyle: { padding: '0' },
-    menuDataRender: (routes) => routes[0].children,
+    menuDataRender: (routes: any) =>
+      routes[0].children.filter((item: any) => item.hideInMenu !== true),
   };
 };
