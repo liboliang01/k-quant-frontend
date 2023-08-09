@@ -15,7 +15,7 @@ const BasicLayout: React.FC<PropsType> = (props) => {
       <div
         className="container pb-5 "
         id="kg-page"
-        style={{ minHeight: '600px', marginTop: '50px', paddingBottom: 0 }}
+        style={{ minHeight: '600px', marginTop: '20px', paddingBottom: 0 }}
       >
         {children}
       </div>

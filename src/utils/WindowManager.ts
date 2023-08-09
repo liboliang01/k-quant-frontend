@@ -63,6 +63,7 @@ class WindowManager {
     const container = document.getElementById(this.containerId) as HTMLElement;
     const height = container?.offsetHeight;
     const width = container?.offsetWidth;
+    const color = d3.scaleOrdinal(d3.schemeCategory10);
     this.svg = d3
       .select(`#${this.containerId}`)
       .append('svg')
@@ -98,7 +99,7 @@ class WindowManager {
       .data(nodes)
       .join('circle')
       .attr('r', 5)
-      .attr('fill', () => 'black');
+      .attr('fill', (d: any) => color(d.group));
 
     this.node.append('title').text((d: any) => d.id);
 
@@ -123,6 +124,8 @@ class WindowManager {
 
       this.node.attr('cx', (d: any) => d.x).attr('cy', (d: any) => d.y);
     });
+
+    // invalidation.then(() => this.simulation.stop());
   }
 
   addNode() {}

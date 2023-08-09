@@ -1,20 +1,9 @@
-import styles from '@/global.less';
-import {
-  Button,
-  Card,
-  Checkbox,
-  Col,
-  Form,
-  Radio,
-  Row,
-  Space,
-  Table,
-} from 'antd';
-import { CheckboxChangeEvent } from 'antd/es/checkbox';
-import { CheckboxValueType } from 'antd/es/checkbox/Group';
+import { Button, Card, Col, Form, Radio, Row, Space, Table } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
-import React, { useMemo, useState } from 'react';
+import axios from 'axios';
+import React, { useEffect, useMemo, useState } from 'react';
 import BasicLayout from '../../layout/BasicLayout';
+import './index.less';
 
 const layout = {
   labelCol: { span: 4 },
@@ -30,141 +19,172 @@ interface TableType {
   ir: number;
 }
 
-const sorter = (a: any, b: any) => a - b;
-
-const plainOptions = [
-  'GATs',
-  'GRU',
-  'LSTM',
-  'MLP',
-  'ALSTM',
-  'SFM',
-  'HIST',
-  'FNRSR',
-];
+const intlMap = new Map([
+  ['MLP', '多层感知机'],
+  ['LSTM', '长短期记忆神经网络'],
+  ['ALSTM', '注意力机制长短期记忆神经网络'],
+  ['GRU', '门控循环单元网络'],
+  ['SFM', '离散状态频率记忆神经网络'],
+  ['GATs', '图注意力网络'],
+  ['average', '平均集成'],
+  ['blend', '线性拟合'],
+  ['dynamic_ensemble', '动态拟合'],
+  ['ensemble_no_retrain', '多模型重采样融合1'],
+  ['ensemble_retrain', '多模型重采样融合2'],
+  ['Perfomance_based_ensemble', '多模型重采样融合3'],
+  ['KEnhance', '多层临时图注意力模型'],
+  ['RSR', '关系注意力股票排序模型'],
+  ['HIST', '概念导向共享信息预测模型'],
+  ['RSR_hidy_is', '关系注意力股票排序模型（使用K-quant知识图谱）'],
+]);
 
 const FinKGUpdate: React.FC = () => {
   const [form] = Form.useForm();
-  const [indeterminate, setIndeterminate] = useState(true);
-  const [checkAll, setCheckAll] = useState(false);
-  const [checkedList, setCheckedList] = useState<CheckboxValueType[]>([]);
+  const [actionType, setActionType] = useState('get_model_data');
+  const [data, setData] = useState<any[]>([]);
   const columns: ColumnsType<TableType> = useMemo(() => {
-    const cols = [
+    const cols1 = [
       {
-        title: '因子名称',
+        title: '模型名称',
         dataIndex: 'name',
         key: 'name',
       },
       {
-        title: '最小分位数超额年化收益率',
-        dataIndex: 'small',
-        key: 'small',
-        sorter: sorter,
+        title: '信息系数',
+        dataIndex: 'IC',
+        key: 'IC',
+        sorter: (a: any, b: any) => a.IC - b.IC,
+        render: (item: any) => Number(item).toFixed(2) + '%',
       },
       {
-        title: '最大分位数超额年化收益率',
-        dataIndex: 'big',
-        key: 'big',
-        sorter: sorter,
+        title: '信标准差',
+        dataIndex: 'ICIR',
+        key: 'ICIR',
+        sorter: (a: any, b: any) => a.ICIR - b.ICIR,
+        render: (item: any) => Number(item).toFixed(2) + '%',
       },
       {
-        title: '最小分位数换手率',
-        dataIndex: 'min',
-        key: 'min',
-        sorter: sorter,
+        title: '超额年化利率',
+        dataIndex: 'annualized_return',
+        key: 'annualized_return',
+        sorter: (a: any, b: any) => a.annualized_return - b.annualized_return,
+        render: (item: any) => Number(item).toFixed(2) + '%',
       },
       {
-        title: '最大分位数换手率',
-        dataIndex: 'max',
-        key: 'max',
-        sorter: sorter,
+        title: '信息比率',
+        dataIndex: 'information_ratio',
+        key: 'information_ratio',
+        sorter: (a: any, b: any) => a.information_ratio - b.information_ratio,
+        render: (item: any) => Number(item).toFixed(2) + '%',
       },
       {
-        title: 'IC均值',
-        dataIndex: 'ic',
-        key: 'ic',
-        sorter: sorter,
-      },
-      {
-        title: 'IR均值',
-        dataIndex: 'ir',
-        key: 'ir',
-        sorter: sorter,
+        title: '最大回撤',
+        dataIndex: 'max_drawdown',
+        key: 'max_drawdown',
+        sorter: (a: any, b: any) => a.max_drawdown - b.max_drawdown,
+        render: (item: any) => Number(item).toFixed(2) + '%',
       },
     ];
-    return cols;
-  }, []);
+    const cols2 = [
+      {
+        title: '模型名称',
+        dataIndex: 'name',
+        key: 'name',
+      },
+      {
+        title: '信息系数(Incre)',
+        dataIndex: 'IC_incre',
+        key: 'IC_incre',
+        sorter: (a: any, b: any) => a.IC_incre - b.IC_incre,
+        render: (item: any) => Number(item).toFixed(2) + '%',
+      },
+      {
+        title: '信标准差(Incre)',
+        dataIndex: 'ICIR_incre',
+        key: 'ICIR_incre',
+        sorter: (a: any, b: any) => a.ICIR_incre - b.ICIR_incre,
+        render: (item: any) => Number(item).toFixed(2) + '%',
+      },
+      {
+        title: '信息系数(DoubleAdapt)',
+        dataIndex: 'IC_DA',
+        key: 'IC_DA',
+        sorter: (a: any, b: any) => a.IC_DA - b.IC_DA,
+        render: (item: any) => Number(item).toFixed(2) + '%',
+      },
+      {
+        title: '信标准差(DoubleAdapt)',
+        dataIndex: 'ICIR_DA',
+        key: 'ICIR_DA',
+        sorter: (a: any, b: any) => a.ICIR_DA - b.ICIR_DA,
+        render: (item: any) => Number(item).toFixed(2) + '%',
+      },
+    ];
+    return actionType === 'get_update_data' ? cols2 : cols1;
+  }, [actionType]);
 
-  const onCheckAllChange = (e: CheckboxChangeEvent) => {
-    setCheckedList(e.target.checked ? plainOptions : []);
-    setIndeterminate(false);
-    setCheckAll(e.target.checked);
-  };
-  const onChange = (list: CheckboxValueType[]) => {
-    setCheckedList(list);
-    setIndeterminate(!!list.length && list.length < plainOptions.length);
-    setCheckAll(list.length === plainOptions.length);
-  };
   const onSearch = () => {
-    form.validateFields().then((values) => {
+    form.validateFields().then(async (values) => {
       const params = {
-        models: checkedList,
         ...values,
       };
-      console.log(params);
+      setActionType(params.actionType);
+      const res = await axios.get(
+        `http://47.106.95.15:8000/${values.actionType}/`,
+        {
+          params: {
+            duration: params.duration,
+          },
+        },
+      );
+      const d = res.data.data.map((item: { [x: string]: any }) => {
+        const key = Object.keys(item)[0];
+        const val = item[key];
+        return {
+          name: intlMap.get(key) || key,
+          ...val,
+        };
+      });
+      setData(d);
     });
   };
   const onReset = () => {
     form.resetFields();
-    setCheckedList([]);
-    setIndeterminate(false);
-    setCheckAll(false);
   };
+
+  useEffect(() => {
+    onSearch();
+  }, []);
+
   return (
     <BasicLayout backgroundColor="#f5f5f5">
       <Card title="因子看板" style={{ marginBottom: '30px' }}>
-        <Row style={{ lineHeight: '32px', height: 32, marginBottom: 24 }}>
-          <Col
-            span={4}
-            style={{
-              textAlign: 'end',
-            }}
-          >
-            <label title="模型" className={styles.antdLabel}>
-              模型
-            </label>
-          </Col>
-          <Col>
-            <Checkbox
-              indeterminate={indeterminate}
-              onChange={onCheckAllChange}
-              checked={checkAll}
-              style={{ marginRight: 20 }}
-            >
-              all
-            </Checkbox>
-            <Checkbox.Group
-              options={plainOptions}
-              value={checkedList}
-              onChange={onChange}
-            />
-          </Col>
-        </Row>
-
         <Form form={form} {...layout}>
-          <Form.Item label="股票池" name="stock">
+          <Form.Item
+            label="操作类型"
+            name="actionType"
+            initialValue={'get_model_data'}
+          >
             <Radio.Group>
-              <Radio value="a">沪深300</Radio>
-              <Radio value="b">中证500</Radio>
-              <Radio value="c">中证800</Radio>
+              <Radio value="get_model_data">深度学习模型和知识赋能模型</Radio>
+              <Radio value="get_rensemble_data">集成模型</Radio>
+              <Radio value="get_update_data">增量更新</Radio>
             </Radio.Group>
           </Form.Item>
-          <Form.Item label="回测周期" name="time">
+          <Form.Item label="股票池" name="stock" initialValue={'csi300'}>
             <Radio.Group>
-              <Radio value="a">近一个月</Radio>
-              <Radio value="b">近三个月</Radio>
-              <Radio value="c">近半年</Radio>
-              <Radio value="d">近一年</Radio>
+              <Radio value="csi300">沪深300</Radio>
+            </Radio.Group>
+          </Form.Item>
+          <Form.Item
+            label="回测周期"
+            name="duration"
+            initialValue={'THERE_MONTH'}
+          >
+            <Radio.Group>
+              <Radio value="THERE_MONTH">近三个月</Radio>
+              <Radio value="SIX_MONTH">近半年</Radio>
+              <Radio value="ONE_YEAR">近一年</Radio>
             </Radio.Group>
           </Form.Item>
           <Form.Item>
@@ -182,7 +202,7 @@ const FinKGUpdate: React.FC = () => {
           </Form.Item>
         </Form>
       </Card>
-      <Table columns={columns} />
+      <Table columns={columns} dataSource={data} pagination={false} />
     </BasicLayout>
   );
 };

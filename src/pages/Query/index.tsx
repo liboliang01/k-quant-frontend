@@ -1,6 +1,8 @@
+import SubGraph from '@/components/SubGraph';
+import UpdateData from '@/components/SubGraph/updateData';
 import { Button, Form, Input, Select } from 'antd';
 import 'bootstrap/dist/css/bootstrap.css';
-import React from 'react';
+import React, { useMemo } from 'react';
 import BasicLayout from '../../layout/BasicLayout';
 
 const RelaList = [
@@ -28,41 +30,17 @@ const RelaList = [
   'be supplied',
 ];
 
-// const data = {
-//   nodes: [
-//     {
-//       id: 'Structural basis of PROTAC cooperative recognition for selective protein degradation.',
-//       group: 'Cited Works',
-//       radius: 2,
-//       citing_patents_count: 2,
-//     },
-//     {
-//       id: 'The influence of rough lipopolysaccharide structur…nteractions with mammalian antimicrobial peptides',
-//       group: 'Cited Works',
-//       radius: 1,
-//       citing_patents_count: 1,
-//     },
-//     {
-//       id: '109-294-662-661-65X',
-//       group: 'Citing Patents',
-//     },
-//   ],
-//   links: [
-//     {
-//       source:
-//         'Structural basis of PROTAC cooperative recognition for selective protein degradation.',
-//       target: '109-294-662-661-65X',
-//       value: 2,
-//     },
-//   ],
-// };
-
 const FinKGQuery: React.FC = () => {
   const [form] = Form.useForm();
-  // useEffect(() => {
-  //   const wm = new WindowManager('query-container', data.nodes, data.links);
-  //   wm.render();
-  // }, []);
+
+  const suits = useMemo(
+    () =>
+      UpdateData[1].origin.map((item) => ({
+        ...item,
+        type: item.rela,
+      })),
+    [],
+  );
 
   return (
     <>
@@ -137,7 +115,7 @@ const FinKGQuery: React.FC = () => {
             <Button type="primary">Select</Button>
           </Form.Item>
         </Form>
-        {/* <div id="query-container" className={styles.queryContainer}></div> */}
+        <SubGraph suits={suits} />
       </BasicLayout>
     </>
   );
