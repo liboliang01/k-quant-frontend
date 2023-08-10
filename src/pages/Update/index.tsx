@@ -1,31 +1,30 @@
 import SubGraph from '@/components/SubGraph';
 import updateData from '@/components/SubGraph/updateData';
-import { Button, Carousel, Input } from 'antd';
+import { Button, Input, Radio, RadioChangeEvent } from 'antd';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import Richly from '../../../public/images/Richly.png';
 import BasicLayout from '../../layout/BasicLayout';
 import styles from './index.less';
 
-const contentStyle: React.CSSProperties = {
-  margin: 0,
-  height: '700px',
-  // color: '#fff',
-  lineHeight: '160px',
-  textAlign: 'center',
-  background: '#364d79',
-};
-
 const FinKGUpdate: React.FC = () => {
   const curId = useRef<number>(1);
   const [text, setText] = useState<[string, string]>(['', '']);
   const [currData, setCurrData] = useState<any>();
+  const [value, setValue] = useState('origin');
+
+  const onChange = (e: RadioChangeEvent) => {
+    console.log('radio checked', e.target.value);
+    setValue(e.target.value);
+  };
 
   const getRandomText = () => {
+    setValue('origin');
     let temp = curId.current;
 
-    const data = updateData.find((item) => item.id === temp);
+    const data = updateData.find((item: { id: number }) => item.id === temp);
     if (data) {
       setCurrData(data);
+      console.log(data);
       setText([data.extraction_1.sentence, data.extraction_2.sentence]);
     }
     temp = (temp % 5) + 1;
@@ -35,6 +34,58 @@ const FinKGUpdate: React.FC = () => {
   useEffect(() => {
     getRandomText();
   }, []);
+
+  const getSubGraph = (nodeName: string, relationType: string) => {
+    let result = currData.origin.filter(function (node: any) {
+      if (relationType === 'all') {
+        if (node.source === nodeName && node.rela !== 'unknown') {
+          return true;
+        } else {
+          return false;
+        }
+      }
+      if (
+        node.source === nodeName &&
+        node.rela === relationType &&
+        node.rela !== 'unknown'
+      ) {
+        return true;
+      } else {
+        return false;
+      }
+    });
+    return result;
+  };
+
+  const extraData1 = useMemo(() => {
+    if (currData && currData.extraction_1) {
+      const list: any[] = [];
+      currData.extraction_1.data.forEach(
+        (item: { source: string; rela: any }) => {
+          const data = getSubGraph(item.source, item.rela);
+          list.push(...data);
+        },
+      );
+      return list;
+    } else {
+      return [];
+    }
+  }, [currData]);
+
+  const extraData2 = useMemo(() => {
+    if (currData && currData.extraction_2) {
+      const list: any[] = [];
+      currData.extraction_2.data.forEach(
+        (item: { source: string; rela: any }) => {
+          const data = getSubGraph(item.source, item.rela);
+          list.push(...data);
+        },
+      );
+      return list;
+    } else {
+      return [];
+    }
+  }, [currData]);
 
   const originData = useMemo(() => {
     if (currData && currData.origin) {
@@ -46,6 +97,48 @@ const FinKGUpdate: React.FC = () => {
       return [];
     }
   }, [currData]);
+
+  const newUpdateData = useMemo(() => {
+    if (currData && currData.update && currData.origin) {
+      const origin = currData.origin.map((item: { rela: any }) => ({
+        ...item,
+        type: item.rela,
+      }));
+      const update = currData.update.map((item: { rela: any }) => ({
+        ...item,
+        type: item.rela,
+      }));
+      return [...update, ...origin];
+    } else {
+      return [];
+    }
+  }, [currData]);
+
+  const fusionData = useMemo(() => {
+    if (currData && currData.fusion) {
+      const list: any[] = [];
+      currData.fusion.forEach((item: { source: string; rela: any }) => {
+        const data = getSubGraph(item.source, item.rela);
+        list.push(...data);
+      });
+      return list;
+    } else {
+      return [];
+    }
+  }, [currData]);
+
+  const renderData = useMemo(() => {
+    switch (value) {
+      case 'origin':
+        return originData;
+      case 'update':
+        return newUpdateData;
+      case 'fusion':
+        return fusionData;
+      default:
+        return originData;
+    }
+  }, [originData, newUpdateData, fusionData, value]);
 
   return (
     <BasicLayout>
@@ -71,22 +164,30 @@ const FinKGUpdate: React.FC = () => {
               style={{ color: 'black' }}
             />
           </div>
+          <div className={styles.radios}>
+            <Radio.Group onChange={onChange} value={value}>
+              <Radio value="origin">origin</Radio>
+              <Radio value="extraction">extraction</Radio>
+              <Radio value="update">update</Radio>
+              <Radio value="fusion">fusion</Radio>
+            </Radio.Group>
+          </div>
         </div>
-        <div className={styles.graphs}>
-          <Carousel dotPosition={'top'}>
-            <div style={contentStyle}>
-              <SubGraph suits={originData} />
+        <div>
+          {value === 'extraction' ? (
+            <div className={styles.extraction}>
+              <div className={styles.graphs} style={{ marginRight: 20 }}>
+                <SubGraph suits={extraData1} id="extra-graph-svg-container-1" />
+              </div>
+              <div className={styles.graphs}>
+                <SubGraph suits={extraData2} id="extra-graph-svg-container-2" />
+              </div>
             </div>
-            <div>
-              <h3 style={contentStyle}>2</h3>
+          ) : (
+            <div className={styles.graphs}>
+              <SubGraph suits={renderData} />
             </div>
-            <div>
-              <h3 style={contentStyle}>3</h3>
-            </div>
-            <div>
-              <h3 style={contentStyle}>4</h3>
-            </div>
-          </Carousel>
+          )}
         </div>
       </div>
     </BasicLayout>

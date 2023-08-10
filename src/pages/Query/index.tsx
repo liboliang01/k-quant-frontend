@@ -1,9 +1,10 @@
 import SubGraph from '@/components/SubGraph';
-import UpdateData from '@/components/SubGraph/updateData';
-import { Button, Form, Input, Select } from 'antd';
+import { getSubGraph } from '@/components/SubGraph/graphData';
+import { Button, Form, Input, Select, message } from 'antd';
 import 'bootstrap/dist/css/bootstrap.css';
-import React, { useMemo } from 'react';
+import React, { useCallback, useState } from 'react';
 import BasicLayout from '../../layout/BasicLayout';
+import styles from './index.less';
 
 const RelaList = [
   'all',
@@ -32,15 +33,37 @@ const RelaList = [
 
 const FinKGQuery: React.FC = () => {
   const [form] = Form.useForm();
+  const [nodes, setNodes] = useState<
+    { source: string; target: string; type: string }[]
+  >([]);
 
-  const suits = useMemo(
-    () =>
-      UpdateData[1].origin.map((item) => ({
-        ...item,
-        type: item.rela,
-      })),
-    [],
-  );
+  const pushNodes = useCallback(() => {
+    form.validateFields().then((values) => {
+      setNodes([]);
+      const { relation, node } = values;
+      let nodeList = [];
+      if (node || relation) {
+        nodeList = getSubGraph(node || '000001.SZ', relation || 'all').map(
+          (item: { rela: any }) => ({
+            ...item,
+            type: item.rela,
+          }),
+        );
+      } else {
+        const nodeList1 = getSubGraph('000001.SZ', 'all');
+        const nodeList2 = getSubGraph('000002.SZ', 'all');
+        nodeList = [...nodeList1, ...nodeList2].map((item) => ({
+          ...item,
+          type: item.rela,
+        }));
+      }
+      if (nodeList.length === 0) {
+        message.info('未找到节点');
+      } else {
+        setNodes(nodeList);
+      }
+    });
+  }, [form, getSubGraph, setNodes]);
 
   return (
     <>
@@ -89,7 +112,7 @@ const FinKGQuery: React.FC = () => {
           <br />
         </div>
         <Form form={form} layout="vertical">
-          <Form.Item label="Relation" name="rela" initialValue={'all'}>
+          <Form.Item label="Relation" name="relation" initialValue={'all'}>
             <Select
               style={{ width: '100%' }}
               placeholder="Please choose a relation"
@@ -104,7 +127,7 @@ const FinKGQuery: React.FC = () => {
               })}
             </Select>
           </Form.Item>
-          <Form.Item label="Search Node" name="node">
+          <Form.Item label="Search Node" name="node" initialValue={'000001.SZ'}>
             <Input
               style={{ width: '100%' }}
               placeholder="Please input the search node"
@@ -112,10 +135,14 @@ const FinKGQuery: React.FC = () => {
             />
           </Form.Item>
           <Form.Item>
-            <Button type="primary">Select</Button>
+            <Button type="primary" onClick={pushNodes}>
+              Select
+            </Button>
           </Form.Item>
         </Form>
-        <SubGraph suits={suits} />
+        <div className={styles.svgContainer}>
+          <SubGraph suits={nodes} />
+        </div>
       </BasicLayout>
     </>
   );
