@@ -2,7 +2,13 @@ const routes = [
   {
     path: '/',
     routes: [
-      { path: '/', redirect: '/home' },
+      { path: '/', redirect: '/welcome' },
+      {
+        name: 'Welcome',
+        path: '/welcome',
+        component: './Welcome',
+        hideInMenu: true,
+      },
       {
         name: 'HOME',
         path: '/home',
@@ -12,13 +18,11 @@ const routes = [
         name: 'FinKG Query',
         path: '/query',
         component: './Query',
-        // microApp: 'query',
       },
       {
         name: 'FinKG Update',
         path: '/update',
         component: './Update',
-        // microApp: 'update',
       },
       {
         name: 'Data Sources',

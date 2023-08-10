@@ -1,0 +1,46 @@
+.welcomeContainer {
+  position: relative;
+  height: 100vh;
+  width: 100%;
+
+  .titleBox {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    text-align: center;
+    color: white;
+
+    .title {
+      text-align: center;
+      font-weight: 700 !important;
+      font-size: calc(1.525rem + 3.3vw);
+    }
+
+    .subtitle {
+      width: 100%;
+      text-align: center;
+      font-weight: 700 !important;
+      font-size: calc(1rem + 2vw);
+    }
+  }
+
+  .downBtn {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    text-align: center;
+    color: white;
+    font-size: calc(1rem + 3vw);
+  }
+}
+
+.box {
+  width: 100%;
+  height: 100vh;
+  background-color: white;
+  z-index: 9;
+}
