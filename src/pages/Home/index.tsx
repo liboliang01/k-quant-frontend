@@ -385,7 +385,7 @@ const HomePage: React.FC = () => {
                 <div className="border border-primary pb-4 pe-4 ps-4 pt-2 rounded shadow">
                   <div>
                     <h3 className="fw-bold h4 mb-1 mt-3 text-white">
-                      Yuxiang Zeng &nbsp &nbsp Postdoc
+                      Yuxiang Zeng Postdoc
                     </h3>
                   </div>
                 </div>
@@ -395,7 +395,7 @@ const HomePage: React.FC = () => {
                 <div className="border border-primary pb-4 pe-4 ps-4 pt-2 rounded shadow">
                   <div>
                     <h3 className="fw-bold h4 mb-1 mt-3 text-white">
-                      Zhifeng Jia &nbsp &nbsp Ph.D student
+                      Zhifeng Jia Ph.D student
                     </h3>
                   </div>
                 </div>
@@ -405,7 +405,7 @@ const HomePage: React.FC = () => {
                 <div className="border border-primary pb-4 pe-4 ps-4 pt-2 rounded shadow">
                   <div>
                     <h3 className="fw-bold h4 mb-1 mt-3 text-white">
-                      Hao Wang &nbsp &nbsp Ph.D student
+                      Hao Wang Ph.D student
                     </h3>
                   </div>
                 </div>
@@ -415,7 +415,7 @@ const HomePage: React.FC = () => {
                 <div className="border border-primary pb-4 pe-4 ps-4 pt-2 rounded shadow">
                   <div>
                     <h3 className="fw-bold h4 mb-1 mt-3 text-white">
-                      Liping Wang &nbsp &nbsp Ph.D student
+                      Liping Wang Ph.D student
                     </h3>
                   </div>
                 </div>
@@ -425,7 +425,7 @@ const HomePage: React.FC = () => {
                 <div className="border border-primary pb-4 pe-4 ps-4 pt-2 rounded shadow">
                   <div>
                     <h3 className="fw-bold h4 mb-1 mt-3 text-white">
-                      Hao Xin &nbsp &nbsp Ph.D student
+                      Hao Xin Ph.D student
                     </h3>
                   </div>
                 </div>
@@ -435,7 +435,7 @@ const HomePage: React.FC = () => {
                 <div className="border border-primary pb-4 pe-4 ps-4 pt-2 rounded shadow">
                   <div>
                     <h3 className="fw-bold h4 mb-1 mt-3 text-white">
-                      Xinyi Zhu &nbsp &nbsp Ph.D student
+                      Xinyi Zhu Ph.D student
                     </h3>
                   </div>
                 </div>
@@ -445,7 +445,7 @@ const HomePage: React.FC = () => {
                 <div className="border border-primary pb-4 pe-4 ps-4 pt-2 rounded shadow">
                   <div>
                     <h3 className="fw-bold h4 mb-1 mt-3 text-white">
-                      Jiawei Li &nbsp &nbsp MPhil student
+                      Jiawei Li MPhil student
                     </h3>
                   </div>
                 </div>
@@ -455,7 +455,7 @@ const HomePage: React.FC = () => {
                 <div className="border border-primary pb-4 pe-4 ps-4 pt-2 rounded shadow">
                   <div>
                     <h3 className="fw-bold h4 mb-1 mt-3 text-white">
-                      Zhizhuo Kou &nbsp &nbsp MPhil student
+                      Zhizhuo Kou MPhil student
                     </h3>
                   </div>
                 </div>
@@ -465,7 +465,7 @@ const HomePage: React.FC = () => {
                 <div className="border border-primary pb-4 pe-4 ps-4 pt-2 rounded shadow">
                   <div>
                     <h3 className="fw-bold h4 mb-1 mt-3 text-white">
-                      Xiaohan Wang &nbsp &nbsp R.A.
+                      Xiaohan Wang R.A.
                     </h3>
                   </div>
                 </div>
@@ -475,7 +475,7 @@ const HomePage: React.FC = () => {
                 <div className="border border-primary pb-4 pe-4 ps-4 pt-2 rounded shadow">
                   <div>
                     <h3 className="fw-bold h4 mb-1 mt-3 text-white">
-                      Boliang Li &nbsp &nbsp R.A.
+                      Boliang Li R.A.
                     </h3>
                   </div>
                 </div>

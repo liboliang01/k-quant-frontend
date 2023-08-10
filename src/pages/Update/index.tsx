@@ -7,7 +7,7 @@ import BasicLayout from '../../layout/BasicLayout';
 import styles from './index.less';
 
 const FinKGUpdate: React.FC = () => {
-  const curId = useRef<number>(1);
+  const curId = useRef<number>(3);
   const [text, setText] = useState<[string, string]>(['', '']);
   const [currData, setCurrData] = useState<any>();
   const [value, setValue] = useState('origin');
@@ -24,7 +24,6 @@ const FinKGUpdate: React.FC = () => {
     const data = updateData.find((item: { id: number }) => item.id === temp);
     if (data) {
       setCurrData(data);
-      console.log(data);
       setText([data.extraction_1.sentence, data.extraction_2.sentence]);
     }
     temp = (temp % 5) + 1;
@@ -98,22 +97,6 @@ const FinKGUpdate: React.FC = () => {
     }
   }, [currData]);
 
-  const newUpdateData = useMemo(() => {
-    if (currData && currData.update && currData.origin) {
-      const origin = currData.origin.map((item: { rela: any }) => ({
-        ...item,
-        type: item.rela,
-      }));
-      const update = currData.update.map((item: { rela: any }) => ({
-        ...item,
-        type: item.rela,
-      }));
-      return [...update, ...origin];
-    } else {
-      return [];
-    }
-  }, [currData]);
-
   const fusionData = useMemo(() => {
     if (currData && currData.fusion) {
       const list: any[] = [];
@@ -126,6 +109,19 @@ const FinKGUpdate: React.FC = () => {
       return [];
     }
   }, [currData]);
+
+  const newUpdateData = useMemo(() => {
+    if (currData && currData.update && currData.origin) {
+      const list: any[] = [];
+      currData.update.forEach((item: { source: string; rela: any }) => {
+        const data = getSubGraph(item.source, item.rela);
+        list.push(...data);
+      });
+      return [...list, ...fusionData];
+    } else {
+      return [];
+    }
+  }, [currData, fusionData]);
 
   const renderData = useMemo(() => {
     switch (value) {
@@ -168,8 +164,8 @@ const FinKGUpdate: React.FC = () => {
             <Radio.Group onChange={onChange} value={value}>
               <Radio value="origin">origin</Radio>
               <Radio value="extraction">extraction</Radio>
-              <Radio value="update">update</Radio>
               <Radio value="fusion">fusion</Radio>
+              <Radio value="update">update</Radio>
             </Radio.Group>
           </div>
         </div>
