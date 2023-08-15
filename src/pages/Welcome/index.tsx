@@ -5,7 +5,7 @@ import SchoolCard from '@/components/SchoolCard';
 import { DownOutlined } from '@ant-design/icons';
 import { history } from '@umijs/max';
 import { Anchor, Button, Image } from 'antd';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Particles from 'react-tsparticles';
 import type { Engine } from 'tsparticles-engine';
 import { loadHyperspacePreset } from 'tsparticles-preset-hyperspace';
@@ -77,13 +77,13 @@ const Welcome: React.FC = () => {
     splitStr(0);
   }, []);
 
-  const windowHeight = useMemo(() => {
-    return window.innerHeight;
-  }, []);
+  // const windowHeight = useMemo(() => {
+  //   return window.innerHeight;
+  // }, []);
 
-  const scrollDown = () => {
-    window.scrollTo({ top: windowHeight, left: 0, behavior: 'smooth' });
-  };
+  // const scrollDown = () => {
+  //   window.scrollTo({ top: windowHeight, left: 0, behavior: 'smooth' });
+  // };
 
   return (
     <>
