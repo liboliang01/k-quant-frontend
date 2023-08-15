@@ -3,7 +3,7 @@ import React from 'react';
 
 const Footer: React.FC = () => {
   return (
-    <footer className="bg-dark pt-5 text-white">
+    <footer className="bg-dark pt-5 text-white" style={{ zIndex: 9 }}>
       <div className="container">
         <div className="row">
           <div className="col-xl-4 py-3">

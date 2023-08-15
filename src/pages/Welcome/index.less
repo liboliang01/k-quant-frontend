@@ -1,3 +1,12 @@
+.anchor {
+  position: fixed;
+  z-index: 10;
+  color: white !important;
+  top: 50%;
+  transform: translate(0, -50%);
+  left: 30px;
+}
+
 .welcomeContainer {
   position: relative;
   height: 100vh;
@@ -26,7 +35,7 @@
     }
   }
 
-  .downBtn {
+  .downBox {
     position: absolute;
     bottom: 0;
     left: 50%;
@@ -35,12 +44,129 @@
     text-align: center;
     color: white;
     font-size: calc(1rem + 3vw);
+
+    .downBtn {
+      transition: 100ms;
+
+      &:hover {
+        font-size: calc(1rem + 4vw);
+      }
+    }
   }
 }
 
-.box {
+.box1 {
   width: 100%;
-  height: 100vh;
-  background-color: white;
+  z-index: 9;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+
+  .whatWeDo {
+    width: 75%;
+    color: white !important;
+
+    div,
+    h1,
+    p,
+    h2,
+    img {
+      width: 100%;
+      text-align: center;
+    }
+
+    .cardContent {
+      width: 100%;
+      display: flex;
+    }
+  }
+}
+
+.box2 {
+  width: 100%;
+  z-index: 9;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  margin-top: 50px;
+
+  .ourProcess {
+    width: 75%;
+    color: white !important;
+
+    div,
+    h1,
+    h2,
+    img {
+      width: 100%;
+      text-align: center;
+    }
+
+    .cardContent {
+      width: 100%;
+      display: flex;
+      margin: 20px 0;
+    }
+  }
+}
+
+.box3 {
+  width: 100%;
+  z-index: 9;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  margin-top: 50px;
+
+  .meetOurGroup {
+    width: 75%;
+    color: white !important;
+
+    div,
+    h1,
+    p {
+      width: 100%;
+      text-align: center;
+    }
+
+    .cardContent {
+      width: 100%;
+      display: flex;
+      margin-bottom: 20px;
+    }
+  }
+}
+
+.box4 {
+  width: 100%;
+  z-index: 9;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  margin: 50px 0 100px;
+
+  .whoIsUsingOurData {
+    width: 75%;
+    color: white !important;
+
+    div,
+    h1,
+    p {
+      width: 100%;
+      text-align: center;
+    }
+
+    .cardContent {
+      width: 100%;
+      display: flex;
+      margin-bottom: 20px;
+    }
+  }
+}
+
+.footerContainer {
   z-index: 9;
 }

@@ -15,6 +15,7 @@
     "@ant-design/pro-components": "^2.4.4",
     "@popperjs/core": "^2.11.8",
     "@umijs/max": "^4.0.72",
+    "animate.css": "^4.1.1",
     "antd": "^5.4.0",
     "axios": "^1.4.0",
     "bootstrap": "^5.3.0",

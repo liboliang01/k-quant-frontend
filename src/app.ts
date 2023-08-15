@@ -1,4 +1,5 @@
 import logo from '@/assets/UST.jpg';
+import 'animate.css';
 import './global.less';
 // 运行时配置
 
