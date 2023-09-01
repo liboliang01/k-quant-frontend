@@ -76,9 +76,13 @@ const FinKGUpdate: React.FC = () => {
   const [strategy, setStrategy] = useState('top30');
   const [data, setData] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
+  // 当前股票池是否为csi300
+  const [isCSI300, setIsCSI300] = useState<boolean>(true);
+  // 当前actionType是否为增量更新
+  const [isUpdate, setIsUpdate] = useState<boolean>(false);
   const columns: ColumnsType<TableType> = useMemo(() => {
     let numOfMonths = 3;
-    let strategyPath = ''
+    let strategyPath = '';
     switch (duration) {
       case 'THERE_MONTH':
         numOfMonths = 3;
@@ -107,10 +111,19 @@ const FinKGUpdate: React.FC = () => {
         dataIndex: 'name',
         key: 'name',
         render: (item: string) => {
+          const list = ['HIST', 'RSR_hidy_is', 'KEnhance'];
+          const flag = list.indexOf(item) >= 0;
+          const stock = form.getFieldValue('stock');
           return (
             <ImagePreviewer
-              text={`${intlMap.get(item)}(${item})`}
-              url={`model_png/plot_${item}_score_${numOfMonths}${strategyPath}.png`}
+              text={`${flag ? '【知识图谱输入】' : ''}${intlMap.get(
+                item,
+              )}(${item})`}
+              url={
+                isCSI300
+                  ? `model_png/plot_${item}_score_${numOfMonths}${strategyPath}.png`
+                  : `model_png/plot_${item}_score_${numOfMonths}_${stock}.png`
+              }
             />
           );
         },
@@ -209,7 +222,7 @@ const FinKGUpdate: React.FC = () => {
       },
     ];
     return actionType === 'get_update_data' ? cols2 : cols1;
-  }, [actionType, duration,strategy]);
+  }, [actionType, duration, strategy]);
 
   const onSearch = () => {
     form.validateFields().then(async (values) => {
@@ -226,6 +239,7 @@ const FinKGUpdate: React.FC = () => {
           params: {
             duration: params.duration,
             strategy: params.strategy,
+            stock: params.stock,
           },
         },
       );
@@ -250,10 +264,30 @@ const FinKGUpdate: React.FC = () => {
     onSearch();
   }, []);
 
+  const onFieldsChange = (__: any, allFields: any) => {
+    // 策略变换时csi300
+    if (allFields[1].value === 'csi300') {
+      setIsCSI300(true);
+      form.setFieldValue('strategy', 'top30');
+    } else {
+      setIsCSI300(false);
+      form.setFieldValue('strategy', 'top5');
+    }
+    // actionType变化时
+    if (allFields[0].value === 'get_update_data') {
+      setIsUpdate(true);
+      form.setFieldValue('stock', 'csi300');
+      setIsCSI300(true);
+      form.setFieldValue('strategy', 'top30');
+    } else {
+      setIsUpdate(false);
+    }
+  };
+
   return (
     <BasicLayout backgroundColor="#f5f5f5">
       <Card title="模型看板" style={{ marginBottom: '20px' }}>
-        <Form form={form} {...layout}>
+        <Form form={form} {...layout} onFieldsChange={onFieldsChange}>
           <Form.Item
             label="操作类型"
             name="actionType"
@@ -265,9 +299,57 @@ const FinKGUpdate: React.FC = () => {
               <Radio value="get_update_data">增量更新</Radio>
             </Radio.Group>
           </Form.Item>
-          <Form.Item label="股票池" name="stock" initialValue={'csi300'}>
+          <Form.Item
+            label="股票池"
+            name="stock"
+            initialValue={'csi300'}
+            help={
+              isUpdate &&
+              'Gradient Based增量更新方法相较于全量更新速度提高60%,DoubleAdapt增量更新方法相较于全量更新速度提高200%'
+            }
+          >
             <Radio.Group>
               <Radio value="csi300">沪深300</Radio>
+              {!isUpdate && (
+                <>
+                  <Radio value="dianzi">
+                    电子(25支)
+                    <Tooltip title="'SH600460', 'SZ002049', 'SH688008', 'SZ300223', 'SH603986', 'SH603501', 'SZ300661', 'SZ300782', 'SH603160', 'SH600584', 'SZ002371', 'SH688012', 'SZ002916', 'SZ002938', 'SH600183', 'SZ300408', 'SZ000100', 'SZ000725', 'SH688036', 'SH600745', 'SZ002475', 'SZ002600', 'SZ002241', 'SZ300433', 'SH601138'">
+                      <QuestionCircleOutlined style={{ fontSize: 10 }} />
+                    </Tooltip>
+                  </Radio>
+                  <Radio value="yiyaoshengwu">
+                    医药生物(26支)
+                    <Tooltip title="'SZ002001', 'SH600276', 'SH600196', 'SZ000963', 'SH600332', 'SH600085', 'SZ000538', 'SH600436', 'SZ002007', 'SH600161', 'SZ002252', 'SZ300122', 'SZ300142', 'SZ300601', 'SZ000661', 'SZ300760', 'SZ300595', 'SZ300529', 'SZ300003', 'SH603882', 'SZ300347', 'SH603259', 'SZ002821', 'SZ300759', 'SH600763', 'SZ300015'">
+                      <QuestionCircleOutlined style={{ fontSize: 10 }} />
+                    </Tooltip>
+                  </Radio>
+                  <Radio value="yinhang">
+                    银行(19支)
+                    <Tooltip title="'SH601398', 'SH601288', 'SH601328', 'SH600000', 'SH600016', 'SH600036', 'SH601166', 'SH601818', 'SH600015', 'SH601998', 'SH601916', 'SZ000001', 'SH601169', 'SH601009', 'SH600919', 'SZ002142', 'SH601229', 'SH600926', 'SH601838'">
+                      <QuestionCircleOutlined style={{ fontSize: 10 }} />
+                    </Tooltip>
+                  </Radio>
+                  <Radio value="feiyinjinrong">
+                    非银金融(23支)
+                    <Tooltip title="'SZ300059', 'SH601788', 'SH601688', 'SH600030', 'SZ002736', 'SZ000166', 'SH601901', 'SH601878', 'SH601066', 'SH601236', 'SH600958', 'SH600999', 'SH601377', 'SH601881', 'SH601211', 'SZ000776', 'SH600837', 'SH601336', 'SH601601', 'SH601318', 'SH601319', 'SH601628', 'SH600061'">
+                      <QuestionCircleOutlined style={{ fontSize: 10 }} />
+                    </Tooltip>
+                  </Radio>
+                  <Radio value="dianlishebei">
+                    电力设备(24支)
+                    <Tooltip title="'SH600438', 'SZ002129', 'SH601012', 'SZ002459', 'SZ300763', 'SZ300274', 'SH603806', 'SH601865', 'SZ300316', 'SH603185', 'SZ300751', 'SZ002202', 'SZ300014', 'SZ300750', 'SZ300207', 'SZ002074', 'SH603659', 'SZ002709', 'SZ002812', 'SH688005', 'SZ300450', 'SH600089', 'SH601877', 'SH600406'">
+                      <QuestionCircleOutlined style={{ fontSize: 10 }} />
+                    </Tooltip>
+                  </Radio>
+                  <Radio value="jisuanji">
+                    计算机(15支)
+                    <Tooltip title="'SZ002236', 'SZ002415', 'SZ000066', 'SH603019', 'SZ000977', 'SZ000938', 'SZ300496', 'SH600845', 'SH600570', 'SZ002410', 'SZ300033', 'SZ300454', 'SH688111', 'SZ002230', 'SH600588'">
+                      <QuestionCircleOutlined style={{ fontSize: 10 }} />
+                    </Tooltip>
+                  </Radio>
+                </>
+              )}
             </Radio.Group>
           </Form.Item>
           <Form.Item
@@ -282,22 +364,36 @@ const FinKGUpdate: React.FC = () => {
             </Radio.Group>
           </Form.Item>
           <Form.Item
-            label={
-              <div>
-                策略
-                <Tooltip title="Top30多头策略:买入每日推荐前30只股票，且每日至少换手五只股票">
-                  <QuestionCircleOutlined />
-                </Tooltip>
-              </div>
-            }
+            label="策略"
             name="strategy"
             initialValue={'top30'}
             help="手续费1.5‱"
           >
             <Radio.Group>
-              <Radio value="top30">Top30多头策略</Radio>
-              <Radio value="top50">Top50多头策略</Radio>
-              <Radio value="top100">Top100多头策略</Radio>
+              <Radio value="top5" disabled={isCSI300}>
+                Top5多头策略
+                <Tooltip title="【行业专属】每日买入推荐的top5股票">
+                  <QuestionCircleOutlined style={{ fontSize: 10 }} />
+                </Tooltip>
+              </Radio>
+              <Radio value="top30" disabled={!isCSI300}>
+                Top30多头策略
+                <Tooltip title="买入每日推荐前30只股票，且每日至少换手五只股票">
+                  <QuestionCircleOutlined style={{ fontSize: 10 }} />
+                </Tooltip>
+              </Radio>
+              <Radio value="top50" disabled={!isCSI300}>
+                Top50多头策略
+                <Tooltip title="每日买入推荐的top50股票，不强制换手">
+                  <QuestionCircleOutlined style={{ fontSize: 10 }} />
+                </Tooltip>
+              </Radio>
+              <Radio value="top100" disabled={!isCSI300}>
+                Top100多头策略
+                <Tooltip title="每日买入推荐的top100股票，不强制换手">
+                  <QuestionCircleOutlined style={{ fontSize: 10 }} />
+                </Tooltip>
+              </Radio>
             </Radio.Group>
           </Form.Item>
           <Form.Item>

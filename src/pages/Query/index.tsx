@@ -13,7 +13,7 @@ const RelaList = [
   'company locate in city',
   'work for',
   'hold',
-  'same industry',
+  'same_industry',
   'rise',
   'compete',
   'cooperate',
