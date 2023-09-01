@@ -264,23 +264,27 @@ const FinKGUpdate: React.FC = () => {
     onSearch();
   }, []);
 
-  const onFieldsChange = (__: any, allFields: any) => {
-    // 策略变换时csi300
-    if (allFields[1].value === 'csi300') {
-      setIsCSI300(true);
-      form.setFieldValue('strategy', 'top30');
-    } else {
-      setIsCSI300(false);
-      form.setFieldValue('strategy', 'top5');
+  const onFieldsChange = (change: any) => {
+    // 股票变换时csi300
+    if (change[0].name.indexOf('stock') >= 0) {
+      if (change[0].value === 'csi300') {
+        setIsCSI300(true);
+        form.setFieldValue('strategy', 'top30');
+      } else {
+        setIsCSI300(false);
+        form.setFieldValue('strategy', 'top5');
+      }
     }
     // actionType变化时
-    if (allFields[0].value === 'get_update_data') {
-      setIsUpdate(true);
-      form.setFieldValue('stock', 'csi300');
-      setIsCSI300(true);
-      form.setFieldValue('strategy', 'top30');
-    } else {
-      setIsUpdate(false);
+    if (change[0].name.indexOf('actionType') >= 0) {
+      if (change[0].value === 'get_update_data') {
+        setIsUpdate(true);
+        form.setFieldValue('stock', 'csi300');
+        setIsCSI300(true);
+        form.setFieldValue('strategy', 'top30');
+      } else {
+        setIsUpdate(false);
+      }
     }
   };
 
