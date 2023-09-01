@@ -14,18 +14,20 @@ const ImagePreviewer: React.FC<PropsType> = (props) => {
       <Button type="link" onClick={() => setVisible(true)}>
         {text}
       </Button>
-      <Image
-        width={200}
-        style={{ display: 'none' }}
-        src={url}
-        preview={{
-          visible,
-          src: url,
-          onVisibleChange: (value) => {
-            setVisible(value);
-          },
-        }}
-      />
+      {visible && (
+        <Image
+          width={200}
+          style={{ display: 'none' }}
+          src={url}
+          preview={{
+            visible,
+            src: url,
+            onVisibleChange: (value) => {
+              setVisible(value);
+            },
+          }}
+        />
+      )}
     </>
   );
 };

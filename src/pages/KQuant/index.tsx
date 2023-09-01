@@ -1,3 +1,4 @@
+import { QuestionCircleOutlined } from '@ant-design/icons';
 import {
   Button,
   Card,
@@ -8,6 +9,7 @@ import {
   Row,
   Space,
   Table,
+  Tooltip,
 } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import axios from 'axios';
@@ -71,10 +73,12 @@ const FinKGUpdate: React.FC = () => {
   const [form] = Form.useForm();
   const [actionType, setActionType] = useState('get_model_data');
   const [duration, setDuration] = useState('THERE_MONTH');
+  const [strategy, setStrategy] = useState('top30');
   const [data, setData] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const columns: ColumnsType<TableType> = useMemo(() => {
     let numOfMonths = 3;
+    let strategyPath = ''
     switch (duration) {
       case 'THERE_MONTH':
         numOfMonths = 3;
@@ -86,6 +90,17 @@ const FinKGUpdate: React.FC = () => {
         numOfMonths = 12;
         break;
     }
+    switch (strategy) {
+      case 'top30':
+        strategyPath = '';
+        break;
+      case 'top50':
+        strategyPath = '_2';
+        break;
+      case 'top100':
+        strategyPath = '_3';
+        break;
+    }
     const cols1 = [
       {
         title: '模型名称',
@@ -95,7 +110,7 @@ const FinKGUpdate: React.FC = () => {
           return (
             <ImagePreviewer
               text={`${intlMap.get(item)}(${item})`}
-              url={`model_png/plot_${item}_score_${numOfMonths}.png`}
+              url={`model_png/plot_${item}_score_${numOfMonths}${strategyPath}.png`}
             />
           );
         },
@@ -105,14 +120,14 @@ const FinKGUpdate: React.FC = () => {
         dataIndex: 'IC',
         key: 'IC',
         sorter: (a: any, b: any) => a.IC - b.IC,
-        render: (item: any) => Number(Number(item) * 100).toFixed(2) + '%',
+        render: (item: any) => Number(item).toFixed(3),
       },
       {
-        title: '信标准差',
+        title: '信息标准差',
         dataIndex: 'ICIR',
         key: 'ICIR',
         sorter: (a: any, b: any) => a.ICIR - b.ICIR,
-        render: (item: any) => Number(Number(item) * 100).toFixed(2) + '%',
+        render: (item: any) => Number(item).toFixed(3),
       },
       {
         title: '超额年化利率',
@@ -126,7 +141,7 @@ const FinKGUpdate: React.FC = () => {
         dataIndex: 'information_ratio',
         key: 'information_ratio',
         sorter: (a: any, b: any) => a.information_ratio - b.information_ratio,
-        render: (item: any) => Number(Number(item) * 100).toFixed(2) + '%',
+        render: (item: any) => Number(item).toFixed(2),
       },
       {
         title: '最大回撤',
@@ -145,42 +160,56 @@ const FinKGUpdate: React.FC = () => {
           return (
             <ImagePreviewer
               text={`${intlMap.get(item)}(${item})`}
-              url={`model_png/plot_${item}_score_${numOfMonths}.png`}
+              url={`model_png/plot_${item}_score_${numOfMonths}${strategyPath}.png`}
             />
           );
         },
       },
       {
-        title: '信息系数(Incre)',
+        title: '信息系数(original)',
+        dataIndex: 'IC',
+        key: 'IC',
+        sorter: (a: any, b: any) => a.IC - b.IC,
+        render: (item: any) => Number(item).toFixed(3),
+      },
+      {
+        title: '信息标准差(original)',
+        dataIndex: 'ICIR',
+        key: 'ICIR',
+        sorter: (a: any, b: any) => a.ICIR - b.ICIR,
+        render: (item: any) => Number(item).toFixed(3),
+      },
+      {
+        title: '信息系数(Gradient Based)',
         dataIndex: 'IC_incre',
         key: 'IC_incre',
         sorter: (a: any, b: any) => a.IC_incre - b.IC_incre,
-        render: (item: any) => Number(Number(item) * 100).toFixed(2) + '%',
+        render: (item: any) => Number(item).toFixed(3),
       },
       {
-        title: '信标准差(Incre)',
+        title: '信息标准差(Gradient Based)',
         dataIndex: 'ICIR_incre',
         key: 'ICIR_incre',
         sorter: (a: any, b: any) => a.ICIR_incre - b.ICIR_incre,
-        render: (item: any) => Number(Number(item) * 100).toFixed(2) + '%',
+        render: (item: any) => Number(item).toFixed(3),
       },
       {
         title: '信息系数(DoubleAdapt)',
         dataIndex: 'IC_DA',
         key: 'IC_DA',
         sorter: (a: any, b: any) => a.IC_DA - b.IC_DA,
-        render: (item: any) => Number(Number(item) * 100).toFixed(2) + '%',
+        render: (item: any) => Number(item).toFixed(3),
       },
       {
-        title: '信标准差(DoubleAdapt)',
+        title: '信息标准差(DoubleAdapt)',
         dataIndex: 'ICIR_DA',
         key: 'ICIR_DA',
         sorter: (a: any, b: any) => a.ICIR_DA - b.ICIR_DA,
-        render: (item: any) => Number(Number(item) * 100).toFixed(2) + '%',
+        render: (item: any) => Number(item).toFixed(3),
       },
     ];
     return actionType === 'get_update_data' ? cols2 : cols1;
-  }, [actionType, duration]);
+  }, [actionType, duration,strategy]);
 
   const onSearch = () => {
     form.validateFields().then(async (values) => {
@@ -189,12 +218,14 @@ const FinKGUpdate: React.FC = () => {
       };
       setActionType(params.actionType);
       setDuration(params.duration);
+      setStrategy(params.strategy);
       setLoading(true);
       const res = await axios.get(
         `http://47.106.95.15:8000/${values.actionType}/`,
         {
           params: {
             duration: params.duration,
+            strategy: params.strategy,
           },
         },
       );
@@ -221,7 +252,7 @@ const FinKGUpdate: React.FC = () => {
 
   return (
     <BasicLayout backgroundColor="#f5f5f5">
-      <Card title="因子看板" style={{ marginBottom: '20px' }}>
+      <Card title="模型看板" style={{ marginBottom: '20px' }}>
         <Form form={form} {...layout}>
           <Form.Item
             label="操作类型"
@@ -248,6 +279,25 @@ const FinKGUpdate: React.FC = () => {
               <Radio value="THERE_MONTH">近三个月</Radio>
               <Radio value="SIX_MONTH">近半年</Radio>
               <Radio value="ONE_YEAR">近一年</Radio>
+            </Radio.Group>
+          </Form.Item>
+          <Form.Item
+            label={
+              <div>
+                策略
+                <Tooltip title="Top30多头策略:买入每日推荐前30只股票，且每日至少换手五只股票">
+                  <QuestionCircleOutlined />
+                </Tooltip>
+              </div>
+            }
+            name="strategy"
+            initialValue={'top30'}
+            help="手续费1.5‱"
+          >
+            <Radio.Group>
+              <Radio value="top30">Top30多头策略</Radio>
+              <Radio value="top50">Top50多头策略</Radio>
+              <Radio value="top100">Top100多头策略</Radio>
             </Radio.Group>
           </Form.Item>
           <Form.Item>

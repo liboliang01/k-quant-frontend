@@ -1,9 +1,11 @@
 import * as d3 from 'd3';
 import { useEffect, useState } from 'react';
+import Legend from './legend';
 
 interface PropsType {
   suits: { source: string; target: string; type: string }[];
   id?: string;
+  width?: number;
 }
 
 const RelationColor = {
@@ -12,7 +14,7 @@ const RelationColor = {
   'company locate in city': '#fa8c16',
   'work for': '#faad14',
   hold: '#fadb14',
-  'same industry': '#a0d911',
+  same_industry: '#a0d911',
   rise: '#52c41a',
   compete: '#13c2c2',
   cooperate: '#1677ff',
@@ -28,10 +30,11 @@ const RelationColor = {
   invest: '#874d00',
   dispute: '#b5f5ec',
   'be supplied': '#efdbff',
+  unknown: 'black',
 };
 
 const SubGraph = (props: PropsType) => {
-  const { suits, id = 'graph-svg-container' } = props;
+  const { suits, id = 'graph-svg-container', width = 928 } = props;
   const [svgNode, setSvgNode] = useState<any>();
 
   useEffect(() => {
@@ -40,7 +43,6 @@ const SubGraph = (props: PropsType) => {
       if (svgNode) {
         svgNode.selectAll('*').remove();
       }
-      const width = 928;
       const height = 600;
       const color = d3.scaleOrdinal(d3.schemeCategory10);
 
@@ -93,22 +95,27 @@ const SubGraph = (props: PropsType) => {
       const link = svg
         .append('g')
         .attr('fill', 'none')
-        .attr('stroke-width', 1.5)
         .selectAll('g')
         .data(links)
         .join('g')
         .append('path')
+        .attr('stroke-width', (d: any) => {
+          if (d && d.tag) {
+            return 10;
+          }
+          return 3;
+        })
         .attr('stroke', (d: { type: 'invest' }) => {
           return RelationColor[d.type] || '#000000';
-        })
-        .attr(
-          'marker-end',
-          (d: { type: any }) =>
-            `url(${new URL(
-              `#arrow-${d.type}`,
-              window.location as unknown as string,
-            )})`,
-        );
+        });
+      // .attr(
+      //   'marker-end',
+      //   (d: { type: any }) =>
+      //     `url(${new URL(
+      //       `#arrow-${d.type}`,
+      //       window.location as unknown as string,
+      //     )})`,
+      // );
 
       function dragstarted(
         event: { active: any },
@@ -187,7 +194,12 @@ const SubGraph = (props: PropsType) => {
     }
   }, [suits, id]);
 
-  return <svg id={id}></svg>;
+  return (
+    <div>
+      <Legend relationColor={RelationColor} />
+      <svg id={id}></svg>
+    </div>
+  );
 };
 
 export default SubGraph;

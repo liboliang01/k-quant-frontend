@@ -4,16 +4,16 @@ const routes = [
     routes: [
       { path: '/', redirect: '/welcome' },
       {
-        name: 'Welcome',
+        name: 'Home',
         path: '/welcome',
         component: './Welcome',
-        hideInMenu: true,
+        // hideInMenu: true,
       },
-      {
-        name: 'HOME',
-        path: '/home',
-        component: './Home',
-      },
+      // {
+      //   name: 'HOME',
+      //   path: '/home',
+      //   component: './Home',
+      // },
       {
         name: 'FinKG Query',
         path: '/query',
@@ -31,8 +31,8 @@ const routes = [
       },
       {
         name: 'APIs',
-        path: '/table2',
-        component: './Table',
+        path: '/apis',
+        component: './API',
       },
       {
         name: 'K-Quant',
@@ -41,8 +41,8 @@ const routes = [
       },
       {
         name: 'Explainer',
-        path: '/table4',
-        component: './Table',
+        path: '/explainer',
+        component: './Explainer',
       },
       {
         name: 'More Information',

@@ -1,0 +1,95 @@
+.descCard {
+  display: flex;
+  background-color: white;
+  border-radius: 10px;
+  width: 400px;
+  padding: 24px;
+  margin: 0 24px 24px 0;
+  box-sizing: border-box;
+  box-shadow: 5px 5px 5px gray;
+  transition: 100ms;
+  &:hover {
+    box-shadow: 10px 10px 10px gray;
+    cursor: pointer;
+    color: #1677ff;
+  }
+  .img {
+    width: 75px;
+    font-size: 50px;
+  }
+  .desc {
+    .title {
+      font-size: larger;
+      font-weight: bolder;
+    }
+    .url {
+      color: gray;
+    }
+  }
+}
+
+.paramsArea {
+  background-color: #f7f7f8;
+  border-radius: 10px;
+  margin: 10px 0 24px 0;
+  overflow: hidden;
+  padding: 10px;
+  .paramsCard {
+    display: flex;
+    border-bottom: 1px solid gray;
+    .param {
+      margin-right: 20px;
+      .name {
+        font-weight: bold;
+        width: 200px;
+      }
+      .type {
+        color: gray;
+        font-size: small;
+      }
+    }
+    .desc {
+      width: 150px;
+      color: gray;
+    }
+    .defaultVal {
+      width: 500px;
+    }
+  }
+}
+
+.bashArea {
+  border: 10px solid rgb(34, 34, 34);
+  border-radius: 10px;
+  overflow: hidden;
+  box-sizing: border-box;
+  margin: 10px 0 24px 0;
+  pre {
+    margin: 0;
+  }
+}
+
+.jsonArea {
+  border: 10px solid rgb(39, 40, 34);
+  border-radius: 10px;
+  overflow: hidden;
+  box-sizing: border-box;
+  margin: 10px 0 24px 0;
+  pre {
+    margin: 0;
+  }
+}
+
+.pageContainer {
+  padding: 24px 0;
+  width: 900px;
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, 0);
+  .cardContainer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+  }
+}

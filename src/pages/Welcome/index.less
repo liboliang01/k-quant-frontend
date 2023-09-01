@@ -11,16 +11,32 @@
   position: relative;
   height: 100vh;
   width: 100%;
-
+  overflow-x: hidden;
+  background-color: rgb(108, 117, 125);
   .titleBox {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    // position: absolute;
+    // top: 40%;
+    // left: 50%;
+    // transform: translate(-50%, -50%);
+    margin-top: 50px;
     width: 100%;
     text-align: center;
     color: white;
-
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    .code {
+      border: 5px solid gray;
+      background-color: black;
+      z-index: 9;
+      border-radius: 10px;
+      height: 48px;
+      padding: 10px;
+      box-sizing: border-box;
+      text-align: start;
+      width: 600px;
+    }
     .title {
       text-align: center;
       font-weight: 700 !important;
@@ -32,24 +48,22 @@
       text-align: center;
       font-weight: 700 !important;
       font-size: calc(1rem + 2vw);
+      color: #1677ff;
     }
-  }
+    .downBox {
+      position: absolute;
+      bottom: 50px;
+      width: 100%;
+      text-align: center;
+      color: white;
+      font-size: calc(1rem + 3vw);
 
-  .downBox {
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 100%;
-    text-align: center;
-    color: white;
-    font-size: calc(1rem + 3vw);
+      .downBtn {
+        transition: 100ms;
 
-    .downBtn {
-      transition: 100ms;
-
-      &:hover {
-        font-size: calc(1rem + 4vw);
+        &:hover {
+          font-size: calc(1rem + 4vw);
+        }
       }
     }
   }

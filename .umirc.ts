@@ -16,4 +16,9 @@ export default defineConfig({
   devtool: process.env.NODE_ENV === 'development' ? 'eval' : false,
   routes,
   npmClient: 'npm',
+  // mfsu: {
+  //   strategy: 'normal',
+  // },
+  publicPath: process.env.NODE_ENV === 'production' ? './' : '/',
+  history: { type: 'hash' },
 });

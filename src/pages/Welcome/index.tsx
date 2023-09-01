@@ -4,17 +4,23 @@ import LeaderCard from '@/components/LeaderCard';
 import SchoolCard from '@/components/SchoolCard';
 import { DownOutlined } from '@ant-design/icons';
 import { history } from '@umijs/max';
-import { Anchor, Button, Image } from 'antd';
+import { Button, Image } from 'antd';
 import React, { useEffect, useMemo, useState } from 'react';
-import Particles from 'react-tsparticles';
 import type { Engine } from 'tsparticles-engine';
 import { loadHyperspacePreset } from 'tsparticles-preset-hyperspace';
+import DynamicTitle from './dynamicTitle';
 import styles from './index.less';
 
 const description = [
   'Financial Knowledge Extraction and Update, Stock Price/Trend Prediction. ',
   'Incremental Update of Investment Model. ',
   'Backtesting, Stock Selection, Robotic Portifolio, Portifolio Scoring. ',
+];
+
+const pythonScript = [
+  'git clone https://github.com/K-Quant/HiDy.git',
+  'cd HiDy',
+  'pip install -r requirements.txt',
 ];
 
 const sleep = (time: number) => {
@@ -59,7 +65,7 @@ const Welcome: React.FC = () => {
   };
 
   const splitStr = async (idx: number) => {
-    const str = description[idx];
+    const str = pythonScript[idx];
     const len = str.length;
     for (let i = 0; i < len + 1; i++) {
       setCurStr(str.slice(0, i) + '|');
@@ -86,8 +92,8 @@ const Welcome: React.FC = () => {
   };
 
   return (
-    <>
-      <div className={styles.anchor}>
+    <div style={{ backgroundColor: 'black' }}>
+      {/* <div className={styles.anchor}>
         <Anchor
           affix={false}
           showInkInFixed={true}
@@ -119,18 +125,32 @@ const Welcome: React.FC = () => {
             },
           ]}
         />
-      </div>
-      <div className={styles.welcomeContainer} id="welcome">
-        <Particles
+      </div> */}
+      <div
+        className={styles.welcomeContainer}
+        id="welcome"
+        style={{ backgroundColor: 'black' }}
+      >
+        {/* <Particles
           options={{
             preset: 'hyperspace',
           }}
           init={customInit}
-        />
+        /> */}
         <div className={styles.titleBox}>
-          <div className={styles.title}>K-QUANT</div>
           <div className={styles.subtitle}>Your Personal Financial Advisor</div>
-          <div>{curStr}</div>
+          <div style={{ color: '#722ed1',fontWeight:'bold' }}>
+            Financial Knowledge Extraction and Update, Stock Price/Trend
+            Prediction, Incremental Update of Investment Model, Backtesting,
+            Stock Selection, Robotic Portifolio, Portifolio Scoring.
+          </div>
+          <DynamicTitle />
+          <div className={styles.code}>
+            <span style={{ fontWeight: 'bold', color: '#1677ff' }}>
+              <span style={{ color: '#722ed1' }}>~/k-quant</span> (master){' '}
+            </span>
+            {curStr}
+          </div>
           <Button
             type="dashed"
             ghost
@@ -139,9 +159,9 @@ const Welcome: React.FC = () => {
           >
             Start Now
           </Button>
-        </div>
-        <div className={`${styles.downBox} animate__bounce`}>
-          <DownOutlined className={styles.downBtn} onClick={scrollDown} />
+          <div className={`${styles.downBox} animate__bounce`}>
+            <DownOutlined className={styles.downBtn} onClick={scrollDown} />
+          </div>
         </div>
       </div>
       <div className={styles.box1} id="what_we_do">
@@ -267,7 +287,7 @@ const Welcome: React.FC = () => {
             <DescCard desc={'R.A.'} title={'Xiaohan Wang'} />
           </div>
           <div className={styles.cardContent}>
-            <DescCard desc={'R.A.'} title={'Boliang'} />
+            <DescCard desc={'R.A.'} title={'Boliang Li'} />
             <div></div>
             <div></div>
           </div>
@@ -289,7 +309,7 @@ const Welcome: React.FC = () => {
       <div className={styles.footerContainer}>
         <Footer />
       </div>
-    </>
+    </div>
   );
 };
 

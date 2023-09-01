@@ -10,15 +10,15 @@ export async function getInitialState(): Promise<{ name: string }> {
 }
 
 export const layout = () => {
-  if (window.location.pathname === '/welcome') {
-    return {
-      rightRender: () => null,
-      headerRender: false,
-      footerRender: false,
-      menuRender: false,
-      menuHeaderRender: false,
-    };
-  }
+  // if (window.location.pathname === '/welcome') {
+  //   return {
+  //     rightRender: () => null,
+  //     headerRender: false,
+  //     footerRender: false,
+  //     menuRender: false,
+  //     menuHeaderRender: false,
+  //   };
+  // }
   return {
     logo,
     menu: {

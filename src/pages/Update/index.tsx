@@ -11,6 +11,7 @@ const FinKGUpdate: React.FC = () => {
   const [text, setText] = useState<[string, string]>(['', '']);
   const [currData, setCurrData] = useState<any>();
   const [value, setValue] = useState('origin');
+  const ref = useRef<HTMLDivElement>(null);
 
   const onChange = (e: RadioChangeEvent) => {
     console.log('radio checked', e.target.value);
@@ -56,36 +57,6 @@ const FinKGUpdate: React.FC = () => {
     return result;
   };
 
-  const extraData1 = useMemo(() => {
-    if (currData && currData.extraction_1) {
-      const list: any[] = [];
-      currData.extraction_1.data.forEach(
-        (item: { source: string; rela: any }) => {
-          const data = getSubGraph(item.source, item.rela);
-          list.push(...data);
-        },
-      );
-      return list;
-    } else {
-      return [];
-    }
-  }, [currData]);
-
-  const extraData2 = useMemo(() => {
-    if (currData && currData.extraction_2) {
-      const list: any[] = [];
-      currData.extraction_2.data.forEach(
-        (item: { source: string; rela: any }) => {
-          const data = getSubGraph(item.source, item.rela);
-          list.push(...data);
-        },
-      );
-      return list;
-    } else {
-      return [];
-    }
-  }, [currData]);
-
   const originData = useMemo(() => {
     if (currData && currData.origin) {
       return currData.origin.map((item: { rela: any }) => ({
@@ -97,13 +68,36 @@ const FinKGUpdate: React.FC = () => {
     }
   }, [currData]);
 
+  const extraData1 = useMemo(() => {
+    if (currData && currData.extraction_1) {
+      return currData.extraction_1.data.map((item: { rela: any }) => ({
+        ...item,
+        type: item.rela,
+      }));
+    } else {
+      return [];
+    }
+  }, [currData]);
+
+  const extraData2 = useMemo(() => {
+    if (currData && currData.extraction_2) {
+      return currData.extraction_2.data.map((item: { rela: any }) => ({
+        ...item,
+        type: item.rela,
+      }));
+    } else {
+      return [];
+    }
+  }, [currData]);
+
   const fusionData = useMemo(() => {
     if (currData && currData.fusion) {
-      const list: any[] = [];
-      currData.fusion.forEach((item: { source: string; rela: any }) => {
-        const data = getSubGraph(item.source, item.rela);
-        list.push(...data);
-      });
+      const list = currData.fusion.map(
+        (item: { source: string; rela: any }) => ({
+          ...item,
+          type: item.rela,
+        }),
+      );
       return list;
     } else {
       return [];
@@ -111,17 +105,19 @@ const FinKGUpdate: React.FC = () => {
   }, [currData]);
 
   const newUpdateData = useMemo(() => {
-    if (currData && currData.update && currData.origin) {
-      const list: any[] = [];
-      currData.update.forEach((item: { source: string; rela: any }) => {
-        const data = getSubGraph(item.source, item.rela);
-        list.push(...data);
-      });
-      return [...list, ...fusionData];
+    if (currData && currData.update && originData) {
+      const list = currData.fusion.map(
+        (item: { source: string; rela: any }) => ({
+          ...item,
+          type: item.rela,
+          tag: 'fusion',
+        }),
+      );
+      return [...originData, ...list];
     } else {
       return [];
     }
-  }, [currData, fusionData]);
+  }, [currData, originData]);
 
   const renderData = useMemo(() => {
     switch (value) {
@@ -136,6 +132,9 @@ const FinKGUpdate: React.FC = () => {
     }
   }, [originData, newUpdateData, fusionData, value]);
 
+  const width = ref.current?.clientWidth;
+  console.log(width);
+
   return (
     <BasicLayout>
       <div style={{ textAlign: 'center' }}>
@@ -144,7 +143,7 @@ const FinKGUpdate: React.FC = () => {
       <div className={styles.container}>
         <div className={styles.text}>
           <Button type="primary" onClick={getRandomText}>
-            Get Random Instance
+            切换示例
           </Button>
           <div className={styles.textarea}>
             <Input.TextArea
@@ -162,26 +161,35 @@ const FinKGUpdate: React.FC = () => {
           </div>
           <div className={styles.radios}>
             <Radio.Group onChange={onChange} value={value}>
-              <Radio value="origin">origin</Radio>
-              <Radio value="extraction">extraction</Radio>
-              <Radio value="fusion">fusion</Radio>
-              <Radio value="update">update</Radio>
+              <Radio value="origin">原始数据（origin）</Radio>
+              <Radio value="extraction">知识抽取（extraction）</Radio>
+              <Radio value="fusion">知识融合（fusion）</Radio>
+              <Radio value="update">更新后数据（update）</Radio>
             </Radio.Group>
           </div>
+          <div style={{marginTop:10,color:'gray'}}>抽取得到的数据将加粗展示</div>
         </div>
         <div>
           {value === 'extraction' ? (
             <div className={styles.extraction}>
               <div className={styles.graphs} style={{ marginRight: 20 }}>
-                <SubGraph suits={extraData1} id="extra-graph-svg-container-1" />
+                <SubGraph
+                  suits={extraData1}
+                  id="extra-graph-svg-container-1"
+                  width={width && width / 2}
+                />
               </div>
               <div className={styles.graphs}>
-                <SubGraph suits={extraData2} id="extra-graph-svg-container-2" />
+                <SubGraph
+                  suits={extraData2}
+                  id="extra-graph-svg-container-2"
+                  width={width && width / 2}
+                />
               </div>
             </div>
           ) : (
-            <div className={styles.graphs}>
-              <SubGraph suits={renderData} />
+            <div className={styles.graphs} ref={ref}>
+              <SubGraph suits={renderData} width={width} />
             </div>
           )}
         </div>
