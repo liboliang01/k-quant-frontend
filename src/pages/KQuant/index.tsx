@@ -257,6 +257,8 @@ const FinKGUpdate: React.FC = () => {
   };
   const onReset = () => {
     form.resetFields();
+    setIsCSI300(true);
+    setIsUpdate(false)
     onSearch();
   };
 
