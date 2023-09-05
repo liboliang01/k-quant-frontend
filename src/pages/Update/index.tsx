@@ -27,7 +27,7 @@ const FinKGUpdate: React.FC = () => {
       setCurrData(data);
       setText([data.extraction_1.sentence, data.extraction_2.sentence]);
     }
-    temp = (temp % 4) + 2;
+    temp = (temp % 4) + 1;
     curId.current = temp;
   };
 

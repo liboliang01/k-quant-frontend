@@ -64,7 +64,7 @@ const SubGraph = (props: PropsType) => {
         .force('charge', d3.forceManyBody().strength(-1000))
         .force('x', d3.forceX())
         .force('y', d3.forceY())
-        .force("center", d3.forceCenter());
+        .force('center', d3.forceCenter());
 
       // Create the SVG container.
       const svg = d3
@@ -182,7 +182,7 @@ const SubGraph = (props: PropsType) => {
         const r = Math.hypot(d.target.x - d.source.x, d.target.y - d.source.y);
         return `
             M${d.source.x},${d.source.y}
-            A${r},${r} 0 0,1 ${d.target.x},${d.target.y}
+            A${0},${0} 0 0,1 ${d.target.x},${d.target.y}
           `;
       }
       simulation.on('tick', () => {
