@@ -63,7 +63,8 @@ const SubGraph = (props: PropsType) => {
         )
         .force('charge', d3.forceManyBody().strength(-1000))
         .force('x', d3.forceX())
-        .force('y', d3.forceY());
+        .force('y', d3.forceY())
+        .force("center", d3.forceCenter());
 
       // Create the SVG container.
       const svg = d3
@@ -101,7 +102,7 @@ const SubGraph = (props: PropsType) => {
         .append('path')
         .attr('stroke-width', (d: any) => {
           if (d && d.tag) {
-            return 10;
+            return 8;
           }
           return 3;
         })

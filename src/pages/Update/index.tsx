@@ -27,7 +27,7 @@ const FinKGUpdate: React.FC = () => {
       setCurrData(data);
       setText([data.extraction_1.sentence, data.extraction_2.sentence]);
     }
-    temp = (temp % 5) + 1;
+    temp = (temp % 4) + 2;
     curId.current = temp;
   };
 
@@ -106,14 +106,62 @@ const FinKGUpdate: React.FC = () => {
 
   const newUpdateData = useMemo(() => {
     if (currData && currData.update && originData) {
-      const list = currData.fusion.map(
+      const list = currData.update.map(
         (item: { source: string; rela: any }) => ({
           ...item,
           type: item.rela,
           tag: 'fusion',
         }),
       );
-      return [...originData, ...list];
+      const relation = 'same_industry';
+      const sameIndustryList = originData.filter(
+        (item: { rela: string }) => item.rela === relation,
+      );
+      const updateList: {
+        target: any;
+        source: any;
+        tag: string;
+        type: string;
+      }[] = [];
+      list.forEach((item: { target: any; source: any }) => {
+        const { target, source } = item;
+        sameIndustryList.forEach(
+          (item: { source: any; target: any; type: string }) => {
+            const s = item.source;
+            const t = item.target;
+            if (target === s) {
+              updateList.push({
+                target: t,
+                source,
+                tag: 'fusion',
+                type: item.type,
+              });
+            } else if (target === t) {
+              updateList.push({
+                target: s,
+                source,
+                tag: 'fusion',
+                type: item.type,
+              });
+            } else if (source === t) {
+              updateList.push({
+                target,
+                source: s,
+                tag: 'fusion',
+                type: item.type,
+              });
+            } else if (source === s) {
+              updateList.push({
+                target,
+                source: t,
+                tag: 'fusion',
+                type: item.type,
+              });
+            }
+          },
+        );
+      });
+      return [...originData, ...updateList, ...list];
     } else {
       return [];
     }
@@ -133,7 +181,7 @@ const FinKGUpdate: React.FC = () => {
   }, [originData, newUpdateData, fusionData, value]);
 
   const width = ref.current?.clientWidth;
-  console.log(width);
+  console.log(currData);
 
   return (
     <BasicLayout>
@@ -167,7 +215,9 @@ const FinKGUpdate: React.FC = () => {
               <Radio value="update">更新后数据（update）</Radio>
             </Radio.Group>
           </div>
-          <div style={{marginTop:10,color:'gray'}}>抽取得到的数据将加粗展示</div>
+          <div style={{ marginTop: 10, color: 'gray' }}>
+            抽取得到的数据将加粗展示
+          </div>
         </div>
         <div>
           {value === 'extraction' ? (
