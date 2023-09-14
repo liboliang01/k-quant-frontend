@@ -181,7 +181,6 @@ const FinKGUpdate: React.FC = () => {
   }, [originData, newUpdateData, fusionData, value]);
 
   const width = ref.current?.clientWidth;
-  console.log(currData);
 
   return (
     <BasicLayout>

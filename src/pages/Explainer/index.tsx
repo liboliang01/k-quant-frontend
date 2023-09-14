@@ -298,6 +298,7 @@ const Coming: React.FC = () => {
         params: {
           stock: params.stock,
           date: params.date,
+          model:params.model,
         },
       });
       const d = Object.entries(res.data.data.relative_data).map((item) => {
@@ -327,14 +328,14 @@ const Coming: React.FC = () => {
             <Form.Item
               label="模型"
               name="model"
-              initialValue={'a'}
+              initialValue={'inputgradient'}
               rules={[{ required: true }]}
             >
               <Select
                 style={{ width: 200 }}
                 options={[
-                  { value: 'a', label: '模型一' },
-                  { value: 'b', label: '模型二', disabled: true },
+                  { value: 'inputgradient', label: 'inputGradient' },
+                  { value: 'xpath', label: 'Xpath' },
                 ]}
               />
             </Form.Item>

@@ -37,7 +37,7 @@ const APIDataList = [
   },
   {
     img: <BugTwoTone />,
-    description: '爬取工业研究论文',
+    description: '爬取行业研究报告',
     tags: ['crawler'],
     url: '/api/crawler/v1/get_industry_research_paper',
     params: [
@@ -88,11 +88,54 @@ const APIDataList = [
         name: 'end_page',
         type: 'number',
         desc: 'the end page',
-        defaultVal: 5,
+        defaultVal: 2,
       },
     ],
     response: {
-      data: [],
+      data: [
+        {
+          content:
+            '皓元医药(688131)投资要点事件：公司拟向WANGYUAN(王元)、上海源盟、启东源力、宁波九胜发行股份及支付现金的方式收购药源药物100%股权，其中，皓元医药以股份支付的对价比例为64.09%，合计2.69亿元，现金支付比例为35.91%，合计1.51亿元，本次交易标的资产的价格预计不超过4.2亿元。此外，公司拟向控股股东安戌信息发行股份募集配套资金，资金总额不超过5000万元，用于支付本次重组相关费用、新建项目投资以及补充流动资金。募集配套资金发行价格为151.33元/股。有望推动公司业务往制剂领域延伸，打造一体化服务平台。药源药物在CMC业务领域深耕18年，是一家聚焦于提供原料药、制剂药学工艺研发、注册和产业化服务的高新技术企业，尤其在制剂CMC领域具有竞争优势。药源掌握多项行业领先技术，有多功能制剂生产平台，包括4个口服固体制剂制备平台以及1个外用制剂制备平台，制剂生产平台通过了欧盟QP质量审计并顺利接受了国家药监局和江苏省药监局药品注册和GMP二合一动态检查，为制剂规模化生产提供了保障。收购药源药物后不仅打造“中间体—原料药—制剂”一体化服务平台，同时提高公司的规模化生产能力。业务间协同性强，公司基因相近。药源药物由留学归国博士领衔创建，公司重视研发，2021年研发团队107人，占总员工的64%，骨干员工均具备10年以上的工艺和质量研究经验，股权激励制度保证了研发团队的相对稳定，有利于进一步增高公司的技术壁垒。另外，皓元医药同药源药物可共享采购渠道、客户资源以及先进的管理经验，推动业务的协同发展。增厚公司业绩，盈利能力有望提升。业绩承诺方拟承诺药源药物2022、2023和2024年度净利润将分别不低于2,000万元、2,600万元、3,800万元，合计不低于8,400万元。在上述承诺顺利完成的情况下，公司的业绩进一步提升，促进公司的持续发展。盈利预测与投资评级：公司向CXO全产业链持续拓展完善，本次收购事件有望带来公司估值的提升。不考虑收购带来的业绩增长，我们预计公司2022、2023年的归母净利润为2.75、3.85亿元，当前股价（157.50元）对应PE为43、30倍。风险提示：业绩承诺相关风险、收购整合风险、行业竞争加剧风险等。',
+          indvInduCode: '465',
+          indvInduName: '化学制药',
+          orgCode: '80000031',
+          orgSName: '东吴证券',
+          publishDate: '2022-03-09 00:00:00.000',
+          researcher: '朱国广,周新明',
+          stockCode: '688131',
+          stockName: '皓元医药',
+          title: '收购药源有望打“中间体+原料药+制剂”一体化服务平台',
+          url: 'https://data.eastmoney.com/report/zw_stock.jshtml?encodeUrl=fwwGwTBW4Fi6nwkYnVb6SdH+rK9KpQ8oacm9hxepFO4=',
+        },
+        {
+          content:
+            '长城汽车(601633)核心观点公司发布2月产销快报：2月公司总销量7.1万辆，同比下滑20.5%，环比下滑36.7%。其中哈弗品牌销量4.2万辆，同比下滑31.2%，环比下滑40.2%。WEY品牌销量4432辆，同比提升103.1%，环比下滑13.1%。长城皮卡销量1.2万辆，同比下滑23.1%，环比下滑9.5%。欧拉品牌销量6261辆，同比下滑15.1%，环比下滑52.7%。坦克品牌销量6468辆，同比增长96.0%，环比下滑37.6%。ESP供应不足，影响公司2月产销：公司2月销量同比环比下滑的主要因素是ESP供应不足，博世为公司主力车型ESP配置的独家供货商。公司正在积极推进博世集团总部及芯片供应商共同制定产量提升方案，力争快速解决供应问题。预计3月公司产销有望恢复同比正增长。目前公司有限的物料供应更多的倾向给了毛利率高的产品。2022年欧拉，WEY和坦克品牌都将是产品大年。哈弗和皮卡也将继续保持自身在细分市场的领导地位。更高的销量将更好的均摊销掉成本和费用，提升公司盈利能力。产品结构优化，高端车型占比提升：1-2月公司15万元以上车型累计销量占比提升至15.5%，产品高端化步伐加快。搭载L2及以上的车型占比提升至88.1%，智能化提升显著。后续物料供给的问题解决后公司WEY，坦克，欧拉等车型销量有望快速爬坡，提升公司核心竞争力。投资建议：公司强产品周期已至，国内多品牌覆盖燃油和电动的高中低端市场，2022年随着芯片短缺缓解，公司将释放更大的业绩弹性。预计2021-2023年的EPS分别为0.73元，1.11元和1.43元。对应PE分别为40.5,26.7和20.7，维持“增持”评级。风险提示：新产品销售情况不及预期；海外市场发展进度不及预期。',
+          indvInduCode: '1029',
+          indvInduName: '汽车整车',
+          orgCode: '80048595',
+          orgSName: '财通证券',
+          publishDate: '2022-03-09 00:00:00.000',
+          researcher: '李渤',
+          stockCode: '601633',
+          stockName: '长城汽车',
+          title: 'ESP短缺影响销量，高端车型占比提升',
+          url: 'https://data.eastmoney.com/report/zw_stock.jshtml?encodeUrl=fwwGwTBW4Fi6nwkYnVb6SbP7XpnCfS/xSMaFi7aT/jY=',
+        },
+        {
+          content:
+            '罗莱生活(002293)投资要点国内家纺龙头，聚焦主业、多品牌全渠道运营。罗莱生活成立于1992年，为2005-2020年国内床上用品市占率第一品牌。2009-2015年公司先后创立家纺品牌乐蜗LOVO（定位大众市场）、罗莱儿童（中高端）、廊湾（高端），2015-2017年陆续收购日本毛巾品牌内野（高端）、美国家具品牌莱克星顿（高端）、国内老牌家纺企业恐龙生活（大众），构成聚焦家纺产品的多品牌矩阵。分渠道看，公司家具产品主要在美国销售（2021H1美国家具收入占比19.9%），家纺产品主要以国内加盟渠道销售为主（2021H1线上/直营/加盟/其他渠道收入占比分别为27.2%/6.8%/33.9%/12.3%），截至2021H1国内终端门店2274家（直营250家+加盟2024家）。受益于家纺具有标品属性适合线上销售、疫情后消费者居家时间延长、美国地产持续景气，2020年、2021年前三季度公司营收利润均保持正增长，受疫情影响较小。1）2020年：营收同比+1.04%，其中美国家具收入同比+4.4%、占比18.4%，家纺线上/直营/加盟/其他渠道收入分别同比+26.3%/-10.4%/-11.4%/-5.1%、占比分别为28.9%/6.8%/33.7%/12.2%；归母净利润同比+7.13%。2）2021年：2021Q1-Q3营收同比+22.8%/较2019同期+17.8%，归母净利润同比+35.5%/较2019同期+37.1%。分渠道看，2021H1美国家具收入同增47.1%，家纺线上/直营/加盟/其他渠道收入分别同比+21.8%/+28.0%/+30.8%/+46%，其中直营/加盟店分别250/2024家、较2020年末分别-7/+45家，开业超过12个月直营门店销售额同比增长47.1%。我们预计2021全年公司门店净增100家以上，营收和净利润均有望达成2021年限制性股票激励计划业绩考核目标（2021/2022/2023年收入或净利润分别较2020年增长10%/21%/33%）。战略规划清晰：聚焦家纺主业、线下拓店、线上双品牌并行。长期看，随着消费者生活水平提高，家纺产品有望迎来更迭加速、品类升级趋势，行业集中度有望持续提升，公司制定了清晰的战略规划以保持行业龙头地位：1）确立聚焦家纺的核心战略。2）结合各地人口规模、居民收入等测算开店空间，未来门店有望以每年净增近10%的速度扩张。3）线上罗莱与乐蜗LOVO双品牌并行，其中线上罗莱有望通过提升产品品质和加价倍率拉高价格带，从而实现与乐蜗LOVO差异化定位、进一步强化罗莱品牌形象、拉动罗莱品牌线下消费、促进整体毛利率提升。4）拟扩产提升自产比例，以更好地满足产能需求、提升反应速度（2021年8月公告购买南通经济技术开发区土地使用权，用途之一为建设智能工厂），公司预计建设顺利情况下2022年底起的5年内有望每年扩产20%。盈利预测与投资评级：公司为国内家纺龙头，战略规划清晰，受疫情影响较小，近两年业绩表现较好，2021年各品类、全渠道均实现较好增长（Q4受双十一备货影响增速可能有所放缓），弱市下拓店、扩产着眼长远，未来业绩增长确定性较强。近两年分红比例在75%以上，高分红趋势有望延续。我们预计2021-2023年归母净利分别同比+17.8%/17.1%/15.5%，对应PE分别为15.7/13.4/11.6X，首次覆盖给予“买入”评级。风险提示：疫情反复影响居民消费、门店扩张速度不及预期。',
+          indvInduCode: '436',
+          indvInduName: '纺织服装',
+          orgCode: '80000031',
+          orgSName: '东吴证券',
+          publishDate: '2022-03-09 00:00:00.000',
+          researcher: '李婕,赵艺原',
+          stockCode: '002293',
+          stockName: '罗莱生活',
+          title: '家纺龙头业绩持续稳增，拓店扩产着眼长远',
+          url: 'https://data.eastmoney.com/report/zw_stock.jshtml?encodeUrl=fwwGwTBW4Fi6nwkYnVb6SZhChRKpDxFaDxe7/9httIU=',
+        },
+      ],
     },
   },
   {
@@ -162,26 +205,50 @@ const APIDataList = [
       },
     ],
     response: {
-      data: [],
-    },
-  },
-  {
-    img: <BugTwoTone />,
-    description: '爬取TVB新闻',
-    tags: ['crawler'],
-    url: '/api/crawler/v1/get_tvb_news',
-    params: [
-      {
-        name: 'required_days',
-        type: 'number',
-        desc: 'the days you want to get',
-        defaultVal: 3,
+      data: {
+        '10jqka': [
+          {
+            content:
+              '企查查APP显示，近日北京特思迪半导体设备有限公司发生工商变更，新增华为旗下深圳哈勃科技投资合伙企业（有限合伙）为股东，持股比例10%，同时注册资本由1260万元增至1400万元。企查查信息显示，北京特思迪半导体设备有限公司成立于2020年，法...',
+            datetime: '2022-02-14 11:59:00',
+            source: '10jqka',
+            title: '华为哈勃投资特思迪半导体，持股10%',
+          },
+          {
+            content:
+              '企查查App显示，近日，快手关联公司北京达佳互联信息技术有限公司申请注册“快手菜”商标，国际分类为广告销售，当前商标状态为申请中。',
+            datetime: '2022-02-14 11:54:00',
+            source: '10jqka',
+            title: '快手申请注册快手菜商标',
+          },
+          {
+            content:
+              '长安汽车公告，2022年1月，长安汽车销量277244辆，同比增长10.03%；自主品牌销量226016辆，同比增长12.59%；自主乘用车销量158625辆，同比增长3.39%。',
+            datetime: '2022-02-14 11:49:00',
+            source: '10jqka',
+            title: '长安汽车：1月份长安汽车销量同比增长10.03%',
+          },
+        ],
       },
-    ],
-    response: {
-      data: 'news not found',
     },
   },
+  // {
+  //   img: <BugTwoTone />,
+  //   description: '爬取TVB新闻',
+  //   tags: ['crawler'],
+  //   url: '/api/crawler/v1/get_tvb_news',
+  //   params: [
+  //     {
+  //       name: 'required_days',
+  //       type: 'number',
+  //       desc: 'the days you want to get',
+  //       defaultVal: 3,
+  //     },
+  //   ],
+  //   response: {
+  //     data: 'news not found',
+  //   },
+  // },
   {
     img: <CodeTwoTone twoToneColor="#eb2f96" />,
     description: '知识生成流水线',
@@ -333,7 +400,7 @@ const APIDataList = [
         name: 'relation',
         type: 'string',
         desc: 'the relation',
-        defaultVal: 'invest',
+        defaultVal: 'same_industry',
       },
       {
         name: 'head_company',
@@ -343,7 +410,11 @@ const APIDataList = [
       },
     ],
     response: {
-      data: 'news not found',
+      data: [
+        ['http://k-qaunt/finkg.com/600036.SH'],
+        ['http://k-qaunt/finkg.com/601939'],
+        ['http://k-qaunt/finkg.com/601988'],
+      ],
     },
   },
   {
@@ -362,11 +433,11 @@ const APIDataList = [
         name: 'tail_company',
         type: 'string',
         desc: 'the tail company',
-        defaultVal: '000002.SZ',
+        defaultVal: '600036.SH',
       },
     ],
     response: {
-      data: 'news not found',
+      data: [['http://k-qaunt/finkg.com/same_industry']],
     },
   },
   {
@@ -571,7 +642,7 @@ const APIDataList = [
         name: 'relation',
         type: 'string',
         desc: 'the relation',
-        defaultVal: 'invest',
+        defaultVal: 'same_industry',
       },
       {
         name: 'head_company',
@@ -581,7 +652,26 @@ const APIDataList = [
       },
     ],
     response: {
-      data: [],
+      data: [
+        {
+          end_node: '600000.SH',
+          relation: 'same_industry',
+          start_node: '000001.SZ',
+          time: '2018/8/2 0:00',
+        },
+        {
+          end_node: '600606.SH',
+          relation: 'same_industry',
+          start_node: '000001.SZ',
+          time: '2018/12/14 0:00',
+        },
+        {
+          end_node: '600036.SH',
+          relation: 'same_industry',
+          start_node: '000001.SZ',
+          time: '2018/6/18 21:30',
+        },
+      ],
     },
   },
   {
@@ -649,9 +739,15 @@ const APIDataList = [
 const APIPage: React.FC = () => {
   return (
     <div className={styles.pageContainer}>
-      <div style={{display:'flex',alignItems:'end'}}>
+      <div style={{ display: 'flex', alignItems: 'end' }}>
         <Typography.Title>API文档</Typography.Title>
-        <Typography.Link href="http://143.89.126.57:8001/docs#/" target='_blank' style={{marginBottom:19}}>想查看旧版api文档？点击此处</Typography.Link>
+        <Typography.Link
+          href="http://143.89.126.57:8001/docs#/"
+          target="_blank"
+          style={{ marginBottom: 19 }}
+        >
+          想查看旧版api文档？点击此处
+        </Typography.Link>
       </div>
       <div className={styles.cardContainer}>
         {APIDataList.map((item) => {

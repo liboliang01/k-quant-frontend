@@ -305,15 +305,7 @@ const FinKGUpdate: React.FC = () => {
               <Radio value="get_update_data">增量更新</Radio>
             </Radio.Group>
           </Form.Item>
-          <Form.Item
-            label="股票池"
-            name="stock"
-            initialValue={'csi300'}
-            help={
-              isUpdate &&
-              'Gradient Based增量更新方法相较于全量更新速度提高60%,DoubleAdapt增量更新方法相较于全量更新速度提高200%'
-            }
-          >
+          <Form.Item label="股票池" name="stock" initialValue={'csi300'}>
             <Radio.Group>
               <Radio value="csi300">沪深300</Radio>
               {!isUpdate && (
@@ -373,7 +365,21 @@ const FinKGUpdate: React.FC = () => {
             label="策略"
             name="strategy"
             initialValue={'top30'}
-            help="手续费1.5‱"
+            help={
+              <div>
+                <div>手续费1.5‱</div>
+                <div>
+                  {isUpdate && (
+                    <div style={{ color: 'black' }}>
+                      Gradient Based增量更新方法相较于全量更新速度提高
+                      <span style={{ fontWeight: 'bold' }}>60%</span>
+                      ,DoubleAdapt增量更新方法相较于全量更新速度提高
+                      <span style={{ fontWeight: 'bold' }}>200%</span>
+                    </div>
+                  )}
+                </div>
+              </div>
+            }
           >
             <Radio.Group>
               <Radio value="top5" disabled={isCSI300}>

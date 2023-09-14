@@ -2,7 +2,7 @@ import SubGraph from '@/components/SubGraph';
 import { getSubGraph } from '@/components/SubGraph/graphData';
 import { Button, Form, Input, Select, message } from 'antd';
 import 'bootstrap/dist/css/bootstrap.css';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import BasicLayout from '../../layout/BasicLayout';
 import styles from './index.less';
 
@@ -33,6 +33,7 @@ const RelaList = [
 
 const FinKGQuery: React.FC = () => {
   const [form] = Form.useForm();
+  const ref = useRef<HTMLDivElement>(null);
   const [nodes, setNodes] = useState<
     { source: string; target: string; type: string }[]
   >([]);
@@ -64,6 +65,8 @@ const FinKGQuery: React.FC = () => {
       }
     });
   }, [form, getSubGraph, setNodes]);
+
+  const width = ref.current?.clientWidth;
 
   return (
     <>
@@ -140,8 +143,8 @@ const FinKGQuery: React.FC = () => {
             </Button>
           </Form.Item>
         </Form>
-        <div className={styles.svgContainer}>
-          <SubGraph suits={nodes} />
+        <div className={styles.svgContainer} ref={ref}>
+          <SubGraph suits={nodes} width={width} />
         </div>
       </BasicLayout>
     </>
