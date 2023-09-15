@@ -1,8 +1,9 @@
 import BasicLayout from '@/layout/BasicLayout';
 import { Button, Card, Form, Select, Space, Table } from 'antd';
 import axios from 'axios';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import ImagePreviewer from '../KQuant/ImagePreviewer';
+import companyName from './company_full_name.json';
 
 const stockList = [
   'SH600000',
@@ -239,6 +240,14 @@ const Coming: React.FC = () => {
   const [dateList, setDateList] = useState<string[]>([]);
   const [data, setData] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
+  const stockNameMap = useMemo(() => {
+    const map = new Map();
+    companyName.forEach((item) => {
+      const code = item.code.split('.')[0]
+      map.set(code, item.name);
+    });
+    return map;
+  }, [companyName]);
   const columns = [
     {
       title: '股票代码',
@@ -246,13 +255,17 @@ const Coming: React.FC = () => {
       key: 'relative_stock',
       render: (item: string) => {
         return (
-          <ImagePreviewer
-            text={item}
-            url={`http://47.106.95.15:8000/get_pic/?stock=${item.substring(
-              2,
-              8,
-            )}&date=${form.getFieldValue('date')}`}
-          />
+          <>
+            {item}
+            ({stockNameMap.get(item.slice(2))})
+            <ImagePreviewer
+              text={'查看蜡烛图'}
+              url={`http://47.106.95.15:8000/get_pic/?stock=${item.substring(
+                2,
+                8,
+              )}&date=${form.getFieldValue('date')}`}
+            />
+          </>
         );
       },
     },
@@ -269,13 +282,17 @@ const Coming: React.FC = () => {
       key: 'stock',
       render: (item: string) => {
         return (
-          <ImagePreviewer
-            text={item}
-            url={`http://47.106.95.15:8000/get_pic/?stock=${item.substring(
-              2,
-              8,
-            )}&date=${form.getFieldValue('date')}`}
-          />
+          <>
+            {item}
+            ({stockNameMap.get(item.slice(2))})
+            <ImagePreviewer
+              text={'查看蜡烛图'}
+              url={`http://47.106.95.15:8000/get_pic/?stock=${item.substring(
+                2,
+                8,
+              )}&date=${form.getFieldValue('date')}`}
+            />
+          </>
         );
       },
     },
@@ -298,7 +315,7 @@ const Coming: React.FC = () => {
         params: {
           stock: params.stock,
           date: params.date,
-          model:params.model,
+          model: params.model,
         },
       });
       const d = Object.entries(res.data.data.relative_data).map((item) => {
