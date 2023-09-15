@@ -243,7 +243,7 @@ const Coming: React.FC = () => {
   const stockNameMap = useMemo(() => {
     const map = new Map();
     companyName.forEach((item) => {
-      const code = item.code.split('.')[0]
+      const code = item.code.split('.')[0];
       map.set(code, item.name);
     });
     return map;
@@ -256,8 +256,7 @@ const Coming: React.FC = () => {
       render: (item: string) => {
         return (
           <>
-            {item}
-            ({stockNameMap.get(item.slice(2))})
+            {item}({stockNameMap.get(item.slice(2))})
             <ImagePreviewer
               text={'查看蜡烛图'}
               url={`http://47.106.95.15:8000/get_pic/?stock=${item.substring(
@@ -280,11 +279,16 @@ const Coming: React.FC = () => {
       title: '股票代码（源）',
       dataIndex: 'stock',
       key: 'stock',
+      onCell: (__: any, index: number|undefined) => {
+        if (index === 0) {
+          return { rowSpan: data.length };
+        }
+        return { rowSpan: 0 };
+      },
       render: (item: string) => {
         return (
           <>
-            {item}
-            ({stockNameMap.get(item.slice(2))})
+            {item}({stockNameMap.get(item.slice(2))})
             <ImagePreviewer
               text={'查看蜡烛图'}
               url={`http://47.106.95.15:8000/get_pic/?stock=${item.substring(
@@ -372,7 +376,7 @@ const Coming: React.FC = () => {
                     .includes(input.toLowerCase())
                 }
                 options={stockList.map((item) => ({
-                  label: item,
+                  label: item + '(' + stockNameMap.get(item.slice(2)) + ')',
                   value: item,
                 }))}
               />
