@@ -14,15 +14,20 @@ const routes = [
       //   path: '/home',
       //   component: './Home',
       // },
+      // {
+      //   name: 'FinKG Query',
+      //   path: '/query',
+      //   component: './Query',
+      // },
+      // {
+      //   name: 'FinKG Update',
+      //   path: '/update',
+      //   component: './Update/newPage',
+      // },
       {
-        name: 'FinKG Query',
-        path: '/query',
-        component: './Query',
-      },
-      {
-        name: 'FinKG Update',
-        path: '/update',
-        component: './Update',
+        name: 'KB Construction',
+        path: '/KB',
+        component: './KB',
       },
       {
         name: 'Data Sources',
@@ -48,6 +53,12 @@ const routes = [
         name: 'More Information',
         path: '/more',
         component: './More',
+      },
+      {
+        name: 'new-home',
+        path: '/newHome',
+        component: './newHome',
+        // hideInMenu: true,
       },
       {
         name: '404',

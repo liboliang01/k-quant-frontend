@@ -42,9 +42,9 @@ const intlMap = new Map([
   ['average', '平均集成'],
   ['blend', '线性拟合'],
   ['dynamic_ensemble', '动态拟合'],
-  ['ensemble_no_retrain', '多模型重采样融合1'],
-  ['ensemble_retrain', '多模型重采样融合2'],
-  ['Perfomance_based_ensemble', '多模型重采样融合3'],
+  // ['ensemble_no_retrain', '多模型重采样融合'],
+  ['ensemble_retrain', '多模型重采样融合'],
+  // ['Perfomance_based_ensemble', '多模型重采样融合3'],
   ['KEnhance', '多层临时图注意力模型'],
   ['RSR', '关系注意力股票排序模型'],
   ['HIST', '概念导向共享信息预测模型'],
@@ -129,14 +129,14 @@ const FinKGUpdate: React.FC = () => {
         },
       },
       {
-        title: '信息系数',
+        title: '信息系数(Rank IC)',
         dataIndex: 'IC',
         key: 'IC',
         sorter: (a: any, b: any) => a.IC - b.IC,
         render: (item: any) => Number(item).toFixed(3),
       },
       {
-        title: '信息标准差',
+        title: '信息比率(Rank ICIR)',
         dataIndex: 'ICIR',
         key: 'ICIR',
         sorter: (a: any, b: any) => a.ICIR - b.ICIR,
@@ -149,13 +149,13 @@ const FinKGUpdate: React.FC = () => {
         sorter: (a: any, b: any) => a.annualized_return - b.annualized_return,
         render: (item: any) => Number(Number(item) * 100).toFixed(2) + '%',
       },
-      {
-        title: '信息比率',
-        dataIndex: 'information_ratio',
-        key: 'information_ratio',
-        sorter: (a: any, b: any) => a.information_ratio - b.information_ratio,
-        render: (item: any) => Number(item).toFixed(2),
-      },
+      // {
+      //   title: '信息比率',
+      //   dataIndex: 'information_ratio',
+      //   key: 'information_ratio',
+      //   sorter: (a: any, b: any) => a.information_ratio - b.information_ratio,
+      //   render: (item: any) => Number(item).toFixed(2),
+      // },
       {
         title: '最大回撤',
         dataIndex: 'max_drawdown',
@@ -179,42 +179,42 @@ const FinKGUpdate: React.FC = () => {
         },
       },
       {
-        title: '信息系数(original)',
+        title: '信息系数(Rank IC)[original]',
         dataIndex: 'IC',
         key: 'IC',
         sorter: (a: any, b: any) => a.IC - b.IC,
         render: (item: any) => Number(item).toFixed(3),
       },
       {
-        title: '信息标准差(original)',
+        title: '信息比率(Rank ICIR)[original]',
         dataIndex: 'ICIR',
         key: 'ICIR',
         sorter: (a: any, b: any) => a.ICIR - b.ICIR,
         render: (item: any) => Number(item).toFixed(3),
       },
       {
-        title: '信息系数(Gradient Based)',
+        title: '信息系数(Rank IC)[Gradient Based]',
         dataIndex: 'IC_incre',
         key: 'IC_incre',
         sorter: (a: any, b: any) => a.IC_incre - b.IC_incre,
         render: (item: any) => Number(item).toFixed(3),
       },
       {
-        title: '信息标准差(Gradient Based)',
+        title: '信息比率(Rank ICIR)[Gradient Based]',
         dataIndex: 'ICIR_incre',
         key: 'ICIR_incre',
         sorter: (a: any, b: any) => a.ICIR_incre - b.ICIR_incre,
         render: (item: any) => Number(item).toFixed(3),
       },
       {
-        title: '信息系数(DoubleAdapt)',
+        title: '信息系数(Rank IC)[DoubleAdapt]',
         dataIndex: 'IC_DA',
         key: 'IC_DA',
         sorter: (a: any, b: any) => a.IC_DA - b.IC_DA,
         render: (item: any) => Number(item).toFixed(3),
       },
       {
-        title: '信息标准差(DoubleAdapt)',
+        title: '信息比率(Rank ICIR)[DoubleAdapt]',
         dataIndex: 'ICIR_DA',
         key: 'ICIR_DA',
         sorter: (a: any, b: any) => a.ICIR_DA - b.ICIR_DA,
@@ -243,14 +243,23 @@ const FinKGUpdate: React.FC = () => {
           },
         },
       );
-      const d = res.data.data.map((item: { [x: string]: any }) => {
-        const key = Object.keys(item)[0];
+      let d = res.data.data.map((item: { [x: string]: any }) => {
+        let key = Object.keys(item)[0];
         const val = item[key];
+        // 删除ensemble_retrain和Perfomance_based_ensemble
+        if(key==='ensemble_retrain'||key==='Perfomance_based_ensemble'){
+          return 'delete';
+        }
+        // 将ensemble_no_retrain改名为ensemble_retrain
+        if(key==='ensemble_no_retrain'){
+          key = 'ensemble_retrain'
+        }
         return {
           name: key,
           ...val,
         };
       });
+      d = d.filter((item: any)=>item!=='delete');
       setData(d);
       setLoading(false);
     });

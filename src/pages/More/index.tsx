@@ -1,10 +1,17 @@
-import { Typography } from 'antd';
-import React from 'react';
+import { Button, Typography } from 'antd';
+import React, { useEffect } from 'react';
 import BasicLayout from '../../layout/BasicLayout';
 
 const { Title, Paragraph, Text } = Typography;
 
 const FinKGUpdate: React.FC = () => {
+  const obj = { a: 1 };
+  useEffect(() => {
+    console.log('render', obj.a);
+  }, [obj.a]);
+  const onClick = () => {
+    obj.a = obj.a + 1;
+  };
   return (
     <BasicLayout>
       <>

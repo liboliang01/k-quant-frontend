@@ -4,8 +4,9 @@ import axios from 'axios';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import ImagePreviewer from '../KQuant/ImagePreviewer';
 import companyName from './company_full_name.json';
+import DownloadModal from './downloadModal';
 
-const stockList = [
+export const stockList = [
   'SH600000',
   'SH600009',
   'SH600010',
@@ -405,6 +406,7 @@ const Coming: React.FC = () => {
                   查询
                 </Button>
                 <Button onClick={onReset}>重置</Button>
+                <DownloadModal stock={form.getFieldValue('stock')}/>
               </Space>
             </Form.Item>
           </Form>

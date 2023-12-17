@@ -1,0 +1,73 @@
+.image_container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.pipeline_container {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  -moz-user-select: none; /*火狐*/
+  -webkit-user-select: none; /*webkit浏览器*/
+  -ms-user-select: none; /*IE10*/
+  -khtml-user-select: none; /*早期浏览器*/
+  user-select: none;
+  .right {
+    width: 730px;
+  }
+  .left {
+    margin-right: 20px;
+    flex: 1;
+    .status_line {
+      height: 70px;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      width: 100%;
+      .title {
+        font-size: 20px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: 200ms;
+        &:hover {
+          color: #1677ff;
+        }
+      }
+      .current {
+        font-size: 25px;
+        color: #1677ff;
+      }
+    }
+    .raw_news {
+      height: 170px;
+      width: 100%;
+      border: 5px solid rgba(80, 80, 80, 0.21);
+      border-radius: 10px;
+      box-shadow: 10px 5px 5px gray;
+      padding: 5px 10px;
+      .carousel {
+        width: 500px;
+      }
+    }
+  }
+}
+
+.item {
+  height: 130px;
+  display: flex !important;
+  width: 100%;
+  justify-content: space-between;
+  &>div {
+    height: 100%;
+    border: 5px solid rgba(80, 80, 80, 0.21);
+    border-radius: 10px;
+    flex-basis: 50%;
+    flex-grow: 0;
+    padding:5px;
+  }
+  &>div:first-child{
+    margin-right: 10px;
+  }
+}
