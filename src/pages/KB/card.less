@@ -1,0 +1,39 @@
+.box {
+  width: 300px;
+  height: 300px;
+  position: absolute;
+  animation: bounce-down 1.6s linear infinite;
+}
+
+.container {
+  width: 200px;
+  height: 200px;
+//   border-radius: 50%;
+//   border: 5px solid rgb(210, 5, 5);
+//   box-shadow: 10px 5px 5px rgba(210, 5, 5, 0.63);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 10px;
+  .number {
+    color: rgb(210, 5, 5);
+    font-size: 25px;
+    font-weight: bold;
+  }
+  .name {
+    font-size: 25px;
+    font-weight: bold;
+  }
+}
+@keyframes bounce-down {
+  25% {
+    transform: translateY(-4px);
+  }
+  50%,
+  100% {
+    transform: translateY(0);
+  }
+  75% {
+    transform: translateY(4px);
+  }
+}

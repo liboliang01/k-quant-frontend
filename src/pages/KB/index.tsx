@@ -3,9 +3,17 @@ import { ArrowRightOutlined, BorderOutlined } from '@ant-design/icons';
 import { Carousel, Image, Typography } from 'antd';
 import React, { useState } from 'react';
 import KGContainer from '../../components/KG';
+import InfoCircleCard from './InfoCircleCard';
+import KB_Compare from './img/KB.png';
+import entities from './img/entities.png';
 import extraction from './img/extraction.png';
 import fusion from './img/fusion.png';
+import news from './img/news.png';
+import relations from './img/relations.png';
+import reports from './img/reports.png';
+import types from './img/types.png';
 import update from './img/update.png';
+import years from './img/years.png';
 import styles from './index.less';
 
 const { Title, Paragraph, Text, Link } = Typography;
@@ -358,6 +366,39 @@ const dataList = [
   },
 ];
 
+const attributes_list = [
+  {
+    name: 'ENTITIES',
+    number: '51,000+',
+    image: entities,
+  },
+  {
+    name: 'RELATIONS',
+    number: '492,600+',
+    image: relations,
+  },
+  {
+    name: 'RESEARCH REPORTS',
+    number: '50,000+',
+    image: reports,
+  },
+  {
+    name: 'FINANCIAL NEWS',
+    number: '2,000,000+',
+    image: news,
+  },
+  {
+    name: 'TYPES OF RELATIONS',
+    number: '20+',
+    image: types,
+  },
+  {
+    name: 'YEARS DATA',
+    number: '5+',
+    image: years,
+  },
+];
+
 const KB: React.FC = () => {
   const [currentStatus, setCurrentStatus] = useState<number>(0);
 
@@ -367,6 +408,45 @@ const KB: React.FC = () => {
 
   return (
     <BasicLayout>
+      <div className={styles.leader_board}>
+        <Title level={3}>
+          <span className={styles.red}>HiDy</span> – A{' '}
+          <span className={styles.red}>Hi</span>erarchical{' '}
+          <span className={styles.red}>Dy</span>namic Knowledge Base (KB)
+        </Title>
+        <Title level={2}>
+          More <span className={styles.red}>Diverse</span> Downstream
+          Applications More <span className={styles.red}>Knowledge Types</span>{' '}
+          in Four Hierarchy
+        </Title>
+        <div className={styles.bottom}>
+          <div className={styles.left_text}>
+            <Title level={4} style={{ color: 'gray' }}>
+              Compare with existing public KBs
+            </Title>
+            <div style={{ fontSize: 15, color: 'gray' }}>
+              Support up to
+              <div style={{ fontSize: 20, fontWeight: 'bold', color: 'black' }}>
+                5 KB-Enhanced Applications
+              </div>
+              Existing KB only support at most 3 applications.
+            </div>
+            <div style={{ height: 20 }}></div>
+            <div style={{ fontSize: 20, fontWeight: 'bold' }}>
+              Knowledge Types Cover 4 Economics Hierarchy
+            </div>
+            <div>Including Macro, Meso, Micro and Others</div>
+          </div>
+          <div>
+            <Image src={KB_Compare} preview={false} height={400} />
+          </div>
+        </div>
+        <div className={styles.attributes}>
+          {attributes_list.map((item) => {
+            return <InfoCircleCard {...item} />;
+          })}
+        </div>
+      </div>
       <div className={styles.pipeline_container}>
         <div className={styles.left}>
           <div className={styles.status_line}>

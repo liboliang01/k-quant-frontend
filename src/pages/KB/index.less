@@ -5,6 +5,32 @@
   margin-top: 20px;
 }
 
+.leader_board {
+  height: 100vh;
+  width: 100%;
+  text-align: center;
+  position: relative;
+  .bottom {
+    display: flex;
+    justify-content: center;
+    // align-items: center;
+    .left_text {
+      text-align: left;
+      margin-right: 20px;
+      margin-top: 50px;
+    }
+  }
+  .circle {
+    position: absolute;
+  }
+  .attributes {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+  }
+}
+
 .pipeline_container {
   width: 100%;
   display: flex;
@@ -59,15 +85,19 @@
   display: flex !important;
   width: 100%;
   justify-content: space-between;
-  &>div {
+  & > div {
     height: 100%;
     border: 5px solid rgba(80, 80, 80, 0.21);
     border-radius: 10px;
     flex-basis: 50%;
     flex-grow: 0;
-    padding:5px;
+    padding: 5px;
   }
-  &>div:first-child{
+  & > div:first-child {
     margin-right: 10px;
   }
+}
+
+.red {
+  color: rgb(210, 5, 5);
 }
