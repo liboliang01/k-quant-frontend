@@ -1,7 +1,18 @@
 import BasicLayout from '@/layout/BasicLayout';
 import { ArrowRightOutlined, BorderOutlined } from '@ant-design/icons';
-import { Carousel, Image, Typography } from 'antd';
-import React, { useState } from 'react';
+import {
+  Button,
+  Carousel,
+  Divider,
+  Image,
+  Radio,
+  Space,
+  Spin,
+  Typography,
+} from 'antd';
+import axios from 'axios';
+import React, { useCallback, useState } from 'react';
+import ReactJson from 'react-json-view';
 import KGContainer from '../../components/KG';
 import InfoCircleCard from './InfoCircleCard';
 import KB_Compare from './img/KB.png';
@@ -399,12 +410,31 @@ const attributes_list = [
   },
 ];
 
+const options = [
+  { label: '最近一周', value: '7' },
+  { label: '最近半个月', value: '15' },
+  { label: '最近一个月', value: '30' },
+];
+
 const KB: React.FC = () => {
   const [currentStatus, setCurrentStatus] = useState<number>(0);
+  const [value, setValue] = useState('7');
+  const [spin, setSpin] = useState(false);
+  const [res, setRes] = useState([]);
 
   const changeStatus = (s: number) => {
     setCurrentStatus(s);
   };
+
+  const get_pipline = useCallback(async () => {
+    setSpin(true);
+    const res = await axios.get(
+      `http://47.106.95.15:8000/get_static_pipiline/?duration=${value}`,
+    );
+    const j_res = JSON.parse(res.data.data);
+    setRes(j_res);
+    setSpin(false);
+  }, [value]);
 
   return (
     <BasicLayout>
@@ -495,6 +525,33 @@ const KB: React.FC = () => {
         <div className={styles.right}>
           <KGContainer data={dataList[currentStatus]}></KGContainer>
         </div>
+      </div>
+      <div className={styles.api}>
+        <Title level={3}>在线调用API</Title>
+        您希望获取多久的数据？
+        <Space>
+          <Radio.Group
+            options={options}
+            onChange={(e) => {
+              setValue(e.target.value);
+            }}
+            value={value}
+            optionType="button"
+          />
+          <Button type="primary" onClick={get_pipline}>
+            调用接口
+          </Button>
+        </Space>
+        <Spin spinning={spin}>
+          <div className={styles.jsonArea}>
+            <ReactJson
+              src={res}
+              enableClipboard={false}
+              name={null}
+              theme="monokai"
+            ></ReactJson>
+          </div>
+        </Spin>
       </div>
     </BasicLayout>
   );
