@@ -256,6 +256,9 @@ initKG = function (data, config, container) {
       //再次点击还原
       edges_line.style('stroke-width', function (line) {
         //当与连接点连接时变粗
+        if (line.type === 'update') {
+          return 10;
+        }
         if (line.source.name == node.name || line.target.name == node.name) {
           if (line.focus && node.focus) {
             line.focus = false;
