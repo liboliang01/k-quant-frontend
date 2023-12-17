@@ -164,7 +164,7 @@ const Welcome: React.FC = () => {
           </div>
         </div>
       </div>
-      <div className={styles.box1} id="what_we_do">
+      {/* <div className={styles.box1} id="what_we_do">
         <div className={styles.whatWeDo}>
           <p style={{ color: '#1677ff', marginBottom: 0 }}>WHAT WE DO</p>
           <h2>
@@ -186,7 +186,7 @@ const Welcome: React.FC = () => {
             of obtaining data, multi-modal model prediction and backtesting.
           </div>
         </div>
-      </div>
+      </div> */}
       <div className={styles.box2} id="our_process">
         <div className={styles.ourProcess}>
           <h1>Our Process</h1>
