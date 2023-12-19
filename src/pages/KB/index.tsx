@@ -1,7 +1,7 @@
 import BasicLayout from '@/layout/BasicLayout';
 import { ArrowRightOutlined, BorderOutlined } from '@ant-design/icons';
 import { Chart } from '@antv/g2';
-import { Button, Carousel, Image, Radio, Space, Spin, Typography } from 'antd';
+import { Button, Image, Radio, Space, Spin, Table, Typography } from 'antd';
 import axios from 'axios';
 import React, { useCallback, useEffect, useState } from 'react';
 import ReactJson from 'react-json-view';
@@ -30,13 +30,16 @@ interface PropsType {
 const IntroductionCard = (props: PropsType) => {
   const { title, subTitle, image, remarks } = props;
   return (
-    <div>
-      <Title level={2}>{title}</Title>
-      <Title level={4}>{subTitle}</Title>
-      <Paragraph>
-        <BorderOutlined />
-        {remarks}
-      </Paragraph>
+    <div className={styles.introduction_container}>
+      <div>
+        <Title level={2}>{title}</Title>
+        <Title level={4}>{subTitle}</Title>
+        <Paragraph>
+          <BorderOutlined />
+          {remarks}
+        </Paragraph>
+      </div>
+
       <div className={styles.image_container}>
         <Image src={image} preview={false} height={300}></Image>
       </div>
@@ -459,6 +462,104 @@ const KB: React.FC = () => {
     render_bar_chart();
   }, []);
 
+  const columns = [
+    {
+      title: '原始新闻',
+      dataIndex: 'news',
+      key: 'news',
+    },
+    {
+      title: '发布时间',
+      dataIndex: 'time',
+      key: 'time',
+      width: 200,
+    },
+  ];
+
+  const table_data = [
+    {
+      news: (
+        <div>
+          国家能源局党组成员、副局长任京东主持会议并讲话，
+          <span style={{ color: 'red' }}>中国石油</span>副总经理黄永章、
+          <span style={{ color: 'red' }}>中国石化</span>
+          副总经理喻宝才出席会议。
+        </div>
+      ),
+      time: '2023-04-04',
+    },
+    {
+      news: (
+        <div>
+          <span style={{ color: 'red' }}>中国石油</span>集团与
+          <span style={{ color: 'red' }}>中国能源建设</span>
+          集团在京签署战略合作协议。协议签署前，
+          中国石油集团董事长、党组书记戴厚良会见了中国能建集团董事长、党委书记宋海良，双方就深化合作交换了意见。
+        </div>
+      ),
+      time: '2023-10-23',
+    },
+    {
+      news: (
+        <div>
+          <span style={{ color: 'red' }}>中石油</span>、
+          <span style={{ color: 'red' }}>中石化</span>
+          等8家公司注册100亿共同成立华光海安集团。
+        </div>
+      ),
+      time: '2023-11-21',
+    },
+    {
+      news: (
+        <div>
+          <span style={{ color: 'red' }}>中国能建</span>发布吸收合并中国
+          <span style={{ color: 'red' }}>葛洲坝</span>
+          集团股份有限公司。
+        </div>
+      ),
+      time: '2021-07-27',
+    },
+    {
+      news: (
+        <div>
+          今日，<span style={{ color: 'red' }}>中石油</span>和
+          <span style={{ color: 'red' }}>中石化</span>
+          宣布了财报。两公司都在过去季度取得了出色的业绩，这一利好消息引发了投资者的乐观情绪，推动了其股票价格的上涨。
+        </div>
+      ),
+      time: '2023-10-21',
+    },
+    {
+      news: (
+        <div>
+          <span style={{ color: 'red' }}>东华能源</span>与
+          <span style={{ color: 'red' }}>华锦股份</span>
+          最新发布的市场报告显示，两家公司在同一产品线上争夺领先地位，竞争导致市场动荡。
+        </div>
+      ),
+      time: '2023-11-29',
+    },
+    {
+      news: (
+        <div>
+          <span style={{ color: 'red' }}>中国石化</span>宣布了一项对
+          <span style={{ color: 'red' }}>东华能源</span>
+          的大规模的投资计划。
+        </div>
+      ),
+      time: '2023-11-16',
+    },
+    {
+      news: (
+        <div>
+          <span style={{ color: 'red' }}>华锦股份</span>和
+          <span style={{ color: 'red' }}>中国石油</span>
+          因商业合作方面的分歧进入司法程序。纠纷涉及产品专利权和市场份额的争夺，此次纠纷引发了业界广泛关注。
+        </div>
+      ),
+      time: '2023-09-17',
+    },
+  ];
   return (
     <BasicLayout>
       <div className={styles.leader_board}>
@@ -517,54 +618,53 @@ const KB: React.FC = () => {
           })}
         </div>
       </div>
+      <div className={styles.table_container}>
+        <Title level={3}>原始新闻</Title>
+        <Table
+          columns={columns}
+          dataSource={table_data}
+          pagination={false}
+          bordered
+        />
+      </div>
       <div className={styles.pipeline_container}>
-        <div className={styles.left}>
-          <div className={styles.status_line}>
-            <div
-              className={`${styles.title} ${
-                currentStatus === 0 && styles.current
-              }`}
-              onClick={() => changeStatus(0)}
-            >
-              知识抽取
-            </div>
-            <ArrowRightOutlined />
-            <div
-              className={`${styles.title} ${
-                currentStatus === 1 && styles.current
-              }`}
-              onClick={() => changeStatus(1)}
-            >
-              知识融合
-            </div>
-            <ArrowRightOutlined />
-            <div
-              className={`${styles.title} ${
-                currentStatus === 2 && styles.current
-              }`}
-              onClick={() => changeStatus(2)}
-            >
-              知识更新
-            </div>
+        <div className={styles.status_line}>
+          <div
+            className={`${styles.title} ${
+              currentStatus === 0 && styles.current
+            }`}
+            onClick={() => changeStatus(0)}
+          >
+            知识抽取
           </div>
-          <IntroductionCard
-            title={introductions[currentStatus].title}
-            subTitle={introductions[currentStatus].subTitle}
-            image={introductions[currentStatus].image}
-            remarks={introductions[currentStatus].remarks}
-          />
-          <div className={styles.raw_news}>
-            <div style={{ fontWeight: 'bold' }}>原始新闻</div>
-            <Carousel autoplay infinite className={styles.carousel}>
-              {raw_news_list.map((item) => {
-                return item;
-              })}
-            </Carousel>
+          <ArrowRightOutlined />
+          <div
+            className={`${styles.title} ${
+              currentStatus === 1 && styles.current
+            }`}
+            onClick={() => changeStatus(1)}
+          >
+            知识融合
+          </div>
+          <ArrowRightOutlined />
+          <div
+            className={`${styles.title} ${
+              currentStatus === 2 && styles.current
+            }`}
+            onClick={() => changeStatus(2)}
+          >
+            知识更新
           </div>
         </div>
-        <div className={styles.right}>
-          <KGContainer data={dataList[currentStatus]}></KGContainer>
-        </div>
+        <IntroductionCard
+          title={introductions[currentStatus].title}
+          subTitle={introductions[currentStatus].subTitle}
+          image={introductions[currentStatus].image}
+          remarks={introductions[currentStatus].remarks}
+        />
+      </div>
+      <div className={styles.graph_container}>
+        <KGContainer data={dataList[currentStatus]}></KGContainer>
       </div>
       <div className={styles.api}>
         <Title level={3}>在线调用API</Title>
