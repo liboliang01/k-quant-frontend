@@ -13,6 +13,7 @@
   "dependencies": {
     "@ant-design/icons": "^5.0.1",
     "@ant-design/pro-components": "^2.4.4",
+    "@antv/g2": "^5.1.12",
     "@popperjs/core": "^2.11.8",
     "@umijs/max": "^4.0.72",
     "animate.css": "^4.1.1",

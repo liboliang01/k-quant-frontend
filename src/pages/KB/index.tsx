@@ -1,12 +1,12 @@
 import BasicLayout from '@/layout/BasicLayout';
 import { ArrowRightOutlined, BorderOutlined } from '@ant-design/icons';
+import { Chart } from '@antv/g2';
 import { Button, Carousel, Image, Radio, Space, Spin, Typography } from 'antd';
 import axios from 'axios';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import ReactJson from 'react-json-view';
 import KGContainer from '../../components/KG';
 import InfoCircleCard from './InfoCircleCard';
-import KB_Compare from './img/KB.png';
 import entities from './img/entities.png';
 import extraction from './img/extraction.png';
 import fusion from './img/fusion.png';
@@ -18,7 +18,7 @@ import update from './img/update.png';
 import years from './img/years.png';
 import styles from './index.less';
 
-const { Title, Paragraph, Text, Link } = Typography;
+const { Title, Paragraph } = Typography;
 
 interface PropsType {
   title: string;
@@ -377,32 +377,32 @@ const dataList = [
 
 const attributes_list = [
   {
-    name: 'ENTITIES',
+    name: '实体',
     number: '51,000+',
     image: entities,
   },
   {
-    name: 'RELATIONS',
+    name: '关系',
     number: '492,600+',
     image: relations,
   },
   {
-    name: 'RESEARCH REPORTS',
+    name: '研究报告',
     number: '50,000+',
     image: reports,
   },
   {
-    name: 'FINANCIAL NEWS',
+    name: '金融新闻',
     number: '2,000,000+',
     image: news,
   },
   {
-    name: 'TYPES OF RELATIONS',
+    name: '关系类型',
     number: '20+',
     image: types,
   },
   {
-    name: 'YEARS DATA',
+    name: '数据年份',
     number: '5+',
     image: years,
   },
@@ -434,6 +434,31 @@ const KB: React.FC = () => {
     setSpin(false);
   }, [value]);
 
+  const render_bar_chart = useCallback(() => {
+    const data = [
+      { 知识库: '第二名', 知识种类: 19 },
+      { 知识库: 'Hidy', 知识种类: 34 },
+    ];
+
+    const chart = new Chart({
+      container: 'bar_chart_container',
+      autoFit: true,
+    });
+
+    chart
+      .interval()
+      .data(data)
+      .encode('x', '知识库')
+      .encode('y', '知识种类')
+      .style('maxWidth', 50);
+
+    chart.render();
+  }, []);
+
+  useEffect(() => {
+    render_bar_chart();
+  }, []);
+
   return (
     <BasicLayout>
       <div className={styles.leader_board}>
@@ -442,31 +467,48 @@ const KB: React.FC = () => {
           <span className={styles.red}>Hi</span>erarchical{' '}
           <span className={styles.red}>Dy</span>namic Knowledge Base (KB)
         </Title>
-        <Title level={2}>
-          More <span className={styles.red}>Diverse</span> Downstream
+        <Title level={3} style={{ margin: 0 }}>
+          <span className={styles.red}>HiDy</span> 一个层次动态知识库
+        </Title>
+        <Title level={2} style={{ marginTop: 0 }}>
+          {/* More <span className={styles.red}>Diverse</span> Downstream
           Applications More <span className={styles.red}>Knowledge Types</span>{' '}
-          in Four Hierarchy
+          in Four Hierarchy */}
+          下游应用更加<span className={styles.red}>多样化</span>{' '}
+          四个层次中的更多<span className={styles.red}>知识类型</span>
         </Title>
         <div className={styles.bottom}>
           <div className={styles.left_text}>
             <Title level={4} style={{ color: 'gray' }}>
-              Compare with existing public KBs
+              {/* Compare with existing public KBs */}
+              与现有的公共知识库对比
             </Title>
             <div style={{ fontSize: 15, color: 'gray' }}>
-              Support up to
+              {/* Support up to */}
+              最多支持
               <div style={{ fontSize: 20, fontWeight: 'bold', color: 'black' }}>
-                5 KB-Enhanced Applications
+                {/* 5 KB-Enhanced Applications */}
+                5KB 增强型应用程序
               </div>
-              Existing KB only support at most 3 applications.
+              {/* Existing KB only support at most 3 applications. */}
+              现存的知识库最多只能支持3个应用程序
             </div>
             <div style={{ height: 20 }}></div>
             <div style={{ fontSize: 20, fontWeight: 'bold' }}>
-              Knowledge Types Cover 4 Economics Hierarchy
+              {/* Knowledge Types Cover 4 Economics Hierarchy */}
+              知识类型涵盖4个经济学层次
             </div>
-            <div>Including Macro, Meso, Micro and Others</div>
+            {/* <div>Including Macro, Meso, Micro and Others</div> */}
+            <div style={{ fontSize: 15, color: 'gray' }}>
+              包括宏观、中观、微观和其他
+            </div>
           </div>
-          <div>
-            <Image src={KB_Compare} preview={false} height={400} />
+          <div className={styles.right_chart}>
+            <div
+              id="bar_chart_container"
+              style={{ height: '100%', width: '100%' }}
+            ></div>
+            {/* <Image src={KB_Compare} preview={false} height={400} /> */}
           </div>
         </div>
         <div className={styles.attributes}>
