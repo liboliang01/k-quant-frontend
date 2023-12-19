@@ -1,15 +1,6 @@
 import BasicLayout from '@/layout/BasicLayout';
 import { ArrowRightOutlined, BorderOutlined } from '@ant-design/icons';
-import {
-  Button,
-  Carousel,
-  Divider,
-  Image,
-  Radio,
-  Space,
-  Spin,
-  Typography,
-} from 'antd';
+import { Button, Carousel, Image, Radio, Space, Spin, Typography } from 'antd';
 import axios from 'axios';
 import React, { useCallback, useState } from 'react';
 import ReactJson from 'react-json-view';
@@ -231,73 +222,76 @@ const dataList = [
         name: '中国石油 (601857)',
         type: '公司',
       },
-      '2': {
-        name: '中国石油',
-        type: '同名公司',
-      },
-      '3': {
-        name: '中石油',
-        type: '同名公司',
-      },
+      // '2': {
+      //   name: '中国石油',
+      //   type: '同名公司',
+      // },
+      // '3': {
+      //   name: '中石油',
+      //   type: '同名公司',
+      // },
       '4': {
         name: '中国石化 (600028)',
         type: '公司',
       },
-      '5': {
-        name: '中国石化',
-        type: '同名公司',
-      },
-      '6': {
-        name: '中石化',
-        type: '同名公司',
-      },
+      // '5': {
+      //   name: '中国石化',
+      //   type: '同名公司',
+      // },
+      // '6': {
+      //   name: '中石化',
+      //   type: '同名公司',
+      // },
       '7': {
         name: '中国能源建设 (601868)',
         type: '公司',
       },
-      '8': {
-        name: '中国能源建设',
-        type: '同名公司',
-      },
-      '9': {
-        name: '中国能建',
-        type: '同名公司',
-      },
+      // '8': {
+      //   name: '中国能源建设',
+      //   type: '同名公司',
+      // },
+      // '9': {
+      //   name: '中国能建',
+      //   type: '同名公司',
+      // },
       '10': {
-        name: '葛洲坝',
-        type: '公司',
+        name: '葛洲坝 (已退市)',
+        type: '已退市公司',
       },
       '11': {
         name: '东华能源 (002221)',
         type: '公司',
       },
-      '12': {
-        name: '东华能源',
-        type: '同名公司',
-      },
+      // '12': {
+      //   name: '东华能源',
+      //   type: '同名公司',
+      // },
       '13': {
         name: '华锦股份 (000059)',
         type: '公司',
       },
-      '14': {
-        name: '华锦股份',
-        type: '同名公司',
-      },
+      // '14': {
+      //   name: '华锦股份',
+      //   type: '同名公司',
+      // },
     },
     links: [
-      { source: 1, target: 2, rela: '同公司', type: '同公司' },
-      { source: 1, target: 3, rela: '同公司', type: '同公司' },
-      { source: 1, target: 4, rela: '同行、同涨、合作', type: '同行关系' },
-      { source: 4, target: 5, rela: '同公司', type: '同公司' },
-      { source: 4, target: 6, rela: '同公司', type: '同公司' },
-      { source: 1, target: 7, rela: '合作', type: '合作' },
-      { source: 7, target: 8, rela: '同公司', type: '同公司' },
-      { source: 7, target: 9, rela: '同公司', type: '同公司' },
-      { source: 7, target: 10, rela: '上级', type: '上级' },
-      { source: 4, target: 11, rela: '投资', type: '投资' },
-      { source: 11, target: 12, rela: '同公司', type: '同公司' },
-      { source: 1, target: 13, rela: '纠纷', type: '纠纷' },
-      { source: 13, target: 14, rela: '同公司', type: '同公司' },
+      // { source: 1, target: 2, rela: '同公司', type: '同公司' },
+      // { source: 1, target: 3, rela: '同公司', type: '同公司' },
+      { source: 1, target: 4, rela: '同行 2023-04-04', type: '同行关系' },
+      { source: 1, target: 4, rela: '同涨 2023-10-21', type: '同行关系' },
+      { source: 1, target: 4, rela: '合作 2023-11-21', type: '同行关系' },
+      // { source: 4, target: 5, rela: '同公司', type: '同公司' },
+      // { source: 4, target: 6, rela: '同公司', type: '同公司' },
+      { source: 1, target: 7, rela: '合作 2023-10-23', type: '合作' },
+      // { source: 7, target: 8, rela: '同公司', type: '同公司' },
+      // { source: 7, target: 9, rela: '同公司', type: '同公司' },
+      { source: 7, target: 10, rela: '上级 2023-11-21', type: '上级' },
+      { source: 4, target: 11, rela: '投资 2023-11-16', type: '投资' },
+      // { source: 11, target: 12, rela: '同公司', type: '同公司' },
+      { source: 1, target: 13, rela: '纠纷 2023-09-17', type: '纠纷' },
+      { source: 11, target: 13, rela: '竞争 2023-11-29', type: '竞争' },
+      // { source: 13, target: 14, rela: '同公司', type: '同公司' },
     ],
   },
   {
@@ -306,73 +300,77 @@ const dataList = [
         name: '中国石油 (601857)',
         type: '公司',
       },
-      '2': {
-        name: '中国石油',
-        type: '同名公司',
-      },
-      '3': {
-        name: '中石油',
-        type: '同名公司',
-      },
+      // '2': {
+      //   name: '中国石油',
+      //   type: '同名公司',
+      // },
+      // '3': {
+      //   name: '中石油',
+      //   type: '同名公司',
+      // },
       '4': {
         name: '中国石化 (600028)',
         type: '公司',
       },
-      '5': {
-        name: '中国石化',
-        type: '同名公司',
-      },
-      '6': {
-        name: '中石化',
-        type: '同名公司',
-      },
+      // '5': {
+      //   name: '中国石化',
+      //   type: '同名公司',
+      // },
+      // '6': {
+      //   name: '中石化',
+      //   type: '同名公司',
+      // },
       '7': {
         name: '中国能源建设 (601868)',
         type: '公司',
       },
-      '8': {
-        name: '中国能源建设',
-        type: '同名公司',
-      },
-      '9': {
-        name: '中国能建',
-        type: '同名公司',
-      },
+      // '8': {
+      //   name: '中国能源建设',
+      //   type: '同名公司',
+      // },
+      // '9': {
+      //   name: '中国能建',
+      //   type: '同名公司',
+      // },
       '10': {
-        name: '葛洲坝',
-        type: '公司',
+        name: '葛洲坝 (已退市)',
+        type: '已退市公司',
       },
       '11': {
         name: '东华能源 (002221)',
         type: '公司',
       },
-      '12': {
-        name: '东华能源',
-        type: '同名公司',
-      },
+      // '12': {
+      //   name: '东华能源',
+      //   type: '同名公司',
+      // },
       '13': {
         name: '华锦股份 (000059)',
         type: '公司',
       },
-      '14': {
-        name: '华锦股份',
-        type: '同名公司',
-      },
+      // '14': {
+      //   name: '华锦股份',
+      //   type: '同名公司',
+      // },
     },
     links: [
-      { source: 1, target: 2, rela: '同公司', type: '同公司' },
-      { source: 1, target: 3, rela: '同公司', type: '同公司' },
-      { source: 1, target: 4, rela: '同行、同涨、合作', type: '同行关系' },
-      { source: 4, target: 5, rela: '同公司', type: '同公司' },
-      { source: 4, target: 6, rela: '同公司', type: '同公司' },
-      { source: 1, target: 7, rela: '合作、同行', type: 'update' },
-      { source: 7, target: 8, rela: '同公司', type: '同公司' },
-      { source: 7, target: 9, rela: '同公司', type: '同公司' },
-      { source: 7, target: 10, rela: '上级', type: '上级' },
-      { source: 4, target: 11, rela: '投资', type: '投资' },
-      { source: 11, target: 12, rela: '同公司', type: '同公司' },
-      { source: 1, target: 13, rela: '纠纷', type: '纠纷' },
-      { source: 13, target: 14, rela: '同公司', type: '同公司' },
+      // { source: 1, target: 2, rela: '同公司', type: '同公司' },
+      // { source: 1, target: 3, rela: '同公司', type: '同公司' },
+      { source: 1, target: 4, rela: '同行 2023-04-04', type: '同行关系' },
+      { source: 1, target: 4, rela: '同涨 2023-10-21', type: '同行关系' },
+      { source: 1, target: 4, rela: '合作 2023-11-21', type: '同行关系' },
+      // { source: 4, target: 5, rela: '同公司', type: '同公司' },
+      // { source: 4, target: 6, rela: '同公司', type: '同公司' },
+      { source: 1, target: 7, rela: '合作 2023-10-23', type: '合作' },
+      { source: 1, target: 7, rela: '同行 2023-04-04', type: 'update' },
+      // { source: 7, target: 8, rela: '同公司', type: '同公司' },
+      // { source: 7, target: 9, rela: '同公司', type: '同公司' },
+      { source: 7, target: 10, rela: '上级 2023-11-21', type: '上级' },
+      { source: 4, target: 11, rela: '投资 2023-11-16', type: '投资' },
+      // { source: 11, target: 12, rela: '同公司', type: '同公司' },
+      { source: 1, target: 13, rela: '纠纷 2023-09-17', type: '纠纷' },
+      { source: 11, target: 13, rela: '竞争 2023-11-29', type: '竞争' },
+      // { source: 13, target: 14, rela: '同公司', type: '同公司' },
     ],
   },
 ];

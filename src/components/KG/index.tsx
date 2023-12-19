@@ -32,7 +32,7 @@ const KGContainer: React.FC<PropsType> = (props) => {
           10,
       };
       const copyData = JSON.parse(JSON.stringify(data))
-      initKG(copyData, config, '#k-quant-kg-container');
+      initKG2(copyData, config, '#k-quant-kg-container');
     } catch (err) {
       Materialize.toast('渲染存在异常', 2000);
       console.info(err);

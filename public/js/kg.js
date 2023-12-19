@@ -250,7 +250,15 @@ initKG = function (data, config, container) {
       //config:边框色
       return colorDict[node.type].stroke;
     })
-    .attr('r', (d) => (d.type === '同名公司' ? 20 : 30))
+    .attr('r', (d) => {
+      if (d.type === '已退市公司') {
+        return 20;
+      }
+      if (d.name === '中国石油 (601857)' || d.name === '中国石化 (600028)') {
+        return 40;
+      }
+      return 30;
+    })
     .on('click', function (node) {
       //单击时让连接线加粗
       //再次点击还原
@@ -492,5 +500,474 @@ initKG = function (data, config, container) {
     const dx = (distance - 2 * radius - textWidth) / 2 - 32;
 
     return dx;
+  }
+};
+
+initKG2 = function (data, config, container) {
+  var width = config.width ? config.width : 1560,
+    height = config.height ? config.height : 800;
+  //默认的节点配色方案
+  if (!config.nodeColor || config.nodeColor === '')
+    var defaultNodeColor = [
+      //粉红
+      {
+        fill: 'rgb(249, 235, 249)',
+        stroke: 'rgb(162, 84, 162)',
+        text: 'rgb(162, 84, 162)',
+      },
+      //灰色
+      { fill: '#ccc', stroke: 'rgb(145, 138, 138)', text: '#333' },
+      {
+        fill: 'rgb(112, 202, 225)',
+        stroke: '#23b3d7',
+        text: 'rgb(93, 76, 93)',
+      },
+      { fill: '#D9C8AE', stroke: '#c0a378', text: 'rgb(60, 60, 60)' },
+      {
+        fill: 'rgb(178, 229, 183)',
+        stroke: 'rgb(98, 182, 105)',
+        text: 'rgb(60, 60, 60)',
+      },
+      //红
+      {
+        fill: 'rgb(248, 152, 152)',
+        stroke: 'rgb(233, 115, 116)',
+        text: 'rgb(60, 60, 60)',
+      },
+    ];
+  else var defaultNodeColor = config.nodeColor;
+
+  //默认的关系配色方案
+  if (!config.linkColor || config.linkColor === '')
+    var defaultLinkColor = [
+      { color: 'rgb(162, 84, 162)' },
+      { color: 'rgb(145, 138, 138)' },
+      { color: '#23b3d7' },
+      { color: '#c0a378' },
+      { color: 'rgb(98, 182, 105)' },
+      { color: 'rgb(233, 115, 116)' },
+    ];
+  else var defaultLinkColor = config.linkColor;
+
+  //为node分配方案
+  var colorDict = new Array();
+  //配色循环指针
+  var point = 0;
+  Object.keys(data.nodes).forEach(function (key) {
+    var type =
+      data.nodes[key].type == null
+        ? (data.nodes[key].type = 'default')
+        : data.nodes[key].type;
+    if (colorDict[type] == null) {
+      colorDict[type] = defaultNodeColor[point];
+      point = (point + 1) % defaultNodeColor.length;
+    }
+  });
+
+  //为link分配配色方案
+  var colorLinkDict = new Array();
+  //配色循环指针
+  var point = 0;
+  Object.keys(data.links).forEach(function (key) {
+    var type =
+      data.links[key].type == null
+        ? (data.links[key].type = 'default')
+        : data.links[key].type;
+    if (colorLinkDict[type] == null) {
+      colorLinkDict[type] = defaultLinkColor[point];
+      point = (point + 1) % defaultLinkColor.length;
+    }
+  });
+  const links = data.links;
+  var linkGroup = {};
+  //对连接线进行统计和分组，不区分连接线的方向，只要属于同两个实体，即认为是同一组
+  var linkmap = {};
+  for (var i = 0; i < links.length; i++) {
+    var key =
+      links[i].source < links[i].target
+        ? links[i].source + ':' + links[i].target
+        : links[i].target + ':' + links[i].source;
+    if (!linkmap.hasOwnProperty(key)) {
+      linkmap[key] = 0;
+    }
+    linkmap[key] += 1;
+    if (!linkGroup.hasOwnProperty(key)) {
+      linkGroup[key] = [];
+    }
+    linkGroup[key].push(links[i]);
+  }
+  //为每一条连接线分配size属性，同时对每一组连接线进行编号
+  for (var i = 0; i < links.length; i++) {
+    var key =
+      links[i].source < links[i].target
+        ? links[i].source + ':' + links[i].target
+        : links[i].target + ':' + links[i].source;
+    links[i].size = linkmap[key];
+    //同一组的关系进行编号
+    var group = linkGroup[key];
+    var keyPair = key.split(':');
+    var type = 'noself'; //标示该组关系是指向两个不同实体还是同一个实体
+    if (keyPair[0] == keyPair[1]) {
+      type = 'self';
+    }
+    //给节点分配编号
+    setLinkNumber(group, type);
+  }
+  console.log(links);
+  const nodeDict = data.nodes;
+  var nodes = {};
+
+  links.forEach(function (link) {
+    //利用source和target名称进行连线以及节点的确认
+    link.source = nodeDict[link.source];
+    nodes[link.source.name] = link.source;
+    link.target = nodeDict[link.target];
+    nodes[link.target.name] = link.target;
+  });
+
+  var force = d3.layout
+    .force()
+    .nodes(d3.values(nodes))
+    .links(links)
+    .size([width, height])
+    .linkDistance(200)
+    .charge(-1200)
+    .on('tick', tick)
+    .start();
+
+  //添加svg元素进行图形的绘制
+  var svg = d3
+    .select(container)
+    .append('svg')
+    .attr('width', width)
+    .attr('height', height);
+
+  var path = svg
+    .append('svg:g')
+    .selectAll('path')
+    .data(force.links())
+    .enter()
+    .append('svg:path')
+    .attr('class', function (d) {
+      return 'link ' + d.type;
+    })
+    .attr('id', function (d, i) {
+      return 'edgepath' + i;
+    })
+    .style('stroke', function (link) {
+      //config:边框色
+      return colorLinkDict[link.type].color;
+    }) //设置线条颜色
+    .style('stroke-width', (d) => (d.type === 'update' ? 10 : 1)) //线条粗细
+    .attr('marker-end', 'url(#resolved)'); //根据箭头标记的id号引用箭头
+
+  var edges_text = svg
+    .append('g')
+    .selectAll('.edgelabel')
+    .data(force.links())
+    .enter()
+    .append('text') //添加text标签
+    .attr({
+      class: 'edgelabel', //定义该text标签class为edgelabel
+      id: function (d, i) {
+        return 'edgepath' + i;
+      },
+      dx: (d) => 60, //在连线上的坐标
+      dy: 0,
+    });
+
+  //设置线条上的文字路径
+  edges_text
+    .append('textPath')
+    .attr('xlink:href', function (d, i) {
+      return '#edgepath' + i;
+    })
+    .style('pointer-events', 'none')
+    .text(function (d) {
+      return d.rela;
+    });
+
+  function getLineTextDx(d) {
+    const sx = d.source.x;
+    const sy = d.source.y;
+    const tx = d.target.x;
+    const ty = d.target.y;
+    const distance = Math.sqrt(Math.pow(tx - sx, 2) + Math.pow(ty - sy, 2));
+
+    const textLength = d.rela.length;
+    const lineTextFontSize = 8;
+    const textWidth = 80;
+    const radius = 30;
+
+    const dx = (distance - 2 * radius - textWidth) / 2 - 32;
+
+    return dx;
+  }
+
+  var circle = svg
+    .append('svg:g')
+    .selectAll('circle')
+    .data(force.nodes())
+    .enter()
+    .append('svg:circle')
+    //config:背景色
+    .style('fill', function (node) {
+      return colorDict[node.type].fill;
+    })
+    .style('stroke', function (node) {
+      //config:边框色
+      return colorDict[node.type].stroke;
+    })
+    .attr('r', (d) => {
+      if (d.type === '已退市公司') {
+        return 20;
+      }
+      if (d.name === '中国石油 (601857)' || d.name === '中国石化 (600028)') {
+        return 40;
+      }
+      return 30;
+    })
+    .call(force.drag);
+
+  var text = svg
+    .append('g')
+    .selectAll('text')
+    .data(force.nodes())
+    //返回缺失元素的占位对象（placeholder），指向绑定的数据中比选定元素集多出的一部分元素。
+    .enter()
+    .append('text') //添加text标签
+    .attr('dy', '.35em') //将文字下移
+    .attr('text-anchor', 'middle') //在圆圈中加上数据
+    .style('fill', function (node) {
+      return colorDict[node.type].text;
+    })
+    .attr('x', function (d) {
+      var re_en = /[a-zA-Z]+/g;
+      //如果是全英文，不换行
+      if (d.name.match(re_en)) {
+        d3.select(this)
+          .append('tspan') //添加tspan用来方便时使用绝对或相对坐标来调整文本
+          .attr('x', 0)
+          .attr('y', 2)
+          .text(function () {
+            return d.name;
+          });
+      }
+      if (d.name.split(' ').length > 1) {
+        var top = d.name.split(' ')[0];
+        var bot = d.name.split(' ')[1];
+
+        d3.select(this).text(function () {
+          return '';
+        });
+
+        d3.select(this)
+          .append('tspan')
+          .attr('x', 0)
+          .attr('y', -7)
+          .text(function () {
+            return top;
+          });
+
+        d3.select(this)
+          .append('tspan')
+          .attr('x', 0)
+          .attr('y', 10)
+          .text(function () {
+            return bot;
+          });
+      }
+      //如果小于8个字符，不换行
+      else if (d.name.length <= 8) {
+        d3.select(this)
+          .append('tspan')
+          .attr('x', 0)
+          .attr('y', 2)
+          .text(function () {
+            return d.name;
+          });
+      } else if (d.name.length >= 16) {
+        //大于16个字符时，将14个字后的内容显示为。。。
+        var top = d.name.substring(0, 8);
+        var bot = d.name.substring(8, 14) + '...';
+
+        d3.select(this).text(function () {
+          return '';
+        });
+
+        d3.select(this)
+          .append('tspan') //前n个字
+          .attr('x', 0)
+          .attr('y', -7)
+          .text(function () {
+            return top;
+          });
+
+        d3.select(this)
+          .append('tspan') //后n个字
+          .attr('x', 0)
+          .attr('y', 10)
+          .text(function () {
+            return bot;
+          });
+      } else {
+        d3.select(this)
+          .append('tspan')
+          .attr('x', 0)
+          .attr('y', 2)
+          .text(function () {
+            return d.name;
+          });
+      }
+    });
+
+  // Use elliptical arc path segments to doubly-encode directionality.
+  function tick() {
+    path.attr('d', function (d) {
+      //如果连接线连接的是同一个实体，则对path属性进行调整，绘制的圆弧属于长圆弧，同时对终点坐标进行微调，避免因坐标一致导致弧无法绘制
+      if (d.target == d.source) {
+        dr = 30 / d.linknum;
+        return (
+          'M' +
+          d.source.x +
+          ',' +
+          d.source.y +
+          'A' +
+          dr +
+          ',' +
+          dr +
+          ' 0 1,1 ' +
+          d.target.x +
+          ',' +
+          (d.target.y + 1)
+        );
+      } else if (d.size % 2 != 0 && d.linknum == 1) {
+        //如果两个节点之间的连接线数量为奇数条，则设置编号为1的连接线为直线，其他连接线会均分在两边
+        return (
+          'M ' +
+          d.source.x +
+          ' ' +
+          d.source.y +
+          ' L ' +
+          d.target.x +
+          ' ' +
+          d.target.y
+        );
+      }
+      //根据连接线编号值来动态确定该条椭圆弧线的长半轴和短半轴，当两者一致时绘制的是圆弧
+      //注意A属性后面的参数，前两个为长半轴和短半轴，第三个默认为0，第四个表示弧度大于180度则为1，小于则为0，这在绘制连接到相同节点的连接线时用到；第五个参数，0表示正角，1表示负角，即用来控制弧形凹凸的方向。本文正是结合编号的正负情况来控制该条连接线的凹凸方向，从而达到连接线对称的效果
+      var curve = 1.5;
+      var homogeneous = 1.2;
+      var dx = d.target.x - d.source.x,
+        dy = d.target.y - d.source.y,
+        dr =
+          (Math.sqrt(dx * dx + dy * dy) * (d.linknum + homogeneous)) /
+          (curve * homogeneous);
+      //当节点编号为负数时，对弧形进行反向凹凸，达到对称效果
+      if (d.linknum < 0) {
+        dr =
+          (Math.sqrt(dx * dx + dy * dy) * (-1 * d.linknum + homogeneous)) /
+          (curve * homogeneous);
+        return (
+          'M' +
+          d.source.x +
+          ',' +
+          d.source.y +
+          'A' +
+          dr +
+          ',' +
+          dr +
+          ' 0 0,0 ' +
+          d.target.x +
+          ',' +
+          d.target.y
+        );
+      }
+      return (
+        'M' +
+        d.source.x +
+        ',' +
+        d.source.y +
+        'A' +
+        dr +
+        ',' +
+        dr +
+        ' 0 0,1 ' +
+        d.target.x +
+        ',' +
+        d.target.y
+      );
+    });
+
+    circle.attr('transform', function (d) {
+      return 'translate(' + d.x + ',' + d.y + ')';
+    });
+
+    text.attr('transform', function (d) {
+      return 'translate(' + d.x + ',' + d.y + ')';
+    });
+  }
+
+  function setLinkNumber(group, type) {
+    if (group.length == 0) return;
+    //对该分组内的关系按照方向进行分类，此处根据连接的实体ASCII值大小分成两部分
+    var linksA = [],
+      linksB = [];
+    for (var i = 0; i < group.length; i++) {
+      var link = group[i];
+      if (link.source < link.target) {
+        linksA.push(link);
+      } else {
+        linksB.push(link);
+      }
+    }
+    //确定关系最大编号。为了使得连接两个实体的关系曲线呈现对称，根据关系数量奇偶性进行平分。
+    //特殊情况：当关系都是连接到同一个实体时，不平分
+    var maxLinkNumber = 0;
+    if (type == 'self') {
+      maxLinkNumber = group.length;
+    } else {
+      maxLinkNumber =
+        group.length % 2 == 0 ? group.length / 2 : (group.length + 1) / 2;
+    }
+    //如果两个方向的关系数量一样多，直接分别设置编号即可
+    if (linksA.length == linksB.length) {
+      var startLinkNumber = 1;
+      for (var i = 0; i < linksA.length; i++) {
+        linksA[i].linknum = startLinkNumber++;
+      }
+      startLinkNumber = 1;
+      for (var i = 0; i < linksB.length; i++) {
+        linksB[i].linknum = startLinkNumber++;
+      }
+    } else {
+      //当两个方向的关系数量不对等时，先对数量少的那组关系从最大编号值进行逆序编号，然后在对另一组数量多的关系从编号1一直编号到最大编号，再对剩余关系进行负编号
+      //如果抛开负号，可以发现，最终所有关系的编号序列一定是对称的（对称是为了保证后续绘图时曲线的弯曲程度也是对称的）
+      var biggerLinks, smallerLinks;
+      if (linksA.length > linksB.length) {
+        biggerLinks = linksA;
+        smallerLinks = linksB;
+      } else {
+        biggerLinks = linksB;
+        smallerLinks = linksA;
+      }
+
+      var startLinkNumber = maxLinkNumber;
+      for (var i = 0; i < smallerLinks.length; i++) {
+        smallerLinks[i].linknum = startLinkNumber--;
+      }
+      var tmpNumber = startLinkNumber;
+
+      startLinkNumber = 1;
+      var p = 0;
+      while (startLinkNumber <= maxLinkNumber) {
+        biggerLinks[p++].linknum = startLinkNumber++;
+      }
+      //开始负编号
+      startLinkNumber = 0 - tmpNumber;
+      for (var i = p; i < biggerLinks.length; i++) {
+        biggerLinks[i].linknum = startLinkNumber++;
+      }
+    }
   }
 };
