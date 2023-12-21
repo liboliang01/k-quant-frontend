@@ -1,24 +1,21 @@
 import BasicLayout from '@/layout/BasicLayout';
-import { ArrowRightOutlined, BorderOutlined } from '@ant-design/icons';
 import { Chart } from '@antv/g2';
-import { Button, Image, Radio, Space, Spin, Table, Typography } from 'antd';
+import { Button, Radio, Space, Spin, Table, Typography } from 'antd';
 import axios from 'axios';
 import React, { useCallback, useEffect, useState } from 'react';
 import ReactJson from 'react-json-view';
 import KGContainer from '../../components/KG';
 import InfoCircleCard from './InfoCircleCard';
 import entities from './img/entities.png';
-import extraction from './img/extraction.png';
-import fusion from './img/fusion.png';
 import news from './img/news.png';
 import relations from './img/relations.png';
 import reports from './img/reports.png';
 import types from './img/types.png';
-import update from './img/update.png';
 import years from './img/years.png';
 import styles from './index.less';
+import CenterModeSlider from './slider';
 
-const { Title, Paragraph } = Typography;
+const { Title } = Typography;
 
 interface PropsType {
   title: string;
@@ -26,103 +23,6 @@ interface PropsType {
   image: string;
   remarks: string;
 }
-
-const IntroductionCard = (props: PropsType) => {
-  const { title, subTitle, image, remarks } = props;
-  return (
-    <div className={styles.introduction_container}>
-      <div>
-        <Title level={2}>{title}</Title>
-        <Title level={4}>{subTitle}</Title>
-        <Paragraph>
-          <BorderOutlined />
-          {remarks}
-        </Paragraph>
-      </div>
-
-      <div className={styles.image_container}>
-        <Image src={image} preview={false} height={300}></Image>
-      </div>
-    </div>
-  );
-};
-
-const introductions: PropsType[] = [
-  {
-    title: '基于人机协同与远程监督的知识提取方法',
-    subTitle: '从非结构化数据中低成本提取高质量金融知识，与任务1.1对应',
-    image: extraction,
-    remarks:
-      '专利： 基于人机协同与远程监督的知识提取方法及系统 (申请号： 2023105070160)',
-  },
-  {
-    title: '基于数据源置信度推导的知识融合方法',
-    subTitle: '对多种来源的金融数据实现动态的去冗消歧，与任务1.2对应',
-    image: fusion,
-    remarks:
-      '论文:HIT-An Effective Approach to Build a Dynamic Financial Knowledge Base.（DASFAA 2023，CCF B类会议）',
-  },
-  {
-    title: '基于数据源置信度推导的知识融合方法',
-    subTitle: '对多种来源的金融数据实现动态的去冗消歧，与任务1.3对应',
-    image: update,
-    remarks:
-      '专利：一种基于图规则挖掘的知识图谱更新系统(申请号：2023104765162)',
-  },
-];
-
-const raw_news_list = [
-  <div className={styles.item}>
-    <div>
-      国家能源局党组成员、副局长任京东主持会议并讲话，
-      <span style={{ color: 'red' }}>中国石油</span>副总经理黄永章、
-      <span style={{ color: 'red' }}>中国石化</span>
-      副总经理喻宝才出席会议。（2023-04-04）
-    </div>
-    <div>
-      <span style={{ color: 'red' }}>中国石油</span>集团与
-      <span style={{ color: 'red' }}>中国能源建设</span>
-      集团在京签署战略合作协议。协议签署前，
-      中国石油集团董事长、党组书记戴厚良会见了中国能建集团董事长、党委书记宋海良，双方就深化合作交换了意见。（2023-10-23）
-    </div>
-  </div>,
-  <div className={styles.item}>
-    <div>
-      <span style={{ color: 'red' }}>中石油</span>、
-      <span style={{ color: 'red' }}>中石化</span>
-      等8家公司注册100亿共同成立华光海安集团。（2023-11-21）
-    </div>
-    <div>
-      <span style={{ color: 'red' }}>中国能建</span>发布吸收合并中国
-      <span style={{ color: 'red' }}>葛洲坝</span>
-      集团股份有限公司。（2021-07-27）
-    </div>
-  </div>,
-  <div className={styles.item}>
-    <div>
-      今日，<span style={{ color: 'red' }}>中石油</span>和
-      <span style={{ color: 'red' }}>中石化</span>
-      宣布了财报。两公司都在过去季度取得了出色的业绩，这一利好消息引发了投资者的乐观情绪，推动了其股票价格的上涨。（2023-10-21）
-    </div>
-    <div>
-      <span style={{ color: 'red' }}>东华能源</span>与
-      <span style={{ color: 'red' }}>华锦股份</span>
-      最新发布的市场报告显示，两家公司在同一产品线上争夺领先地位，竞争导致市场动荡。（2023-11-29）
-    </div>
-  </div>,
-  <div className={styles.item}>
-    <div>
-      <span style={{ color: 'red' }}>中国石化</span>宣布了一项对
-      <span style={{ color: 'red' }}>东华能源</span>
-      的大规模的投资计划。（2023-11-16）
-    </div>
-    <div>
-      <span style={{ color: 'red' }}>华锦股份</span>和
-      <span style={{ color: 'red' }}>中国石油</span>
-      因商业合作方面的分歧进入司法程序。纠纷涉及产品专利权和市场份额的争夺，此次纠纷引发了业界广泛关注。（2023-09-17）
-    </div>
-  </div>,
-];
 
 const dataList = [
   {
@@ -423,10 +323,6 @@ const KB: React.FC = () => {
   const [spin, setSpin] = useState(false);
   const [res, setRes] = useState([]);
 
-  const changeStatus = (s: number) => {
-    setCurrentStatus(s);
-  };
-
   const get_pipline = useCallback(async () => {
     setSpin(true);
     const res = await axios.get(
@@ -475,6 +371,8 @@ const KB: React.FC = () => {
       width: 200,
     },
   ];
+
+  const title_list = ['知识抽取', '知识融合', '知识更新'];
 
   const table_data = [
     {
@@ -627,44 +525,17 @@ const KB: React.FC = () => {
           bordered
         />
       </div>
-      <div className={styles.pipeline_container}>
-        <div className={styles.status_line}>
-          <div
-            className={`${styles.title} ${
-              currentStatus === 0 && styles.current
-            }`}
-            onClick={() => changeStatus(0)}
-          >
-            知识抽取
-          </div>
-          <ArrowRightOutlined />
-          <div
-            className={`${styles.title} ${
-              currentStatus === 1 && styles.current
-            }`}
-            onClick={() => changeStatus(1)}
-          >
-            知识融合
-          </div>
-          <ArrowRightOutlined />
-          <div
-            className={`${styles.title} ${
-              currentStatus === 2 && styles.current
-            }`}
-            onClick={() => changeStatus(2)}
-          >
-            知识更新
-          </div>
-        </div>
-        <IntroductionCard
-          title={introductions[currentStatus].title}
-          subTitle={introductions[currentStatus].subTitle}
-          image={introductions[currentStatus].image}
-          remarks={introductions[currentStatus].remarks}
+      <div>
+        <CenterModeSlider
+          currentStatus={currentStatus}
+          setCurrentStatus={setCurrentStatus}
         />
       </div>
       <div className={styles.graph_container}>
-        <KGContainer data={dataList[currentStatus]}></KGContainer>
+        <KGContainer
+          data={dataList[currentStatus]}
+          title={title_list[currentStatus]}
+        ></KGContainer>
       </div>
       <div className={styles.api}>
         <Title level={3}>在线调用API</Title>

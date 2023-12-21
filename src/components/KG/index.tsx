@@ -3,11 +3,12 @@ import styles from './index.less';
 
 interface PropsType {
   data: { nodes: any; links: any };
+  title: string;
 }
 
 const KGContainer: React.FC<PropsType> = (props) => {
-  const { data } = props;
-  console.log(data.links)
+  const { data, title } = props;
+  console.log(data.links);
   const render = () => {
     try {
       const rootNode = document.getElementById('k-quant-kg-container');
@@ -31,7 +32,7 @@ const KGContainer: React.FC<PropsType> = (props) => {
           (document.getElementById('k-quant-kg-container')?.clientHeight || 5) -
           10,
       };
-      const copyData = JSON.parse(JSON.stringify(data))
+      const copyData = JSON.parse(JSON.stringify(data));
       initKG2(copyData, config, '#k-quant-kg-container');
     } catch (err) {
       Materialize.toast('渲染存在异常', 2000);
@@ -42,7 +43,11 @@ const KGContainer: React.FC<PropsType> = (props) => {
   useEffect(() => {
     render();
   }, [data.links, data.nodes]);
-  return <div id="k-quant-kg-container" className={styles.container}></div>;
+  return (
+    <div id="k-quant-kg-container" className={styles.container}>
+      <div className={styles.title}>{title}</div>
+    </div>
+  );
 };
 
 export default KGContainer;
