@@ -247,19 +247,19 @@ const FinKGUpdate: React.FC = () => {
         let key = Object.keys(item)[0];
         const val = item[key];
         // 删除ensemble_retrain和Perfomance_based_ensemble
-        if(key==='ensemble_retrain'||key==='Perfomance_based_ensemble'){
+        if (key === 'ensemble_retrain' || key === 'Perfomance_based_ensemble') {
           return 'delete';
         }
         // 将ensemble_no_retrain改名为ensemble_retrain
-        if(key==='ensemble_no_retrain'){
-          key = 'ensemble_retrain'
+        if (key === 'ensemble_no_retrain') {
+          key = 'ensemble_retrain';
         }
         return {
           name: key,
           ...val,
         };
       });
-      d = d.filter((item: any)=>item!=='delete');
+      d = d.filter((item: any) => item !== 'delete');
       setData(d);
       setLoading(false);
     });
@@ -276,6 +276,7 @@ const FinKGUpdate: React.FC = () => {
   }, []);
 
   const onFieldsChange = (change: any) => {
+    console.log(change);
     // 股票变换时csi300
     if (change[0].name.indexOf('stock') >= 0) {
       if (change[0].value === 'csi300') {
