@@ -7,7 +7,9 @@ import {
   Form,
   Radio,
   Row,
+  Select,
   Space,
+  Statistic,
   Table,
   Tooltip,
 } from 'antd';
@@ -17,6 +19,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import BasicLayout from '../../layout/BasicLayout';
 import ImagePreviewer from './ImagePreviewer';
 import './index.less';
+import LineChart from './lineChart';
 
 const layout = {
   labelCol: { span: 4 },
@@ -75,6 +78,10 @@ const FinKGUpdate: React.FC = () => {
   const [duration, setDuration] = useState('THERE_MONTH');
   const [strategy, setStrategy] = useState('top30');
   const [data, setData] = useState<any[]>([]);
+  const [modelList, setModelList] = useState<any[]>([]);
+  const [currModel, setCurrModel] = useState<string>();
+  const [graphDataList, setGraphDataList] =
+    useState<{ datetime: string; return: number; bench: number }[]>();
   const [loading, setLoading] = useState<boolean>(false);
   // 当前股票池是否为csi300
   const [isCSI300, setIsCSI300] = useState<boolean>(true);
@@ -261,6 +268,20 @@ const FinKGUpdate: React.FC = () => {
       });
       d = d.filter((item: any) => item !== 'delete');
       setData(d);
+      // console.log(d)
+      const ml = d.map((item: { name: any }) => ({
+        value: item.name,
+        label: `${intlMap.get(item.name)}(${item.name})`,
+      }));
+      setModelList(ml);
+      setCurrModel(ml[0].value);
+      getGraphData(
+        values.actionType,
+        params.duration,
+        params.strategy,
+        params.stock,
+        ml[0].value,
+      );
       setLoading(false);
     });
   };
@@ -276,7 +297,6 @@ const FinKGUpdate: React.FC = () => {
   }, []);
 
   const onFieldsChange = (change: any) => {
-    console.log(change);
     // 股票变换时csi300
     if (change[0].name.indexOf('stock') >= 0) {
       if (change[0].value === 'csi300') {
@@ -299,6 +319,54 @@ const FinKGUpdate: React.FC = () => {
       }
     }
   };
+
+  const onModelChange = (value: string) => {
+    setCurrModel(value);
+    form.validateFields().then((values) => {
+      getGraphData(
+        values.actionType,
+        values.duration,
+        values.strategy,
+        values.stock,
+        value,
+      );
+    });
+  };
+
+  const actionMap = {
+    get_model_data: 0,
+    get_rensemble_data: 1,
+    get_update_data: 2,
+  };
+  const durationMap = { THERE_MONTH: 3, SIX_MONTH: 6, ONE_YEAR: 12 };
+  const strategyMap = { top5: 0, top30: 1, top50: 2, top100: 3 };
+
+  const getGraphData = async (
+    actionType: keyof typeof actionMap,
+    duration: keyof typeof durationMap,
+    strategy: keyof typeof strategyMap,
+    stock: string,
+    model: string,
+  ) => {
+    const res = await axios.get(`http://47.106.95.15:8000/get_graph_data/`, {
+      params: {
+        duration: durationMap[duration],
+        strategy: strategyMap[strategy],
+        action: actionMap[actionType],
+        stock,
+        model,
+      },
+    });
+    setGraphDataList(res.data.data);
+  };
+
+  const currRate = useMemo(() => {
+    if (data.length && currModel) {
+      const curr = data.filter((item) => item.name === currModel)[0];
+      return curr;
+    }
+    return {};
+  }, [data, currModel]);
 
   return (
     <BasicLayout backgroundColor="#f5f5f5">
@@ -446,12 +514,92 @@ const FinKGUpdate: React.FC = () => {
           </Descriptions.Item>
         </Descriptions>
       </Card>
-      <Table
+      {/* <Table
         columns={columns}
         dataSource={data}
         pagination={false}
         loading={loading}
-      />
+      /> */}
+      {modelList.length && graphDataList?.length && (
+        <Card style={{ margin: '20px 0', padding: '0 0 20px 0' }}>
+          <Select
+            defaultActiveFirstOption={true}
+            value={currModel}
+            onChange={onModelChange}
+            style={{ width: 400 }}
+            options={modelList}
+          />
+          <LineChart data={graphDataList} />
+          {actionType === 'get_update_data' ? (
+            <Row gutter={16} style={{ marginTop: '20px' }}>
+              <Col span={6}>
+                <Statistic
+                  title="信息系数（Rank IC）[original]"
+                  value={currRate['IC']}
+                  precision={3}
+                />
+              </Col>
+              <Col span={6}>
+                <Statistic
+                  title="信息比率（Rank ICIR）[original]"
+                  value={currRate['ICIR']}
+                  precision={3}
+                />
+              </Col>
+              <Col span={6}>
+                <Statistic
+                  title="信息系数（Rank IC）[DoubleAdapt]"
+                  value={currRate['IC_DA']}
+                  precision={3}
+                />
+              </Col>
+              <Col span={6}>
+                <Statistic
+                  title="信息比率（Rank ICIR）[DoubleAdapt]"
+                  value={currRate['ICIR_DA']}
+                  precision={3}
+                />
+              </Col>
+            </Row>
+          ) : (
+            <Row gutter={16} style={{ marginTop: '20px' }}>
+              <Col span={6}>
+                <Statistic
+                  title="信息系数（Rank IC）"
+                  precision={3}
+                  value={currRate['IC']}
+                />
+              </Col>
+              <Col span={6}>
+                <Statistic
+                  title="信息比率（Rank ICIR）"
+                  precision={3}
+                  value={currRate['ICIR']}
+                />
+              </Col>
+              <Col span={6}>
+                <Statistic
+                  title="超额年化利率"
+                  value={
+                    Number(Number(currRate['annualized_return']) * 100).toFixed(
+                      2,
+                    ) + '%'
+                  }
+                />
+              </Col>
+              <Col span={6}>
+                <Statistic
+                  title="最大回撤"
+                  value={
+                    Number(Number(currRate['max_drawdown']) * 100).toFixed(2) +
+                    '%'
+                  }
+                />
+              </Col>
+            </Row>
+          )}
+        </Card>
+      )}
     </BasicLayout>
   );
 };
