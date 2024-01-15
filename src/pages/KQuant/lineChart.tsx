@@ -28,16 +28,18 @@ const LineCharts = (props: PropsType) => {
 
   const uvData = data.map((item, idx) => ({
     date: item.datetime,
-    count: Math.random()*100,
+    count: Math.random() * 100,
     type: idx % 3 === 0,
   }));
 
   const render = () => {
     const line = new DualAxes('kquant-line-chart', {
       data: [uvData, tmpData],
+      // data: [tmpData, uvData],
       xField: 'date',
       yField: ['count', 'value'],
-      yAxis: [false, false],
+      // yField: ['value', 'count'],
+      // yAxis: [false, false],
       // yAxis: {
       //   label: {
       //     // 数值格式化为千分位
@@ -58,14 +60,43 @@ const LineCharts = (props: PropsType) => {
       //     ? '#30BF78'
       //     : '#FAAD14';
       // },
+      yAxis: {
+        count: false,
+        value: {
+          position: 'left',
+          nice: true,
+        },
+      },
       meta: {
+        value: {
+          range: [0.2, 1],
+        },
         count: {
           alias: '成交量',
           range: [0, 0.2],
         },
-        value: {
-          range: [0.2, 1],
-        },
+      },
+      annotations: {
+        value: [
+          {
+            type: 'line',
+            start: ['min', 0],
+            end: ['max', 0],
+            // text: {
+            //   content: '0',
+            //   offsetY: -2,
+            //   style: {
+            //     textAlign: 'left',
+            //     fontSize: 10,
+            //     fill: 'rgba(44, 53, 66, 0.45)',
+            //     textBaseline: 'bottom',
+            //   },
+            // },
+            style: {
+              stroke: 'rgba(0, 0, 0, 0.25)',
+            },
+          },
+        ],
       },
       geometryOptions: [
         {

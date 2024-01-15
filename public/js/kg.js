@@ -613,7 +613,6 @@ initKG2 = function (data, config, container) {
     //给节点分配编号
     setLinkNumber(group, type);
   }
-  console.log(links);
   const nodeDict = data.nodes;
   var nodes = {};
 

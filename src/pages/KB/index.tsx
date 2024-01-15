@@ -467,35 +467,35 @@ const KB: React.FC = () => {
           <span className={styles.red}>Dy</span>namic Knowledge Base (KB)
         </Title>
         <Title level={3} style={{ margin: 0 }}>
-          <span className={styles.red}>HiDy</span> 一个层次动态知识库
+          <span className={styles.red}>层次化动态知识库：HiDy</span>
         </Title>
         <Title level={2} style={{ marginTop: 0 }}>
           {/* More <span className={styles.red}>Diverse</span> Downstream
           Applications More <span className={styles.red}>Knowledge Types</span>{' '}
           in Four Hierarchy */}
-          下游应用更加<span className={styles.red}>多样化</span>{' '}
-          四个层次中的更多<span className={styles.red}>知识类型</span>
+          涵盖<span className={styles.red}>四大</span>经济分支，
+          <span className={styles.red}>更丰富</span>知识种类
         </Title>
         <div className={styles.bottom}>
           <div className={styles.left_text}>
             <Title level={4} style={{ color: 'gray' }}>
               {/* Compare with existing public KBs */}
-              与现有的公共知识库对比
+              与现有开源A股市场知识库对比
             </Title>
             <div style={{ fontSize: 15, color: 'gray' }}>
               {/* Support up to */}
-              最多支持
+              支持
               <div style={{ fontSize: 20, fontWeight: 'bold', color: 'black' }}>
                 {/* 5 KB-Enhanced Applications */}
-                5KB 增强型应用程序
+                五项KB赋能金融应用任务
               </div>
               {/* Existing KB only support at most 3 applications. */}
-              现存的知识库最多只能支持3个应用程序
+              现有开源知识库最多支持三项
             </div>
             <div style={{ height: 20 }}></div>
             <div style={{ fontSize: 20, fontWeight: 'bold' }}>
               {/* Knowledge Types Cover 4 Economics Hierarchy */}
-              知识类型涵盖4个经济学层次
+              知识种类覆盖四种经济学分支
             </div>
             {/* <div>Including Macro, Meso, Micro and Others</div> */}
             <div style={{ fontSize: 15, color: 'gray' }}>

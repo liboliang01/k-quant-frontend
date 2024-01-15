@@ -1,6 +1,6 @@
-import { ArrowRightOutlined, BorderOutlined } from '@ant-design/icons';
+import { ArrowRightOutlined } from '@ant-design/icons';
 import { Image, Typography } from 'antd';
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
 import Slider from 'react-slick';
 import extraction from './img/extraction.png';
 import fusion from './img/fusion.png';
@@ -13,7 +13,7 @@ interface PropsType {
   title: string;
   subTitle: string;
   image: string;
-  remarks: string;
+  remarks: string[];
 }
 
 const introductions: PropsType[] = [
@@ -21,22 +21,27 @@ const introductions: PropsType[] = [
     title: '基于人机协同与远程监督的知识提取方法',
     subTitle: '从非结构化数据中低成本提取高质量金融知识，与任务1.1对应',
     image: extraction,
-    remarks:
-      '专利： 基于人机协同与远程监督的知识提取方法及系统 (申请号： 2023105070160)',
+    remarks: [
+      '论文：Triple-d: Denoising Distant Supervision for High-quality Data Creation.（ICDE2024，CCF A类会议）',
+      '专利：基于人机协同与远程监督的知识提取方法及系统 (申请号： 2023105070160)',
+    ],
   },
   {
     title: '基于数据源置信度推导的知识融合方法',
     subTitle: '对多种来源的金融数据实现动态的去冗消歧，与任务1.2对应',
     image: fusion,
-    remarks:
-      '论文:HIT-An Effective Approach to Build a Dynamic Financial Knowledge Base.（DASFAA 2023，CCF B类会议）',
+    remarks: [
+      '论文：HIT-An Effective Approach to Build a Dynamic Financial Knowledge Base.（DASFAA 2023，CCF B类会议）',
+      '论文：T-FinKB: A Platform of Temporal Financial Knowledge Base Construction.（ICDE2023，CCF A类会议）',
+    ],
   },
   {
     title: '基于数据源置信度推导的知识融合方法',
     subTitle: '对多种来源的金融数据实现动态的去冗消歧，与任务1.3对应',
     image: update,
-    remarks:
+    remarks: [
       '专利：一种基于图规则挖掘的知识图谱更新系统(申请号：2023104765162)',
+    ],
   },
 ];
 
@@ -49,8 +54,11 @@ const IntroductionCard = (props: PropsType) => {
           <Title level={2}>{title}</Title>
           <Title level={4}>{subTitle}</Title>
           <Paragraph>
-            <BorderOutlined />
-            {remarks}
+            <ul style={{ listStyleType: 'disc' }}>
+              {remarks.map((item) => {
+                return <li>{item}</li>;
+              })}
+            </ul>
           </Paragraph>
         </div>
 
@@ -93,8 +101,11 @@ function SamplePrevArrow(props: any) {
   );
 }
 
-const CenterModeSlider = (props: { currentStatus: any; setCurrentStatus: any; }) => {
-  const {currentStatus, setCurrentStatus} = props;
+const CenterModeSlider = (props: {
+  currentStatus: any;
+  setCurrentStatus: any;
+}) => {
+  const { currentStatus, setCurrentStatus } = props;
   // const [currentStatus, setCurrentStatus] = useState<number>(0);
   const slider = useRef(null);
   const settings = {
@@ -106,12 +117,12 @@ const CenterModeSlider = (props: { currentStatus: any; setCurrentStatus: any; })
     speed: 500,
     // arrows: true,
     // dots: true,
-    autoplay: true,
-    autoplaySpeed: 3000,
+    // autoplay: true,
+    // autoplaySpeed: 3000,
     pauseOnHover: true,
     nextArrow: <SampleNextArrow />,
     prevArrow: <SamplePrevArrow />,
-    beforeChange: (current:any, next: number) => setCurrentStatus(next),
+    beforeChange: (current: any, next: number) => setCurrentStatus(next),
   };
   const changeStatus = (s: number) => {
     setCurrentStatus(s);

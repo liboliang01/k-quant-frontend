@@ -17,7 +17,6 @@ import type { ColumnsType } from 'antd/es/table';
 import axios from 'axios';
 import React, { useEffect, useMemo, useState } from 'react';
 import BasicLayout from '../../layout/BasicLayout';
-import ImagePreviewer from './ImagePreviewer';
 import './index.less';
 import LineChart from './lineChart';
 
@@ -120,20 +119,29 @@ const FinKGUpdate: React.FC = () => {
         render: (item: string) => {
           const list = ['HIST', 'RSR_hidy_is', 'KEnhance'];
           const flag = list.indexOf(item) >= 0;
-          const stock = form.getFieldValue('stock');
           return (
-            <ImagePreviewer
-              text={`${flag ? '【知识图谱输入】' : ''}${intlMap.get(
-                item,
-              )}(${item})`}
-              url={
-                isCSI300
-                  ? `model_png/plot_${item}_score_${numOfMonths}${strategyPath}.png`
-                  : `model_png/plot_${item}_score_${numOfMonths}_${stock}.png`
-              }
-            />
+            <div>{`${flag ? '【知识图谱输入】' : ''}${intlMap.get(
+              item,
+            )}(${item})`}</div>
           );
         },
+        // render: (item: string) => {
+        //   const list = ['HIST', 'RSR_hidy_is', 'KEnhance'];
+        //   const flag = list.indexOf(item) >= 0;
+        //   const stock = form.getFieldValue('stock');
+        //   return (
+        //     <ImagePreviewer
+        //       text={`${flag ? '【知识图谱输入】' : ''}${intlMap.get(
+        //         item,
+        //       )}(${item})`}
+        //       url={
+        //         isCSI300
+        //           ? `model_png/plot_${item}_score_${numOfMonths}${strategyPath}.png`
+        //           : `model_png/plot_${item}_score_${numOfMonths}_${stock}.png`
+        //       }
+        //     />
+        //   );
+        // },
       },
       {
         title: '信息系数(Rank IC)',
@@ -177,13 +185,16 @@ const FinKGUpdate: React.FC = () => {
         dataIndex: 'name',
         key: 'name',
         render: (item: string) => {
-          return (
-            <ImagePreviewer
-              text={`${intlMap.get(item)}(${item})`}
-              url={`model_png/plot_${item}_score_${numOfMonths}${strategyPath}.png`}
-            />
-          );
+          return <div>{`${intlMap.get(item)}(${item})`}</div>;
         },
+        // render: (item: string) => {
+        //   return (
+        //     <ImagePreviewer
+        //       text={`${intlMap.get(item)}(${item})`}
+        //       url={`model_png/plot_${item}_score_${numOfMonths}${strategyPath}.png`}
+        //     />
+        //   );
+        // },
       },
       {
         title: '信息系数(Rank IC)[original]',
@@ -229,7 +240,7 @@ const FinKGUpdate: React.FC = () => {
       },
     ];
     return actionType === 'get_update_data' ? cols2 : cols1;
-  }, [actionType, duration, strategy]);
+  }, [actionType, duration, strategy, currModel]);
 
   const onSearch = () => {
     form.validateFields().then(async (values) => {
@@ -267,6 +278,7 @@ const FinKGUpdate: React.FC = () => {
         };
       });
       d = d.filter((item: any) => item !== 'delete');
+      d = d.map((item: any) => ({ ...item, key: item.name }));
       setData(d);
       // console.log(d)
       const ml = d.map((item: { name: any }) => ({
@@ -367,6 +379,14 @@ const FinKGUpdate: React.FC = () => {
     }
     return {};
   }, [data, currModel]);
+
+  const rowSelection = {
+    onChange: (selectedRowKeys: React.Key[], selectedRows: any[]) => {
+      onModelChange(selectedRowKeys[0] as string);
+    },
+    selectedRowKeys: [currModel as string],
+    type: 'radio' as 'checkbox' | 'radio',
+  };
 
   return (
     <BasicLayout backgroundColor="#f5f5f5">
@@ -514,12 +534,20 @@ const FinKGUpdate: React.FC = () => {
           </Descriptions.Item>
         </Descriptions>
       </Card>
-      {/* <Table
+      <Table
         columns={columns}
         dataSource={data}
         pagination={false}
         loading={loading}
-      /> */}
+        rowSelection={rowSelection}
+        onRow={(record) => {
+          return {
+            onDoubleClick: () => {
+              onModelChange(record.name);
+            },
+          };
+        }}
+      />
       {modelList.length && graphDataList?.length && (
         <Card style={{ margin: '20px 0', padding: '0 0 20px 0' }}>
           <Select
@@ -535,29 +563,25 @@ const FinKGUpdate: React.FC = () => {
               <Col span={6}>
                 <Statistic
                   title="信息系数（Rank IC）[original]"
-                  value={currRate['IC']}
-                  precision={3}
+                  value={Number(currRate['IC']).toFixed(3)}
                 />
               </Col>
               <Col span={6}>
                 <Statistic
                   title="信息比率（Rank ICIR）[original]"
-                  value={currRate['ICIR']}
-                  precision={3}
+                  value={Number(currRate['ICIR']).toFixed(3)}
                 />
               </Col>
               <Col span={6}>
                 <Statistic
                   title="信息系数（Rank IC）[DoubleAdapt]"
-                  value={currRate['IC_DA']}
-                  precision={3}
+                  value={Number(currRate['IC_DA']).toFixed(3)}
                 />
               </Col>
               <Col span={6}>
                 <Statistic
                   title="信息比率（Rank ICIR）[DoubleAdapt]"
-                  value={currRate['ICIR_DA']}
-                  precision={3}
+                  value={Number(currRate['ICIR_DA']).toFixed(3)}
                 />
               </Col>
             </Row>
@@ -566,15 +590,13 @@ const FinKGUpdate: React.FC = () => {
               <Col span={6}>
                 <Statistic
                   title="信息系数（Rank IC）"
-                  precision={3}
-                  value={currRate['IC']}
+                  value={Number(currRate['IC']).toFixed(3)}
                 />
               </Col>
               <Col span={6}>
                 <Statistic
                   title="信息比率（Rank ICIR）"
-                  precision={3}
-                  value={currRate['ICIR']}
+                  value={Number(currRate['ICIR']).toFixed(3)}
                 />
               </Col>
               <Col span={6}>

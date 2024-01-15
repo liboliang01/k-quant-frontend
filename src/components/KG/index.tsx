@@ -8,7 +8,6 @@ interface PropsType {
 
 const KGContainer: React.FC<PropsType> = (props) => {
   const { data, title } = props;
-  console.log(data.links);
   const render = () => {
     try {
       const rootNode = document.getElementById('k-quant-kg-container');
