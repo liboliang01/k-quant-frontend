@@ -17,6 +17,7 @@ import type { ColumnsType } from 'antd/es/table';
 import axios from 'axios';
 import React, { useEffect, useMemo, useState } from 'react';
 import BasicLayout from '../../layout/BasicLayout';
+import HeatCharts from './heatChart';
 import './index.less';
 import LineChart from './lineChart';
 
@@ -533,6 +534,9 @@ const FinKGUpdate: React.FC = () => {
             {Number(csi300[duration].max_drawdown * 100).toFixed(2) + '%'}
           </Descriptions.Item>
         </Descriptions>
+      </Card>
+      <Card style={{ marginBottom: '20px' }}>
+        <HeatCharts data={data} />
       </Card>
       <Table
         columns={columns}
