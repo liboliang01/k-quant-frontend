@@ -1,12 +1,13 @@
-import { DualAxes } from '@antv/g2plot';
+import { Datum, DualAxes } from '@antv/g2plot';
 import { useEffect, useMemo, useRef } from 'react';
 
 interface PropsType {
   data: { datetime: string; return: number; bench: number }[];
+  isUpdate: boolean;
 }
 
 const LineCharts = (props: PropsType) => {
-  const { data } = props;
+  const { data, isUpdate } = props;
   const lineRef = useRef<DualAxes>();
   const tmpData: { date: string; type: string; value: number }[] =
     useMemo(() => {
@@ -19,7 +20,9 @@ const LineCharts = (props: PropsType) => {
         });
         tmp.push({
           date: item.datetime,
-          type: 'Model cumulative return',
+          type: isUpdate
+            ? 'DoubleAdapt cumulative return'
+            : 'Model cumulative return',
           value: item.return,
         });
       });
@@ -38,38 +41,36 @@ const LineCharts = (props: PropsType) => {
       // data: [tmpData, uvData],
       xField: 'date',
       yField: ['count', 'value'],
-      // yField: ['value', 'count'],
-      // yAxis: [false, false],
-      // yAxis: {
-      //   label: {
-      //     // 数值格式化为千分位
-      //     formatter: (v) =>
-      //       `${v}`.replace(/\d{1,3}(?=(\d{3})+$)/g, (s) => `${s},`),
-      //   },
-      // },
-      // tooltip:{
-      //   customContent:(title, data)=>{
-      //     return `<div>${title}</div><div></div>`
-      //   }
-      // },
-      // seriesField: 'type',
-      // color: ({ type }) => {
-      //   return type === 'CSI300 benchmark cumulative return'
-      //     ? '#F4664A'
-      //     : type === 'Model cumulative return'
-      //     ? '#30BF78'
-      //     : '#FAAD14';
-      // },
+      tooltip: {
+        fields: ['type', 'value'],
+        customItems: (originalItems: any[]) => {
+          return originalItems.filter((item) => !isNaN(Number(item.value)));
+        },
+        formatter: (datum: Datum) => {
+          return { name: datum.type, value: Number(datum.value).toFixed(3) };
+        },
+      },
       yAxis: {
         count: false,
         value: {
           position: 'left',
           nice: true,
+          tickCount: 5,
+          // tickMethod:'cat',
+          grid: {
+            line: {
+              style: {
+                stroke: 'rgba(0, 0, 0, 0.1)',
+              },
+            },
+            // alignTick: false,
+          },
         },
       },
       meta: {
         value: {
           range: [0.2, 1],
+          tickCount: 4,
         },
         count: {
           alias: '成交量',
@@ -82,18 +83,9 @@ const LineCharts = (props: PropsType) => {
             type: 'line',
             start: ['min', 0],
             end: ['max', 0],
-            // text: {
-            //   content: '0',
-            //   offsetY: -2,
-            //   style: {
-            //     textAlign: 'left',
-            //     fontSize: 10,
-            //     fill: 'rgba(44, 53, 66, 0.45)',
-            //     textBaseline: 'bottom',
-            //   },
-            // },
             style: {
-              stroke: 'rgba(0, 0, 0, 0.25)',
+              stroke: 'rgba(255, 0, 0, 0.25)',
+              lineDash: [10, 10],
             },
           },
         ],
@@ -101,7 +93,7 @@ const LineCharts = (props: PropsType) => {
       geometryOptions: [
         {
           geometry: 'column',
-          columnWidthRatio: 1,
+          columnWidthRatio: 0.8,
           seriesField: 'type',
           color: ({ type }) => {
             return type ? '#F4664A' : '#30BF78';
@@ -117,6 +109,15 @@ const LineCharts = (props: PropsType) => {
           },
         },
       ],
+      legend:{
+        itemWidth:300,
+        maxWidth:3000,
+        itemSpacing:20,
+        autoEllipsis:false,
+        itemName:{
+          spacing:10
+        }
+      }
     });
     lineRef.current = line;
 

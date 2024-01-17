@@ -17,8 +17,8 @@ import type { ColumnsType } from 'antd/es/table';
 import axios from 'axios';
 import React, { useEffect, useMemo, useState } from 'react';
 import BasicLayout from '../../layout/BasicLayout';
-import HeatCharts from './heatChart';
-import './index.less';
+import BarCharts from './barChart';
+import styles from './index.less';
 import LineChart from './lineChart';
 
 const layout = {
@@ -389,6 +389,19 @@ const FinKGUpdate: React.FC = () => {
     type: 'radio' as 'checkbox' | 'radio',
   };
 
+  const startEndTime: [string, string] = useMemo(() => {
+    switch (duration) {
+      case 'THERE_MONTH':
+        return ['2023-04-03', '2023-06-30'];
+      case 'SIX_MONTH':
+        return ['2023-01-03', '2023-06-30'];
+      case 'ONE_YEAR':
+        return ['2022-06-01', '2023-06-30'];
+      default:
+        return ['', ''];
+    }
+  }, [duration]);
+
   return (
     <BasicLayout backgroundColor="#f5f5f5">
       <Card title="模型看板" style={{ marginBottom: '20px' }}>
@@ -535,9 +548,6 @@ const FinKGUpdate: React.FC = () => {
           </Descriptions.Item>
         </Descriptions>
       </Card>
-      <Card style={{ marginBottom: '20px' }}>
-        <HeatCharts data={data} />
-      </Card>
       <Table
         columns={columns}
         dataSource={data}
@@ -554,14 +564,31 @@ const FinKGUpdate: React.FC = () => {
       />
       {modelList.length && graphDataList?.length && (
         <Card style={{ margin: '20px 0', padding: '0 0 20px 0' }}>
-          <Select
-            defaultActiveFirstOption={true}
-            value={currModel}
-            onChange={onModelChange}
-            style={{ width: 400 }}
-            options={modelList}
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              marginBottom: 20,
+            }}
+          >
+            <div className={styles.title}>{`${String(
+              strategy,
+            ).toUpperCase()}多头策略在${startEndTime[0]}至${
+              startEndTime[1]
+            }的回测累积收益曲线`}</div>
+            <Select
+              defaultActiveFirstOption={true}
+              value={currModel}
+              onChange={onModelChange}
+              style={{ width: 400 }}
+              options={modelList}
+            />
+          </div>
+          <LineChart
+            data={graphDataList}
+            isUpdate={actionType === 'get_update_data'}
           />
-          <LineChart data={graphDataList} />
           {actionType === 'get_update_data' ? (
             <Row gutter={16} style={{ marginTop: '20px' }}>
               <Col span={6}>
@@ -626,6 +653,12 @@ const FinKGUpdate: React.FC = () => {
           )}
         </Card>
       )}
+      <Card
+        style={{ marginBottom: '20px', padding: '0 0 30px 0' }}
+        title="模型对比图"
+      >
+        <BarCharts data={data} />
+      </Card>
     </BasicLayout>
   );
 };
