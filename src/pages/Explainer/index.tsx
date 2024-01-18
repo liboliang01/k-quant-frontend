@@ -1,10 +1,13 @@
 import BasicLayout from '@/layout/BasicLayout';
-import { Button, Card, Form, Select, Space, Table } from 'antd';
+import { Button, Card, Form, Select, Space } from 'antd';
 import axios from 'axios';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import ImagePreviewer from '../KQuant/ImagePreviewer';
+import BarChart from './BarChart';
+import KChart from './KChart';
 import companyName from './company_full_name.json';
 import DownloadModal from './downloadModal';
+import styles from './index.less';
 
 export const stockList = [
   'SH600000',
@@ -240,6 +243,7 @@ const Coming: React.FC = () => {
   const [form] = Form.useForm();
   const [dateList, setDateList] = useState<string[]>([]);
   const [data, setData] = useState<any[]>([]);
+  const [newData, setNewData] = useState<any>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const stockNameMap = useMemo(() => {
     const map = new Map();
@@ -280,7 +284,7 @@ const Coming: React.FC = () => {
       title: '股票代码（源）',
       dataIndex: 'stock',
       key: 'stock',
-      onCell: (__: any, index: number|undefined) => {
+      onCell: (__: any, index: number | undefined) => {
         if (index === 0) {
           return { rowSpan: data.length };
         }
@@ -334,13 +338,34 @@ const Coming: React.FC = () => {
       setLoading(false);
     });
   };
+
+  const onSearchNew = () => {
+    form.validateFields().then(async (values): Promise<any> => {
+      const params = {
+        ...values,
+      };
+      setLoading(true);
+      const res = await axios.get(`http://47.106.95.15:8000/get_score_new/`, {
+        params: {
+          stock: params.stock,
+          date: params.date,
+          model: params.model,
+        },
+      });
+      setNewData(res.data.data);
+      console.log(res.data.data);
+      setLoading(false);
+    });
+  };
+
   const onReset = () => {
     form.resetFields();
-    onSearch();
+    onSearchNew();
   };
 
   useEffect(() => {
     onSearch();
+    onSearchNew();
   }, []);
   return (
     <>
@@ -402,22 +427,76 @@ const Coming: React.FC = () => {
             </Form.Item>
             <Form.Item>
               <Space>
-                <Button type="primary" onClick={onSearch}>
+                <Button type="primary" onClick={onSearchNew}>
                   查询
                 </Button>
                 <Button onClick={onReset}>重置</Button>
-                <DownloadModal stock={form.getFieldValue('stock')}/>
+                <DownloadModal stock={form.getFieldValue('stock')} />
               </Space>
             </Form.Item>
           </Form>
         </Card>
-        
-        <Table
+        {newData.origin && newData.relative && (
+          <>
+            <Card
+              title={`源股票 ${newData.origin.stock}(${stockNameMap.get(
+                newData.origin.stock.slice(2),
+              )})`}
+              style={{ marginBottom: '20px', height: '400px' }}
+            >
+              <KChart
+                rawData={JSON.parse(newData.origin.candle)}
+                id={`${newData.origin.stock}-k-chart`}
+              />
+            </Card>
+            <Card title="相关股票">
+              {newData.relative.map((item: any, idx: number) => {
+                return (
+                  <div
+                    style={{
+                      display: 'flex',
+                      height: 400,
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                    }}
+                  >
+                    <div style={{ width: '40%' }}>
+                      {typeof item.value === 'number' ? (
+                        <div className={styles.title}>
+                          <div>{`TOP${idx + 1}:${item.stock}(${stockNameMap.get(
+                            item.stock.slice(2),
+                          )})`}</div>
+                          <div>{`总分：${Number(item.value).toFixed(2)}`}</div>
+                        </div>
+                      ) : (
+                        <BarChart
+                          stock={`TOP${idx + 1}:${
+                            item.stock
+                          }(${stockNameMap.get(item.stock.slice(2))})`}
+                          rawData={item.value}
+                          id={`${item.stock}-bar-chart`}
+                        />
+                      )}
+                    </div>
+                    <div style={{ width: '60%' }}>
+                      <KChart
+                        rawData={JSON.parse(item.candle)}
+                        id={`${item.stock}-k-chart`}
+                      />
+                    </div>
+                  </div>
+                );
+              })}
+            </Card>
+          </>
+        )}
+
+        {/* <Table
           columns={columns}
           dataSource={data}
           pagination={false}
           loading={loading}
-        />
+        /> */}
       </BasicLayout>
     </>
   );
