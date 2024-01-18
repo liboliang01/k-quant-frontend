@@ -17,7 +17,7 @@ import type { ColumnsType } from 'antd/es/table';
 import axios from 'axios';
 import React, { useEffect, useMemo, useState } from 'react';
 import BasicLayout from '../../layout/BasicLayout';
-import BarCharts from './barChart';
+import DoubleAxiasBarChart from './doubleAxiasBarChart';
 import styles from './index.less';
 import LineChart from './lineChart';
 
@@ -654,10 +654,11 @@ const FinKGUpdate: React.FC = () => {
         </Card>
       )}
       <Card
-        style={{ marginBottom: '20px', padding: '0 0 30px 0' }}
+        style={{ marginBottom: '20px', padding: '0 0 30px 0'}}
         title="模型对比图"
       >
-        <BarCharts data={data} />
+        {/* <BarCharts data={data} /> */}
+        <DoubleAxiasBarChart tableData={data} isUpdate={isUpdate} />
       </Card>
     </BasicLayout>
   );
