@@ -61,8 +61,10 @@ const DoubleAxiasBarChart: React.FC<PropTypes> = (props) => {
       '#1677ff',
       '#722ed1',
     ];
-    const keys = tableData.map(
-      (item) => `${intlMap.get(item.name)}(${item.name})`,
+    const keys = tableData.map((item) =>
+      tableData.length === 9
+        ? `${intlMap.get(item.name)}(${item.name})`
+        : `${intlMap.get(item.name)}\n(${item.name})`,
     );
     const values: any[] = [];
     const typeList = isUpdate
@@ -79,9 +81,9 @@ const DoubleAxiasBarChart: React.FC<PropTypes> = (props) => {
         data: list,
         yAxisIndex: String(item).includes('ICIR') ? 1 : 0,
         itemStyle: {
-          color: isUpdate ? IRColor[idx] : ICColor[idx],
-          borderColor: String(item).includes('DA') ? '#73d13d' : '#fff',
-          borderWidth: String(item).includes('DA') ? 2 : 0,
+        //   color: isUpdate ? IRColor[idx] : ICColor[idx],
+          //   borderColor: String(item).includes('DA') ? '#73d13d' : '#fff',
+          //   borderWidth: String(item).includes('DA') ? 2 : 0,
         },
       };
       values.push(s);
@@ -117,8 +119,12 @@ const DoubleAxiasBarChart: React.FC<PropTypes> = (props) => {
           // prettier-ignore
           data: keys,
           axisLabel: {
+            formatter: {
+              align: 'center',
+              verticalAlign: 'center',
+            },
             interval: 0,
-            rotate: 15,
+            rotate: keys.length === 9 ? 15 : 0,
             // lineHeight:200,
             height: 200,
           },
@@ -132,9 +138,6 @@ const DoubleAxiasBarChart: React.FC<PropTypes> = (props) => {
           alignTicks: true,
           axisLine: {
             show: true,
-            lineStyle: {
-              color: ICColor[0],
-            },
           },
           axisLabel: {
             formatter: '{value}',
@@ -147,9 +150,6 @@ const DoubleAxiasBarChart: React.FC<PropTypes> = (props) => {
           alignTicks: true,
           axisLine: {
             show: true,
-            lineStyle: {
-              color: ICColor[1],
-            },
           },
           axisLabel: {
             formatter: '{value}',
