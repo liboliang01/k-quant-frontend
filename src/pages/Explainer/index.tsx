@@ -314,31 +314,6 @@ const Coming: React.FC = () => {
     getDate();
   }, [getDate]);
 
-  const onSearch = () => {
-    form.validateFields().then(async (values) => {
-      const params = {
-        ...values,
-      };
-      setLoading(true);
-      const res = await axios.get(`http://47.106.95.15:8000/get_score/`, {
-        params: {
-          stock: params.stock,
-          date: params.date,
-          model: params.model,
-        },
-      });
-      const d = Object.entries(res.data.data.relative_data).map((item) => {
-        return {
-          relative_stock: item[0],
-          score: item[1],
-          stock: res.data.data.stock,
-        };
-      });
-      setData(d);
-      setLoading(false);
-    });
-  };
-
   const onSearchNew = () => {
     form.validateFields().then(async (values): Promise<any> => {
       const params = {
@@ -350,6 +325,7 @@ const Coming: React.FC = () => {
           stock: params.stock,
           date: params.date,
           model: params.model,
+          forecast: params.forecast,
         },
       });
       setNewData(res.data.data);
@@ -364,7 +340,6 @@ const Coming: React.FC = () => {
   };
 
   useEffect(() => {
-    onSearch();
     onSearchNew();
   }, []);
   return (
@@ -383,6 +358,20 @@ const Coming: React.FC = () => {
                 options={[
                   { value: 'inputgradient', label: 'inputGradient' },
                   { value: 'xpath', label: 'Xpath' },
+                ]}
+              />
+            </Form.Item>
+            <Form.Item
+              label="预测模型"
+              name="forecast"
+              initialValue={'NRSR'}
+              rules={[{ required: true }]}
+            >
+              <Select
+                style={{ width: 200 }}
+                options={[
+                  { value: 'NRSR', label: 'NRSR' },
+                  { value: 'GATs', label: 'GATs' },
                 ]}
               />
             </Form.Item>
@@ -425,7 +414,10 @@ const Coming: React.FC = () => {
                 options={dateList.map((item) => ({ label: item, value: item }))}
               />
             </Form.Item>
-            <Form.Item>
+            <br />
+            <div
+              style={{ textAlign: 'left', width: '100%', margin: '10px 0 0 0' }}
+            >
               <Space>
                 <Button type="primary" onClick={onSearchNew}>
                   查询
@@ -433,7 +425,7 @@ const Coming: React.FC = () => {
                 <Button onClick={onReset}>重置</Button>
                 <DownloadModal stock={form.getFieldValue('stock')} />
               </Space>
-            </Form.Item>
+            </div>
           </Form>
         </Card>
         {newData.origin && newData.relative && (
