@@ -348,7 +348,7 @@ const Coming: React.FC = () => {
         <Card style={{ marginBottom: '20px' }}>
           <Form form={form} layout="inline" style={{ marginBottom: '20px' }}>
             <Form.Item
-              label="模型"
+              label="解释模型"
               name="model"
               initialValue={'inputgradient'}
               rules={[{ required: true }]}

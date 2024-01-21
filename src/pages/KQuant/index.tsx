@@ -80,8 +80,10 @@ const FinKGUpdate: React.FC = () => {
   const [data, setData] = useState<any[]>([]);
   const [modelList, setModelList] = useState<any[]>([]);
   const [currModel, setCurrModel] = useState<string>();
-  const [graphDataList, setGraphDataList] =
-    useState<{ datetime: string; return: number; bench: number }[]>();
+  const [graphDataList, setGraphDataList] = useState<{
+    data: any[];
+    volume: any[];
+  }>();
   const [loading, setLoading] = useState<boolean>(false);
   // 当前股票池是否为csi300
   const [isCSI300, setIsCSI300] = useState<boolean>(true);
@@ -562,7 +564,7 @@ const FinKGUpdate: React.FC = () => {
           };
         }}
       />
-      {modelList.length && graphDataList?.length && (
+      {modelList.length && graphDataList?.data.length && (
         <Card style={{ margin: '20px 0', padding: '0 0 20px 0' }}>
           <div
             style={{
@@ -654,7 +656,7 @@ const FinKGUpdate: React.FC = () => {
         </Card>
       )}
       <Card
-        style={{ marginBottom: '20px', padding: '0 0 30px 0'}}
+        style={{ marginBottom: '20px', padding: '0 0 30px 0' }}
         title="模型对比图"
       >
         {/* <BarCharts data={data} /> */}

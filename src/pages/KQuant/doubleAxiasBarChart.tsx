@@ -51,15 +51,15 @@ const DoubleAxiasBarChart: React.FC<PropTypes> = (props) => {
       '#9a60b4',
       '#ea7ccc',
     ];
-    const ICColor = ['#ffc53d', '#36cfc9'];
+    const ICColor = ['#5470c6', '#91cc75'];
     // const ICIRColor = ['#fff566', '#faad14', '#fa541c'];
     const IRColor = [
-      '#ffc53d',
-      '#fa541c',
-      '#f5222d',
-      '#36cfc9',
-      '#1677ff',
-      '#722ed1',
+      '#b7eb8f',
+      '#91caff',
+      '#73d13d',
+      '#4096ff',
+      '#237804',
+      '#003eb3',
     ];
     const keys = tableData.map((item) =>
       tableData.length === 9
@@ -68,7 +68,7 @@ const DoubleAxiasBarChart: React.FC<PropTypes> = (props) => {
     );
     const values: any[] = [];
     const typeList = isUpdate
-      ? ['IC', 'IC_incre', 'IC_DA', 'ICIR', 'ICIR_incre', 'ICIR_DA']
+      ? ['IC', 'ICIR', 'IC_incre', 'ICIR_incre', 'IC_DA', 'ICIR_DA']
       : ['IC', 'ICIR'];
     typeList.forEach((item, idx) => {
       const list: any[] = [];
@@ -81,7 +81,7 @@ const DoubleAxiasBarChart: React.FC<PropTypes> = (props) => {
         data: list,
         yAxisIndex: String(item).includes('ICIR') ? 1 : 0,
         itemStyle: {
-        //   color: isUpdate ? IRColor[idx] : ICColor[idx],
+          color: isUpdate ? IRColor[idx] : ICColor[idx],
           //   borderColor: String(item).includes('DA') ? '#73d13d' : '#fff',
           //   borderWidth: String(item).includes('DA') ? 2 : 0,
         },
