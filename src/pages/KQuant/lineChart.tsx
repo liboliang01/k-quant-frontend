@@ -33,6 +33,7 @@ const LineCharts = (props: PropsType) => {
     date: item.date,
     count: item.volume,
     type: '成交量',
+    color: idx % 3 === 0,
   }));
 
   const render = () => {
@@ -95,9 +96,9 @@ const LineCharts = (props: PropsType) => {
         {
           geometry: 'column',
           columnWidthRatio: 0.8,
-          seriesField: 'type',
-          color: ({ type }) => {
-            return '#30BF78';
+          seriesField: 'color',
+          color: ({ color }) => {
+            return color?'#ee6666':'#30BF78';
           },
         },
         {

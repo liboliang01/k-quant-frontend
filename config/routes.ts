@@ -50,6 +50,11 @@ const routes = [
         component: './Explainer',
       },
       {
+        name: 'Assessment',
+        path: '/assessment',
+        component: './Assessment',
+      },
+      {
         name: 'More Information',
         path: '/more',
         component: './More',
