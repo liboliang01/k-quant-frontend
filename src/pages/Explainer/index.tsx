@@ -8,7 +8,6 @@ import KChart from './KChart';
 import companyName from './company_full_name.json';
 import DownloadModal from './downloadModal';
 import styles from './index.less';
-import LineChart from './lineChart';
 
 export const stockList = [
   'SH600000',
@@ -573,20 +572,43 @@ const Coming: React.FC = () => {
   }, [getDate]);
 
   const nodeLinkData = useMemo(() => {
-    if (!currStock || !newData.relative) return { nodes: {}, links: {} };
+    if (!currStock || !newData.relative) return { nodes: {}, links: [] };
 
     const nodes: Record<string, any> = {};
     const links: Record<string, any>[] = [];
+    newData.relative.sort((a: any, b: any) => {
+      const a_val = Number(a['value']['total_score'] || a['value']);
+      const b_val = Number(b['value']['total_score'] || b['value']);
+      return b_val - a_val;
+    });
     newData.relative.forEach((item: any, index: number) => {
       nodes[String(index + 2)] = {
         name: stockNameMap.get(item['stock'].slice(2)),
-        type: '公司2',
+        type: `公司${index + 1}`,
         desc: '',
       };
       links.push({
         source: 1,
         target: index + 2,
         rela: Number(item['value']['total_score'] || item['value']).toFixed(2),
+        type: '',
+      });
+    });
+
+    const emptyNodes: Record<string, any> = {};
+    const len = newData.relative.length + 1;
+
+    [0, 0, 0].forEach((item, idx) => {
+      const name = `其他${idx + 1}`;
+      emptyNodes[String(len + idx + 1)] = {
+        name: name,
+        type: 'empty_node',
+        desc: '',
+      };
+      links.push({
+        source: 1,
+        target: len + idx + 1,
+        rela: '',
         type: '',
       });
     });
@@ -599,6 +621,7 @@ const Coming: React.FC = () => {
           desc: '',
         },
         ...nodes,
+        ...emptyNodes,
       },
       links,
     };
@@ -616,7 +639,6 @@ const Coming: React.FC = () => {
       res[relaStock] = JSON.parse(candle)['close'];
       return res;
     });
-    console.log([origin, ...relativeList]);
     return [origin, ...relativeList];
   }, [newData.origin]);
 
@@ -636,7 +658,6 @@ const Coming: React.FC = () => {
       });
       setNewData(res.data.data);
       setCurrStock(params.stock);
-      console.log(res.data.data);
       setLoading(false);
     });
   };
@@ -735,21 +756,22 @@ const Coming: React.FC = () => {
             </div>
           </Form>
         </Card>
-        <div style={{ marginBottom: '20px' }} className={styles.chart_box}>
-          <Card style={{ marginRight: 20, height: 500, flex: 1 }}>
-            <div className={styles.card_box}>
-              <KGContainer data={nodeLinkData}></KGContainer>
-            </div>
-          </Card>
-          <Card style={{ height: 500, flex: 1 }}>
-            <div className={styles.card_box}>
-              <LineChart rawData={candleList} id="close-line-chart" />
-            </div>
-          </Card>
-        </div>
 
         {newData.origin && newData.relative && (
           <>
+            <div style={{ marginBottom: '20px' }} className={styles.chart_box}>
+              <Card style={{ marginRight: 20, height: 500, flex: 1 }}>
+                <div className={styles.card_box}>
+                  <KGContainer data={nodeLinkData}></KGContainer>
+                </div>
+              </Card>
+
+              {/* <Card style={{ height: 500, flex: 1 }}>
+                <div className={styles.card_box}>
+                  <LineChart rawData={candleList} id="close-line-chart" />
+                </div>
+              </Card> */}
+            </div>
             <Card
               title={`源股票 ${newData.origin.stock}(${stockNameMap.get(
                 newData.origin.stock.slice(2),

@@ -722,7 +722,19 @@ initKG2 = function (data, config, container) {
         return 20;
       }
       if (d.type === 'curr') {
-        return 40;
+        return 50;
+      }
+      if (d.type === '公司1') {
+        return 45;
+      }
+      if (d.type === '公司2') {
+        return 35;
+      }
+      if (d.type === '公司3') {
+        return 25;
+      }
+      if (d.type === '公司4' ||d.type==='empty_node') {
+        return 15;
       }
       if (d.name === '中国石油 (601857)' || d.name === '中国石化 (600028)') {
         return 40;
