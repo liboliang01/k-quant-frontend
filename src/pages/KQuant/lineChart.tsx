@@ -1,55 +1,162 @@
-import { Datum, DualAxes } from '@antv/g2plot';
+import { DualAxes } from '@antv/g2plot';
+import insertCss from 'insert-css';
 import { useEffect, useMemo, useRef } from 'react';
+import styles from './index.less';
+
+insertCss(`
+    .custom-tooltip-list{
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top:10px
+    }
+    .circle-box{
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+    }
+    .circle{
+      border-radius: 50%;
+      width: 10px;
+      height: 10px;
+      margin-right: 5px;
+    }
+    .box{
+      width: 270px;
+        background: #fff;
+        border-radius: 5px;
+        padding: 10px;
+        border: 1px solid rgba(0,0,0,0.5),
+    }
+   
+`);
 
 interface PropsType {
   data: { data: any[]; volume: any[] };
-  isUpdate: boolean;
+  modelList: string[];
 }
 
+const ToolTips = (props: { data: any[] }) => {
+  const { data } = props;
+  return (
+    <div
+      style={{
+        width: 200,
+        background: '#fff',
+        borderRadius: '5px',
+        padding: 10,
+        border: '1px solid rgba(0,0,0,0.5)',
+      }}
+    >
+      <div>总分</div>
+      <div>
+        {data.map((item, idx) => {
+          return (
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+              }}
+            >
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'flex-start',
+                }}
+              >
+                <div
+                  className={styles.circle}
+                  style={{ backgroundColor: `${item.color}` }}
+                ></div>
+                <div>{item.name}</div>
+              </div>
+              <div>{item.value}</div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+};
+
 const LineCharts = (props: PropsType) => {
-  const { data, isUpdate } = props;
+  const { data, modelList } = props;
   const lineRef = useRef<DualAxes>();
   const tmpData: { date: string; type: string; value: number }[] =
     useMemo(() => {
       const tmp: { date: string; type: string; value: number }[] = [];
-      data.data.forEach((item) => {
-        tmp.push({
-          date: item.datetime,
-          type: 'CSI300 benchmark cumulative return',
-          value: item.bench,
-        });
-        tmp.push({
-          date: item.datetime,
-          type: isUpdate
-            ? 'DoubleAdapt cumulative return'
-            : 'Model cumulative return',
-          value: item.return,
+      data.data.forEach((list: any[], idx) => {
+        list.forEach((item) => {
+          if (idx === 0) {
+            tmp.push({
+              date: item.datetime,
+              type: 'CSI300 benchmark cumulative return',
+              value: item.bench,
+            });
+          }
+
+          tmp.push({
+            date: item.datetime,
+            type: modelList[idx],
+            value: item[modelList[idx]],
+          });
         });
       });
+      // console.log(tmp)
       return tmp;
     }, [data]);
 
-  const uvData = data.volume.map((item, idx) => ({
-    date: item.date,
-    count: item.volume,
-    type: '成交量',
-    color: idx % 3 === 0,
-  }));
+  const uvData = data.volume
+    .map((item, idx) => ({
+      date: item.date,
+      count: item.volume,
+      type: '成交量',
+      color: idx % 3 === 0,
+    }))
+    .reverse();
 
   const render = () => {
     const line = new DualAxes('kquant-line-chart', {
       data: [uvData, tmpData],
       xField: 'date',
       yField: ['count', 'value'],
+      // tooltip: {
+      //   fields: ['type', 'value', 'count'],
+      //   enterable:true,
+      //   formatter: (datum: Datum) => {
+      //     return {
+      //       name: datum.type,
+      //       value: datum.value
+      //         ? Number(datum.value).toFixed(3)
+      //         : Number(datum.count).toFixed(3),
+      //     };
+      //   },
+      //   showMarkers:true
+      // },
       tooltip: {
-        fields: ['type', 'value', 'count'],
-        formatter: (datum: Datum) => {
-          return {
-            name: datum.type,
-            value: datum.value
-              ? Number(datum.value).toFixed(3)
-              : Number(datum.count).toFixed(3),
-          };
+        showMarkers: false,
+        enterable: true,
+        domStyles: {
+          'g2-tooltip': {
+            width: '270px',
+            padding: 5,
+          },
+        },
+        customContent: (title, items) => {
+          let domList = '';
+          items.forEach((item) => {
+            const { color, name, value } = item;
+            if (name === 'true' || name === 'false') {
+            } else {
+              const div = `<div class="custom-tooltip-list"><div class="circle-box"><div class="circle" style=" background-color: ${color} "></div><div>${name}</div></div><div>${Number(
+                value,
+              ).toFixed(2)}</div></div>`;
+              domList = domList + div;
+            }
+          });
+          return `<div class="box"><div>${title}</div><div>${domList}</div><div style="margin-top:10px"><a href="/#/explainer/${title}" target="_blank">查看当日Explainer</a></div></div>`;
         },
       },
       yAxis: {
@@ -98,17 +205,17 @@ const LineCharts = (props: PropsType) => {
           columnWidthRatio: 0.8,
           seriesField: 'color',
           color: ({ color }) => {
-            return color?'#ee6666':'#30BF78';
+            return color ? '#ee6666' : '#30BF78';
           },
         },
         {
           geometry: 'line',
           seriesField: 'type',
-          color: ({ type }) => {
-            return type === 'CSI300 benchmark cumulative return'
-              ? '#ffc53d'
-              : '#13c2c2';
-          },
+          // color: ({ type }) => {
+          //   return type === 'CSI300 benchmark cumulative return'
+          //     ? '#ffc53d'
+          //     : '#13c2c2';
+          // },
         },
       ],
       legend: {

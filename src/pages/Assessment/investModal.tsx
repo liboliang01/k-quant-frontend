@@ -384,7 +384,7 @@ const InvestModal: React.FC<PropType> = (props) => {
                                 >
                                   <InputNumber
                                     placeholder="股票数量"
-                                    addonAfter='支'
+                                    addonAfter='股'
                                     style={{ width: 250 }}
                                   />
                                 </Form.Item>

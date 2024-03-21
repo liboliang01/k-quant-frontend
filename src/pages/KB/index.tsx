@@ -187,6 +187,7 @@ const dataList = [
       // { source: 4, target: 5, rela: '同公司', type: '同公司' },
       // { source: 4, target: 6, rela: '同公司', type: '同公司' },
       { source: 1, target: 7, rela: '合作 2023-10-23', type: '合作' },
+      { source: 4, target: 7, rela: '同行 2023-09-16', type: '同行' },
       // { source: 7, target: 8, rela: '同公司', type: '同公司' },
       // { source: 7, target: 9, rela: '同公司', type: '同公司' },
       { source: 7, target: 10, rela: '上级 2023-11-21', type: '上级' },
@@ -266,6 +267,7 @@ const dataList = [
       // { source: 4, target: 6, rela: '同公司', type: '同公司' },
       { source: 1, target: 7, rela: '合作 2023-10-23', type: '合作' },
       { source: 1, target: 7, rela: '同行 2023-04-04', type: 'update' },
+      { source: 4, target: 7, rela: '同行 2023-09-16', type: '同行' },
       // { source: 7, target: 8, rela: '同公司', type: '同公司' },
       // { source: 7, target: 9, rela: '同公司', type: '同公司' },
       { source: 7, target: 10, rela: '上级 2023-11-21', type: '上级' },
@@ -326,10 +328,16 @@ const KB: React.FC = () => {
   const get_pipline = useCallback(async () => {
     setSpin(true);
     const res = await axios.get(
-      `http://47.106.95.15:8000/get_static_pipiline/?duration=${value}`,
+      `http://143.89.126.57:8001/api/get_static_pipline?required_days=${value}`,
     );
-    const j_res = JSON.parse(res.data.data);
-    setRes(j_res);
+    const j_res = JSON.parse(res.data);
+    const r = j_res.map((item: { head_code: any; tail_code: any; relation: any; time: any; }) => ({
+      head_code: item.head_code,
+      tail_code: item.tail_code,
+      relation: item.relation,
+      time: item.time,
+    }));
+    setRes(r);
     setSpin(false);
   }, [value]);
 

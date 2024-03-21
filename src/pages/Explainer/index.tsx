@@ -1,13 +1,14 @@
+import KGContainer from '@/components/KG/custom';
 import BasicLayout from '@/layout/BasicLayout';
 import { Button, Card, Form, Select, Space } from 'antd';
 import axios from 'axios';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import ImagePreviewer from '../KQuant/ImagePreviewer';
 import BarChart from './BarChart';
 import KChart from './KChart';
 import companyName from './company_full_name.json';
 import DownloadModal from './downloadModal';
 import styles from './index.less';
+import LineChart from './lineChart';
 
 export const stockList = [
   'SH600000',
@@ -239,12 +240,269 @@ export const stockList = [
   'SZ300498',
 ];
 
+const nodeList = [
+  {
+    nodes: {
+      '1': {
+        name: '中国石油(1)',
+        type: '公司',
+        desc: '国家能源局党组成员、副局长任京东主持会议并讲话，中国石油副总经理黄永章、中国石化副总经理喻宝才出席会议。',
+      },
+      '2': {
+        name: '中国石化(1)',
+        type: '公司',
+        desc: '国家能源局党组成员、副局长任京东主持会议并讲话，中国石油副总经理黄永章、中国石化副总经理喻宝才出席会议。',
+      },
+      '3': {
+        name: '中国石油(2)',
+        type: '公司',
+        desc: '中国石油集团与中国能源建设集团在京签署战略合作协议。协议签署前，中国石油集团董事长、党组书记戴厚良会见了中国能建集团董事长、党委书记宋海良，双方就深化合作交换了意见。',
+      },
+      '4': {
+        name: '中国能源建设(1)',
+        type: '公司',
+        desc: '中国石油集团与中国能源建设集团在京签署战略合作协议。协议签署前，中国石油集团董事长、党组书记戴厚良会见了中国能建集团董事长、党委书记宋海良，双方就深化合作交换了意见。',
+      },
+      '5': {
+        name: '中石油(3)',
+        type: '公司',
+        desc: '中石油、中石化等8家公司注册100亿共同成立华光海安集团。',
+      },
+      '6': {
+        name: '中石化(2)',
+        type: '公司',
+        desc: '中石油、中石化等8家公司注册100亿共同成立华光海安集团。',
+      },
+      '7': {
+        name: '中国能建(2)',
+        type: '公司',
+        desc: '中国能建发布吸收合并中国葛洲坝集团股份有限公司。',
+      },
+      '8': {
+        name: '葛洲坝',
+        type: '公司',
+        desc: '中国能建发布吸收合并中国葛洲坝集团股份有限公司。',
+      },
+      '9': {
+        name: '中石油(4)',
+        type: '公司',
+        desc: '今日，中石油和中石化宣布了财报。两公司都在过去季度取得了出色的业绩，这一利好消息引发了投资者的乐观情绪，推动了其股票价格的上涨。',
+      },
+      '10': {
+        name: '中石化(4)',
+        type: '公司',
+        desc: '今日，中石油和中石化宣布了财报。两公司都在过去季度取得了出色的业绩，这一利好消息引发了投资者的乐观情绪，推动了其股票价格的上涨。',
+      },
+      '11': {
+        name: '东华能源(1)',
+        type: '公司',
+        desc: '东华能源与华锦股份最新发布的市场报告显示，两家公司在同一产品线上争夺领先地位，竞争导致市场动荡。',
+      },
+      '12': {
+        name: '华锦股份(1)',
+        type: '公司',
+        desc: '东华能源与华锦股份最新发布的市场报告显示，两家公司在同一产品线上争夺领先地位，竞争导致市场动荡。',
+      },
+      '13': {
+        name: '中国石化(5)',
+        type: '公司',
+        desc: '中国石化宣布了一项对东华能源的大规模的投资计划。',
+      },
+      '14': {
+        name: '东华能源(2)',
+        type: '公司',
+        desc: '中国石化宣布了一项对东华能源的大规模的投资计划。',
+      },
+      '15': {
+        name: '中国石油(5)',
+        type: '公司',
+        desc: '华锦股份和中国石油因商业合作方面的分歧进入司法程序。纠纷涉及产品专利权和市场份额的争夺，此次纠纷引发了业界广泛关注。',
+      },
+      '16': {
+        name: '华锦股份(2)',
+        type: '公司',
+        desc: '华锦股份和中国石油因商业合作方面的分歧进入司法程序。纠纷涉及产品专利权和市场份额的争夺，此次纠纷引发了业界广泛关注。',
+      },
+    },
+    links: [
+      { source: 1, target: 2, rela: '同行 2023-04-04', type: '同行关系' },
+      { source: 3, target: 4, rela: '合作 2023-10-23', type: '合作关系' },
+      { source: 5, target: 6, rela: '合作 2023-11-21', type: '合作关系' },
+      { source: 7, target: 8, rela: '上级 2021-07-27', type: '上级' },
+      { source: 9, target: 10, rela: '同涨 2023-10-21', type: '同涨' },
+      { source: 11, target: 12, rela: '竞争 2023-11-29', type: '竞争' },
+      { source: 13, target: 14, rela: '投资 2023-11-16', type: '投资' },
+      { source: 15, target: 16, rela: '纠纷 2023-09-17', type: '纠纷' },
+    ],
+  },
+  {
+    nodes: {
+      '1': {
+        name: '中国石油 (601857)',
+        type: '公司',
+      },
+      // '2': {
+      //   name: '中国石油',
+      //   type: '同名公司',
+      // },
+      // '3': {
+      //   name: '中石油',
+      //   type: '同名公司',
+      // },
+      '4': {
+        name: '中国石化 (600028)',
+        type: '公司',
+      },
+      // '5': {
+      //   name: '中国石化',
+      //   type: '同名公司',
+      // },
+      // '6': {
+      //   name: '中石化',
+      //   type: '同名公司',
+      // },
+      '7': {
+        name: '中国能源建设 (601868)',
+        type: '公司',
+      },
+      // '8': {
+      //   name: '中国能源建设',
+      //   type: '同名公司',
+      // },
+      // '9': {
+      //   name: '中国能建',
+      //   type: '同名公司',
+      // },
+      '10': {
+        name: '葛洲坝 (已退市)',
+        type: '已退市公司',
+      },
+      '11': {
+        name: '东华能源 (002221)',
+        type: '公司',
+      },
+      // '12': {
+      //   name: '东华能源',
+      //   type: '同名公司',
+      // },
+      '13': {
+        name: '华锦股份 (000059)',
+        type: '公司',
+      },
+      // '14': {
+      //   name: '华锦股份',
+      //   type: '同名公司',
+      // },
+    },
+    links: [
+      // { source: 1, target: 2, rela: '同公司', type: '同公司' },
+      // { source: 1, target: 3, rela: '同公司', type: '同公司' },
+      { source: 1, target: 4, rela: '同行 2023-04-04', type: '同行关系' },
+      { source: 1, target: 4, rela: '同涨 2023-10-21', type: '同行关系' },
+      { source: 1, target: 4, rela: '合作 2023-11-21', type: '同行关系' },
+      // { source: 4, target: 5, rela: '同公司', type: '同公司' },
+      // { source: 4, target: 6, rela: '同公司', type: '同公司' },
+      { source: 1, target: 7, rela: '合作 2023-10-23', type: '合作' },
+      { source: 4, target: 7, rela: '同行 2023-09-16', type: '同行' },
+      // { source: 7, target: 8, rela: '同公司', type: '同公司' },
+      // { source: 7, target: 9, rela: '同公司', type: '同公司' },
+      { source: 7, target: 10, rela: '上级 2023-11-21', type: '上级' },
+      { source: 4, target: 11, rela: '投资 2023-11-16', type: '投资' },
+      // { source: 11, target: 12, rela: '同公司', type: '同公司' },
+      { source: 1, target: 13, rela: '纠纷 2023-09-17', type: '纠纷' },
+      { source: 11, target: 13, rela: '竞争 2023-11-29', type: '竞争' },
+      // { source: 13, target: 14, rela: '同公司', type: '同公司' },
+    ],
+  },
+  {
+    nodes: {
+      '1': {
+        name: '中国石油 (601857)',
+        type: '公司',
+      },
+      // '2': {
+      //   name: '中国石油',
+      //   type: '同名公司',
+      // },
+      // '3': {
+      //   name: '中石油',
+      //   type: '同名公司',
+      // },
+      '4': {
+        name: '中国石化 (600028)',
+        type: '公司',
+      },
+      // '5': {
+      //   name: '中国石化',
+      //   type: '同名公司',
+      // },
+      // '6': {
+      //   name: '中石化',
+      //   type: '同名公司',
+      // },
+      '7': {
+        name: '中国能源建设 (601868)',
+        type: '公司',
+      },
+      // '8': {
+      //   name: '中国能源建设',
+      //   type: '同名公司',
+      // },
+      // '9': {
+      //   name: '中国能建',
+      //   type: '同名公司',
+      // },
+      '10': {
+        name: '葛洲坝 (已退市)',
+        type: '已退市公司',
+      },
+      '11': {
+        name: '东华能源 (002221)',
+        type: '公司',
+      },
+      // '12': {
+      //   name: '东华能源',
+      //   type: '同名公司',
+      // },
+      '13': {
+        name: '华锦股份 (000059)',
+        type: '公司',
+      },
+      // '14': {
+      //   name: '华锦股份',
+      //   type: '同名公司',
+      // },
+    },
+    links: [
+      // { source: 1, target: 2, rela: '同公司', type: '同公司' },
+      // { source: 1, target: 3, rela: '同公司', type: '同公司' },
+      { source: 1, target: 4, rela: '同行 2023-04-04', type: '同行关系' },
+      { source: 1, target: 4, rela: '同涨 2023-10-21', type: '同行关系' },
+      { source: 1, target: 4, rela: '合作 2023-11-21', type: '同行关系' },
+      // { source: 4, target: 5, rela: '同公司', type: '同公司' },
+      // { source: 4, target: 6, rela: '同公司', type: '同公司' },
+      { source: 1, target: 7, rela: '合作 2023-10-23', type: '合作' },
+      { source: 1, target: 7, rela: '同行 2023-04-04', type: 'update' },
+      { source: 4, target: 7, rela: '同行 2023-09-16', type: '同行' },
+      // { source: 7, target: 8, rela: '同公司', type: '同公司' },
+      // { source: 7, target: 9, rela: '同公司', type: '同公司' },
+      { source: 7, target: 10, rela: '上级 2023-11-21', type: '上级' },
+      { source: 4, target: 11, rela: '投资 2023-11-16', type: '投资' },
+      // { source: 11, target: 12, rela: '同公司', type: '同公司' },
+      { source: 1, target: 13, rela: '纠纷 2023-09-17', type: '纠纷' },
+      { source: 11, target: 13, rela: '竞争 2023-11-29', type: '竞争' },
+      // { source: 13, target: 14, rela: '同公司', type: '同公司' },
+    ],
+  },
+];
+
 const Coming: React.FC = () => {
   const [form] = Form.useForm();
   const [dateList, setDateList] = useState<string[]>([]);
   const [data, setData] = useState<any[]>([]);
   const [newData, setNewData] = useState<any>([]);
   const [loading, setLoading] = useState<boolean>(false);
+  const [currStock, setCurrStock] = useState<string>();
   const stockNameMap = useMemo(() => {
     const map = new Map();
     companyName.forEach((item) => {
@@ -253,59 +511,59 @@ const Coming: React.FC = () => {
     });
     return map;
   }, [companyName]);
-  const columns = [
-    {
-      title: '股票代码',
-      dataIndex: 'relative_stock',
-      key: 'relative_stock',
-      render: (item: string) => {
-        return (
-          <>
-            {item}({stockNameMap.get(item.slice(2))})
-            <ImagePreviewer
-              text={'查看蜡烛图'}
-              url={`http://47.106.95.15:8000/get_pic/?stock=${item.substring(
-                2,
-                8,
-              )}&date=${form.getFieldValue('date')}`}
-            />
-          </>
-        );
-      },
-    },
-    {
-      title: '评分',
-      dataIndex: 'score',
-      key: 'score',
-      sorter: (a: any, b: any) => a.score - b.score,
-      render: (item: any) => Number(item).toFixed(2),
-    },
-    {
-      title: '股票代码（源）',
-      dataIndex: 'stock',
-      key: 'stock',
-      onCell: (__: any, index: number | undefined) => {
-        if (index === 0) {
-          return { rowSpan: data.length };
-        }
-        return { rowSpan: 0 };
-      },
-      render: (item: string) => {
-        return (
-          <>
-            {item}({stockNameMap.get(item.slice(2))})
-            <ImagePreviewer
-              text={'查看蜡烛图'}
-              url={`http://47.106.95.15:8000/get_pic/?stock=${item.substring(
-                2,
-                8,
-              )}&date=${form.getFieldValue('date')}`}
-            />
-          </>
-        );
-      },
-    },
-  ];
+  // const columns = [
+  //   {
+  //     title: '股票代码',
+  //     dataIndex: 'relative_stock',
+  //     key: 'relative_stock',
+  //     render: (item: string) => {
+  //       return (
+  //         <>
+  //           {item}({stockNameMap.get(item.slice(2))})
+  //           <ImagePreviewer
+  //             text={'查看蜡烛图'}
+  //             url={`http://47.106.95.15:8000/get_pic/?stock=${item.substring(
+  //               2,
+  //               8,
+  //             )}&date=${form.getFieldValue('date')}`}
+  //           />
+  //         </>
+  //       );
+  //     },
+  //   },
+  //   {
+  //     title: '评分',
+  //     dataIndex: 'score',
+  //     key: 'score',
+  //     sorter: (a: any, b: any) => a.score - b.score,
+  //     render: (item: any) => Number(item).toFixed(2),
+  //   },
+  //   {
+  //     title: '股票代码（源）',
+  //     dataIndex: 'stock',
+  //     key: 'stock',
+  //     onCell: (__: any, index: number | undefined) => {
+  //       if (index === 0) {
+  //         return { rowSpan: data.length };
+  //       }
+  //       return { rowSpan: 0 };
+  //     },
+  //     render: (item: string) => {
+  //       return (
+  //         <>
+  //           {item}({stockNameMap.get(item.slice(2))})
+  //           <ImagePreviewer
+  //             text={'查看蜡烛图'}
+  //             url={`http://47.106.95.15:8000/get_pic/?stock=${item.substring(
+  //               2,
+  //               8,
+  //             )}&date=${form.getFieldValue('date')}`}
+  //           />
+  //         </>
+  //       );
+  //     },
+  //   },
+  // ];
   const getDate = useCallback(async () => {
     const res = await axios.get('http://47.106.95.15:8000/get_trade_date/');
     setDateList(res.data.data);
@@ -313,6 +571,54 @@ const Coming: React.FC = () => {
   useEffect(() => {
     getDate();
   }, [getDate]);
+
+  const nodeLinkData = useMemo(() => {
+    if (!currStock || !newData.relative) return { nodes: {}, links: {} };
+
+    const nodes: Record<string, any> = {};
+    const links: Record<string, any>[] = [];
+    newData.relative.forEach((item: any, index: number) => {
+      nodes[String(index + 2)] = {
+        name: stockNameMap.get(item['stock'].slice(2)),
+        type: '公司2',
+        desc: '',
+      };
+      links.push({
+        source: 1,
+        target: index + 2,
+        rela: Number(item['value']['total_score'] || item['value']).toFixed(2),
+        type: '',
+      });
+    });
+
+    return {
+      nodes: {
+        '1': {
+          name: stockNameMap.get(currStock.slice(2)),
+          type: 'curr',
+          desc: '',
+        },
+        ...nodes,
+      },
+      links,
+    };
+  }, [newData, currStock]);
+
+  const candleList = useMemo(() => {
+    if (!newData.origin) return {};
+    const originalStock = stockNameMap.get(newData.origin.stock.slice(2));
+    const origin: any = {};
+    origin[originalStock] = JSON.parse(newData.origin.candle)['close'];
+    const relativeList = newData.relative.map((item: any) => {
+      const { candle, stock } = item;
+      const relaStock = stockNameMap.get(stock.slice(2));
+      const res: any = {};
+      res[relaStock] = JSON.parse(candle)['close'];
+      return res;
+    });
+    console.log([origin, ...relativeList]);
+    return [origin, ...relativeList];
+  }, [newData.origin]);
 
   const onSearchNew = () => {
     form.validateFields().then(async (values): Promise<any> => {
@@ -329,6 +635,7 @@ const Coming: React.FC = () => {
         },
       });
       setNewData(res.data.data);
+      setCurrStock(params.stock);
       console.log(res.data.data);
       setLoading(false);
     });
@@ -428,6 +735,19 @@ const Coming: React.FC = () => {
             </div>
           </Form>
         </Card>
+        <div style={{ marginBottom: '20px' }} className={styles.chart_box}>
+          <Card style={{ marginRight: 20, height: 500, flex: 1 }}>
+            <div className={styles.card_box}>
+              <KGContainer data={nodeLinkData}></KGContainer>
+            </div>
+          </Card>
+          <Card style={{ height: 500, flex: 1 }}>
+            <div className={styles.card_box}>
+              <LineChart rawData={candleList} id="close-line-chart" />
+            </div>
+          </Card>
+        </div>
+
         {newData.origin && newData.relative && (
           <>
             <Card

@@ -35,22 +35,123 @@ const intlMap = new Map([
   ['annualized_return', '超额年化率'],
 ]);
 
+// function Max(value: { max: number; min: number }) {
+//   let maxStr = +`${parseInt(Math.abs(value.max))}`[0] + 1;
+//   let minStr = +`${parseInt(Math.abs(value.min))}`[0] + 1;
+//   for (let i = 0; i < `${Math.ceil(Math.abs(value.max))}`.length - 1; i++) {
+//     maxStr += '0';
+//   }
+//   for (let i = 0; i < `${Math.ceil(Math.abs(value.min))}`.length - 1; i++) {
+//     minStr += '0';
+//   }
+//   return Math.abs(value.max) > Math.abs(value.min) ? +maxStr : +minStr;
+// }
+
+// function Min(value: { max: number; min: number }) {
+//   let maxStr = +`${parseInt(Math.abs(value.max))}`[0] + 1;
+//   let minStr = +`${parseInt(Math.abs(value.min))}`[0] + 1;
+//   for (let i = 0; i < `${Math.ceil(Math.abs(value.max))}`.length - 1; i++) {
+//     maxStr += '0';
+//   }
+//   for (let i = 0; i < `${Math.ceil(Math.abs(value.min))}`.length - 1; i++) {
+//     minStr += '0';
+//   }
+//   return value.min >= 0
+//     ? 0
+//     : Math.abs(value.max) > Math.abs(value.min)
+//     ? -+maxStr
+//     : -+minStr;
+// }
+
+const colors = [
+  '#5470c6',
+  '#91cc75',
+  '#fac858',
+  '#ee6666',
+  '#73c0de',
+  '#3ba272',
+  '#fc8452',
+  '#9a60b4',
+  '#ea7ccc',
+];
+
 const DoubleAxiasBarChart: React.FC<PropTypes> = (props) => {
   const { tableData, isUpdate } = props;
   const domRef = useRef<echarts.ECharts>();
 
+  const maxmin = useMemo(() => {
+    const values: any[] = [];
+    const typeList = isUpdate
+      ? ['IC', 'ICIR', 'IC_incre', 'ICIR_incre', 'IC_DA', 'ICIR_DA']
+      : ['IC', 'ICIR'];
+    typeList.forEach((item, idx) => {
+      const list: any[] = [];
+      tableData.forEach((dataItem) => {
+        list.push(dataItem[item]*1000);
+      });
+      const s = {
+        data: list,
+      };
+      values.push(s);
+    });
+    // console.log(values);
+    let max1;
+    let max2;
+    let min1;
+    let min2;
+    if (isUpdate) {
+      const data1 = values[0].data;
+      const data2 = values[1].data;
+      const data3 = values[2].data;
+      const data4 = values[3].data;
+      const data5 = values[4].data;
+      const data6 = values[5].data;
+      max1 = Math.max(...data1, ...data3, ...data5);
+      max2 = Math.max(...data2, ...data4, ...data6);
+      min1 = Math.min(...data1, ...data3, ...data5);
+      min2 = Math.min(...data2, ...data4, ...data6);
+    } else {
+      const data1 = values[0].data;
+      const data2 = values[1].data;
+      max1 = Math.max(...data1);
+      max2 = Math.max(...data2);
+      min1 = Math.min(...data1);
+      min2 = Math.min(...data2);
+    }
+
+    const rat1 = min1 / max1;
+    const rat2 = min2 / max2;
+    const ratState = rat1 > rat2;
+
+    /*设置极小值*/
+    if (ratState) {
+      min1 = rat2 * max1;
+    } else {
+      min2 = rat1 * max2;
+    }
+
+    let inter1 = Number((max1 - min1) / 6);
+    let inter2 = Number((max2 - min2) / 6);
+
+    /*对极值微调*/
+    min1 = Number(((min1 / inter1) * inter1 * 1.2).toFixed(4));
+    max1 = Number(((max1 / inter1) * inter1 * 1.2).toFixed(4));
+    min2 = Number(((min2 / inter2) * inter2 * 1.2).toFixed(4));
+    max2 = Number(((max2 / inter2) * inter2 * 1.2).toFixed(4));
+
+    min1 = min1 > 0 ? 0 : min1;
+    min2 = min2 > 0 ? 0 : min2;
+
+    min1/=1000
+    min2/=1000
+    max1/=1000
+    max2/=1000
+    console.log({ min1, min2, max1, max2 });
+    return { min1, min2, max1, max2 };
+  }, [tableData, isUpdate]);
+
   const option: EChartsOption = useMemo(() => {
-    const colors = [
-      '#5470c6',
-      '#91cc75',
-      '#fac858',
-      '#ee6666',
-      '#73c0de',
-      '#3ba272',
-      '#fc8452',
-      '#9a60b4',
-      '#ea7ccc',
-    ];
+    const { min1, min2, max1, max2 } = maxmin;
     const ICColor = ['#5470c6', '#91cc75'];
     // const ICIRColor = ['#fff566', '#faad14', '#fa541c'];
     const IRColor = [
@@ -88,6 +189,7 @@ const DoubleAxiasBarChart: React.FC<PropTypes> = (props) => {
       };
       values.push(s);
     });
+
     return {
       //   color: colors,
       //   aria: {
@@ -140,8 +242,10 @@ const DoubleAxiasBarChart: React.FC<PropTypes> = (props) => {
             show: true,
           },
           axisLabel: {
-            formatter: '{value}',
+            formatter: (value)=>value.toFixed(3),
           },
+          // max: max1,
+          // min: min1,
         },
         {
           type: 'value',
@@ -152,13 +256,16 @@ const DoubleAxiasBarChart: React.FC<PropTypes> = (props) => {
             show: true,
           },
           axisLabel: {
-            formatter: '{value}',
+            formatter: (value)=>value.toFixed(3),
           },
+          // max: max2,
+          // min: min2,
+          // interval: inter2,
         },
       ],
       series: values,
     };
-  }, [tableData, isUpdate]);
+  }, [tableData, isUpdate, maxmin]);
 
   const render = () => {
     var chartDom = document.getElementById('DoubleAxiasBarChart')!;

@@ -32,7 +32,6 @@ const sleep = (time: number) => {
 };
 
 const ChenLeiDesc = [
-  ' Acting Head, Data Science and Analytics Thrust, HKUST(Guangzhou)',
   'Chair Professor, Department of Computer Science and Engineering',
   'Director of HKUST Big Data Institute',
   'Director of MOE/MSRA Information Technology Key Laboratory',
@@ -52,6 +51,33 @@ const ShenYanDesc = [
   'Database Top International Journal VLDBJ Guest Editor',
   'VLDB Deputy Editor',
   'Served as a PC for more than 10 top-level conferences in the field of database and artificial intelligence',
+];
+
+const PaperList = [
+  '"Triple-d: Denoising Distant Supervision for High-quality Data Creation." ICDE, 2024.',
+  '"HIT-An Effective Approach to Build a Dynamic Financial Knowledge Base."  DASFAA. 2023',
+  '"T-FinKB: A Platform of Temporal Financial Knowledge Base Construction." ICDE, 2023.',
+  '"TE-DyGE: Temporal Evolution-Enhanced Dynamic Graph Embedding Network." DASFAA, 2023.',
+  '"Orca: Scalable Temporal Graph Neural Network Training with Theoretical Guarantees", SIGMOD, 2022.',
+  '"HENCE-X: Toward Heterogeneity-agnostic Multi-level Explainability for Deep Graph Networks", VLDB, 2023.',
+  '"On Data-Aware Global Explainability of Graph Neural Networks", VLDB, 2023.',
+];
+
+const PatentList = [
+  '基于人机协同与远程监督的知识提取方法及系统',
+  '基于图规则挖掘的知识图谱更新系统',
+  '基于网络表格的知识图谱补全方法及系统',
+  '一种图神经网络动态更新方法、装置、设备及介质',
+  '基于多维特征混合的轻量级量化投资模型构建方法和系统',
+  '基于动态集成异构深度学习模型的股票预测方法及系统',
+];
+
+const futureList = [
+  'Multi-modal vector database',
+  'Retrieval-Augmented Generation for Finance',
+  'LLM in Alpha Mining, Portfolio construction',
+  'Update and continue learning of temporal knowledge graph',
+  '…',
 ];
 
 const Welcome: React.FC = () => {
@@ -139,7 +165,7 @@ const Welcome: React.FC = () => {
         /> */}
         <div className={styles.titleBox}>
           <div className={styles.subtitle}>Your Personal Financial Advisor</div>
-          <div style={{ color: '#722ed1',fontWeight:'bold' }}>
+          <div style={{ color: '#722ed1', fontWeight: 'bold' }}>
             Financial Knowledge Extraction and Update, Stock Price/Trend
             Prediction, Incremental Update of Investment Model, Backtesting,
             Stock Selection, Robotic Portifolio, Portifolio Scoring.
@@ -187,6 +213,66 @@ const Welcome: React.FC = () => {
           </div>
         </div>
       </div> */}
+      <div className={styles.box2} id="competitions">
+        <div className={styles.competitions}>
+          <h1 style={{ marginBottom: 20 }}>Competition</h1>
+          <div className={styles.competitions_box}>
+            <div style={{ fontSize: 25 }}>
+              <ul>
+                <li>
+                  2023 Fintech Olympiad{' '}
+                  <span style={{ fontWeight: 'bold' }}>Sliver Award</span>
+                </li>
+                <Image height={200} src="images/award2.jpg" />
+                <li>
+                  2023 Hong Kong Fintech Award{' '}
+                  <span style={{ fontWeight: 'bold' }}>Sliver Award</span>
+                </li>
+                <Image height={200} src="images/award1.jpg" />
+              </ul>
+            </div>
+            <div style={{ marginRight: 20 }}>
+              <Image
+                height={400}
+                src="images/competitions.png"
+                preview={false}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className={styles.box2} id="achievement">
+        <div className={styles.competitions}>
+          <h1 style={{ marginBottom: 20 }}>Achievement</h1>
+          <div className={styles.achievement_box}>
+            <p style={{ color: '#1677ff', marginBottom: 0 }}>Research paper</p>
+            <ul>
+              {PaperList.map((item) => (
+                <li>{item}</li>
+              ))}
+            </ul>
+            <p style={{ color: '#1677ff', marginBottom: 0 }}>Patent</p>
+            <ul>
+              {PatentList.map((item) => (
+                <li>{item}</li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div className={styles.box2} id="future">
+        <div className={styles.competitions}>
+          <h1 style={{ marginBottom: 20 }}>Future Research Directions</h1>
+          <div className={styles.achievement_box}>
+            <ul>
+              {futureList.map((item) => (
+                <li>{item}</li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </div>
+
       <div className={styles.box2} id="our_process">
         <div className={styles.ourProcess}>
           <h1>Our Process</h1>
@@ -257,7 +343,7 @@ const Welcome: React.FC = () => {
               <LeaderCard
                 name="Prof. Lei Chen"
                 icon="images/boss.png"
-                subTitle="Chair Professor, Director of HKUST Big Data Institute"
+                subTitle="Dean, Information Hub, HKUST (Guangzhou)"
                 descList={ChenLeiDesc}
               />
             </div>
@@ -303,6 +389,7 @@ const Welcome: React.FC = () => {
             <SchoolCard name="HKUST" icon="images/HKUST.jpg" />
             <SchoolCard name="HKUST_GZ" icon="images/HKUST.jpg" />
             <SchoolCard name="SJTU" icon="images/SJTU.jpg" />
+            <SchoolCard name="CSMAR" icon="images/csmar.png" />
           </div>
         </div>
       </div>

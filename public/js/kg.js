@@ -721,6 +721,9 @@ initKG2 = function (data, config, container) {
       if (d.type === '已退市公司') {
         return 20;
       }
+      if (d.type === 'curr') {
+        return 40;
+      }
       if (d.name === '中国石油 (601857)' || d.name === '中国石化 (600028)') {
         return 40;
       }

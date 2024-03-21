@@ -7,7 +7,6 @@ import {
   Form,
   Radio,
   Row,
-  Select,
   Space,
   Statistic,
   Table,
@@ -15,7 +14,7 @@ import {
 } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import axios from 'axios';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import BasicLayout from '../../layout/BasicLayout';
 import DoubleAxiasBarChart from './doubleAxiasBarChart';
 import styles from './index.less';
@@ -80,7 +79,12 @@ const FinKGUpdate: React.FC = () => {
   const [data, setData] = useState<any[]>([]);
   const [modelList, setModelList] = useState<any[]>([]);
   const [currModel, setCurrModel] = useState<string>();
+  const [currModelList, setCurrModelList] = useState<string[]>([]);
   const [graphDataList, setGraphDataList] = useState<{
+    data: any[];
+    volume: any[];
+  }>();
+  const [multiGraphDataList, setMultiGraphDataList] = useState<{
     data: any[];
     volume: any[];
   }>();
@@ -290,12 +294,13 @@ const FinKGUpdate: React.FC = () => {
       }));
       setModelList(ml);
       setCurrModel(ml[0].value);
-      getGraphData(
+      setCurrModelList([ml[0].value]);
+      getMultiGraphData(
         values.actionType,
         params.duration,
         params.strategy,
         params.stock,
-        ml[0].value,
+        [ml[0].value],
       );
       setLoading(false);
     });
@@ -348,6 +353,19 @@ const FinKGUpdate: React.FC = () => {
     });
   };
 
+  const onModelChangeNew = (value: string[]) => {
+    setCurrModelList(value);
+    form.validateFields().then((values) => {
+      getMultiGraphData(
+        values.actionType,
+        values.duration,
+        values.strategy,
+        values.stock,
+        value,
+      );
+    });
+  };
+
   const actionMap = {
     get_model_data: 0,
     get_rensemble_data: 1,
@@ -375,6 +393,33 @@ const FinKGUpdate: React.FC = () => {
     setGraphDataList(res.data.data);
   };
 
+  const getMultiGraphData = async (
+    actionType: keyof typeof actionMap,
+    duration: keyof typeof durationMap,
+    strategy: keyof typeof strategyMap,
+    stock: string,
+    modelList: string[],
+  ) => {
+    if(modelList.length===0){
+      return 
+    }
+    const res = await axios.get(
+      `http://47.106.95.15:8000/get_multi_graph_data/`,
+      {
+        params: {
+          duration: durationMap[duration],
+          strategy: strategyMap[strategy],
+          action: actionMap[actionType],
+          stock,
+          model_list: modelList.join(','),
+        },
+      },
+    );
+    // console.log(res);
+    setMultiGraphDataList(res.data.data);
+    // setGraphDataList(res.data.data);
+  };
+
   const currRate = useMemo(() => {
     if (data.length && currModel) {
       const curr = data.filter((item) => item.name === currModel)[0];
@@ -385,10 +430,10 @@ const FinKGUpdate: React.FC = () => {
 
   const rowSelection = {
     onChange: (selectedRowKeys: React.Key[], selectedRows: any[]) => {
-      onModelChange(selectedRowKeys[0] as string);
+      onModelChangeNew(selectedRowKeys as string[]);
     },
-    selectedRowKeys: [currModel as string],
-    type: 'radio' as 'checkbox' | 'radio',
+    selectedRowKeys: currModelList,
+    type: 'checkbox' as 'checkbox' | 'radio',
   };
 
   const startEndTime: [string, string] = useMemo(() => {
@@ -403,6 +448,8 @@ const FinKGUpdate: React.FC = () => {
         return ['', ''];
     }
   }, [duration]);
+
+  const get_multi_graph_data = useCallback(() => {}, []);
 
   return (
     <BasicLayout backgroundColor="#f5f5f5">
@@ -556,105 +603,106 @@ const FinKGUpdate: React.FC = () => {
         pagination={false}
         loading={loading}
         rowSelection={rowSelection}
-        onRow={(record) => {
-          return {
-            onDoubleClick: () => {
-              onModelChange(record.name);
-            },
-          };
-        }}
+        // onRow={(record) => {
+        //   return {
+        //     onDoubleClick: () => {
+        //       onModelChange(record.name);
+        //     },
+        //   };
+        // }}
       />
-      {modelList.length && graphDataList?.data.length && (
-        <Card style={{ margin: '20px 0', padding: '0 0 20px 0' }}>
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              marginBottom: 20,
-            }}
-          >
-            <div className={styles.title}>{`${String(
-              strategy,
-            ).toUpperCase()}多头策略在${startEndTime[0]}至${
-              startEndTime[1]
-            }的回测累积收益曲线`}</div>
-            <Select
+      {modelList.length &&
+        multiGraphDataList?.data.length &&
+        currModelList.length > 0 && (
+          <Card style={{ margin: '20px 0', padding: '0 0 20px 0' }}>
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                marginBottom: 20,
+              }}
+            >
+              <div className={styles.title}>{`${String(
+                strategy,
+              ).toUpperCase()}多头策略在${startEndTime[0]}至${
+                startEndTime[1]
+              }的回测累积收益曲线`}</div>
+              {/* <Select
               defaultActiveFirstOption={true}
               value={currModel}
               onChange={onModelChange}
               style={{ width: 400 }}
               options={modelList}
-            />
-          </div>
-          <LineChart
-            data={graphDataList}
-            isUpdate={actionType === 'get_update_data'}
-          />
-          {actionType === 'get_update_data' ? (
-            <Row gutter={16} style={{ marginTop: '20px' }}>
-              <Col span={6}>
-                <Statistic
-                  title="信息系数（Rank IC）[original]"
-                  value={Number(currRate['IC']).toFixed(3)}
-                />
-              </Col>
-              <Col span={6}>
-                <Statistic
-                  title="信息比率（Rank ICIR）[original]"
-                  value={Number(currRate['ICIR']).toFixed(3)}
-                />
-              </Col>
-              <Col span={6}>
-                <Statistic
-                  title="信息系数（Rank IC）[DoubleAdapt]"
-                  value={Number(currRate['IC_DA']).toFixed(3)}
-                />
-              </Col>
-              <Col span={6}>
-                <Statistic
-                  title="信息比率（Rank ICIR）[DoubleAdapt]"
-                  value={Number(currRate['ICIR_DA']).toFixed(3)}
-                />
-              </Col>
-            </Row>
-          ) : (
-            <Row gutter={16} style={{ marginTop: '20px' }}>
-              <Col span={6}>
-                <Statistic
-                  title="信息系数（Rank IC）"
-                  value={Number(currRate['IC']).toFixed(3)}
-                />
-              </Col>
-              <Col span={6}>
-                <Statistic
-                  title="信息比率（Rank ICIR）"
-                  value={Number(currRate['ICIR']).toFixed(3)}
-                />
-              </Col>
-              <Col span={6}>
-                <Statistic
-                  title="超额年化利率"
-                  value={
-                    Number(Number(currRate['annualized_return']) * 100).toFixed(
-                      2,
-                    ) + '%'
-                  }
-                />
-              </Col>
-              <Col span={6}>
-                <Statistic
-                  title="最大回撤"
-                  value={
-                    Number(Number(currRate['max_drawdown']) * 100).toFixed(2) +
-                    '%'
-                  }
-                />
-              </Col>
-            </Row>
-          )}
-        </Card>
-      )}
+            /> */}
+            </div>
+            <LineChart data={multiGraphDataList} modelList={currModelList} />
+
+            {actionType === 'get_update_data' ? (
+              <Row gutter={16} style={{ marginTop: '20px' }}>
+                <Col span={6}>
+                  <Statistic
+                    title="信息系数（Rank IC）[original]"
+                    value={Number(currRate['IC']).toFixed(3)}
+                  />
+                </Col>
+                <Col span={6}>
+                  <Statistic
+                    title="信息比率（Rank ICIR）[original]"
+                    value={Number(currRate['ICIR']).toFixed(3)}
+                  />
+                </Col>
+                <Col span={6}>
+                  <Statistic
+                    title="信息系数（Rank IC）[DoubleAdapt]"
+                    value={Number(currRate['IC_DA']).toFixed(3)}
+                  />
+                </Col>
+                <Col span={6}>
+                  <Statistic
+                    title="信息比率（Rank ICIR）[DoubleAdapt]"
+                    value={Number(currRate['ICIR_DA']).toFixed(3)}
+                  />
+                </Col>
+              </Row>
+            ) : (
+              <Row gutter={16} style={{ marginTop: '20px' }}>
+                <Col span={6}>
+                  <Statistic
+                    title="信息系数（Rank IC）"
+                    value={Number(currRate['IC']).toFixed(3)}
+                  />
+                </Col>
+                <Col span={6}>
+                  <Statistic
+                    title="信息比率（Rank ICIR）"
+                    value={Number(currRate['ICIR']).toFixed(3)}
+                  />
+                </Col>
+                <Col span={6}>
+                  <Statistic
+                    title="超额年化利率"
+                    value={
+                      Number(
+                        Number(currRate['annualized_return']) * 100,
+                      ).toFixed(2) + '%'
+                    }
+                  />
+                </Col>
+                <Col span={6}>
+                  <Statistic
+                    title="最大回撤"
+                    value={
+                      Number(Number(currRate['max_drawdown']) * 100).toFixed(
+                        2,
+                      ) + '%'
+                    }
+                  />
+                </Col>
+              </Row>
+            )}
+          </Card>
+        )}
       <Card
         style={{ marginBottom: '20px', padding: '0 0 30px 0' }}
         title="模型对比图"

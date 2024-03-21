@@ -46,7 +46,7 @@ const routes = [
       },
       {
         name: 'Explainer',
-        path: '/explainer',
+        path: '/explainer/:date',
         component: './Explainer',
       },
       {

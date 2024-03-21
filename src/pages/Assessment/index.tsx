@@ -123,7 +123,7 @@ const Assessment: React.FC = () => {
   const stock_recommend = {
     date: [dayjs('2019-06-01'), dayjs('2019-06-15')],
     explanation_model: 'inputGradientExplainer',
-    prediction_model: 'NSRS',
+    prediction_model: 'NRSR',
     seq_len: 30,
     num_recommendation_stocks: 3,
   };
@@ -168,7 +168,10 @@ const Assessment: React.FC = () => {
       const list = item.list;
       const obj: any = {};
       list.forEach((s: any) => {
-        obj[s['stockName']] = s['number'];
+        const key = `${s['stockName']}(${stockNameMap.get(
+            s['stockName'].substring(2, 8),
+          )})`
+        obj[key] = s['number'];
       });
       const name = `投资组合${idx + 1}`;
       const res: any = {};
@@ -408,7 +411,7 @@ const Assessment: React.FC = () => {
                 rules={[{ required: true, message: '请输入推荐股票数' }]}
               >
                 <InputNumber
-                  addonAfter="支"
+                  addonAfter="股"
                   placeholder="3"
                   style={{ width: 100 }}
                 />
