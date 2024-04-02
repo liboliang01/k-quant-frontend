@@ -51,6 +51,10 @@ const investRadarChart = (props: PropTypes) => {
           { name: '基准比较得分', max: 1 },
           { name: '同行业股票比较对比得分', max: 1 },
         ],
+        axisName: {
+          // show: true,
+          color: 'black',
+        },
       },
       series: [
         {

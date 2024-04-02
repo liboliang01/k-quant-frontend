@@ -18,6 +18,7 @@ import companyName from '../Explainer/company_full_name.json';
 import CredibilityRadarChart from './credibilityRadarChart';
 import { credibility, invest, stock } from './data';
 import styles from './index.less';
+import Indicator from './indicator';
 import InvestModal from './investModal';
 import InvestRadarChart from './investRadarChart';
 
@@ -47,6 +48,42 @@ const select_dict_list = [
     '300072.SZ': 1,
   },
 ];
+
+const indicator1 = {
+  可靠性:
+    '评价量化投资模型的预测准确程度。模型选择时间段内预测结果与真实结果的平均差异。',
+
+  稳定性:
+    '评价量化投资模型在规定时间内提供持续可靠服务的程度。模型选择时间段内预测结果与真实结果差异的方差。',
+
+  鲁棒性: '评价量化投资模型在面对异常情况时保持正常运行的能力。',
+
+  透明性:
+    '评价量化投资模型内部运行机制是否透明。量化投资模型中的任一模块使用了如如下任意一款模型，如线性回归、逻辑回归、GLM、决策树、决策规则、KNN等被认为是自带可解释的模型，透明性输出为1，不透明则输出为0。',
+
+  可解释性:
+    '评价模型组合解释能力的指标。用解释模型的输出结果可以保留多少决策信息来衡量模型组合的可解释性能力。',
+};
+
+const indicator2 = {
+  用户收益偏好: '对投资策略是否满足用户的收益偏好进行打分。',
+
+  用户风险偏好: '对投资策略是否满足用户的风险偏好进行打分。',
+
+  用户投资体验感: '对投资策略的最大回撤率是否小于风险偏好进行打分。',
+
+  沪深300指数对比得分:
+    'Log(投资组合夏普比率 - 沪深300夏普比率 + 1)（夏普比率）对投资策略相较无风险投资的超额回报率是否“跑赢”市场指数或基准进行打分。（信息比率）对投资策略相较市场指数或基准的超额回报率进行计算和展示，暂不进行打分。',
+
+  中证500指数对比得分:
+    'Log(投资组合夏普比率 - 沪深300夏普比率 + 1)（夏普比率）对投资策略相较无风险投资的超额回报率是否“跑赢”市场指数或基准进行打分。（信息比率）对投资策略相较市场指数或基准的超额回报率进行计算和展示，暂不进行打分。',
+
+  业绩基准:
+    'Log(投资组合夏普比率 - 业绩基准夏普比率 + 1)（夏普比率）对投资策略相较无风险投资的超额回报率是否“跑赢”市场指数或基准进行打分。（信息比率）对投资策略相较市场指数或基准的超额回报率进行计算和展示，暂不进行打分。',
+
+  同行业股票表现对比:
+    '对所选股票在近一个月、两个月、三个月、四个月、六个月、九个月、一年等的年化收益率、年化波动率是否处于同类股票的top n%进行打分。（注:时间值可以在函数内部自定义，且只考虑交易日数为最佳）',
+};
 
 const Assessment: React.FC = () => {
   const [form] = Form.useForm();
@@ -169,8 +206,8 @@ const Assessment: React.FC = () => {
       const obj: any = {};
       list.forEach((s: any) => {
         const key = `${s['stockName']}(${stockNameMap.get(
-            s['stockName'].substring(2, 8),
-          )})`
+          s['stockName'].substring(2, 8),
+        )})`;
         obj[key] = s['number'];
       });
       const name = `投资组合${idx + 1}`;
@@ -337,10 +374,13 @@ const Assessment: React.FC = () => {
               )}
             </Form.List>
           </Form>
-          <CredibilityRadarChart
-            id="credibility_radar_chart"
-            rawData={credibility}
-          />
+          <div className={styles.radar}>
+            <CredibilityRadarChart
+              id="credibility_radar_chart"
+              rawData={credibility}
+            />
+            <Indicator desc={indicator1} />
+          </div>
         </Card>
 
         <Card style={{ marginBottom: '20px' }} title={'推荐股票'}>
@@ -435,6 +475,7 @@ const Assessment: React.FC = () => {
               );
             })}
         </Card>
+
         <Card title={'投资组合评价'}>
           <Form
             name="invest_form"
@@ -490,7 +531,7 @@ const Assessment: React.FC = () => {
               }}
               align="baseline"
             >
-              <div>投资组合：</div>
+              <div>投资组合:</div>
               <Form.Item label={'投资组合'} noStyle shouldUpdate>
                 {() => (
                   <Typography>
@@ -513,7 +554,10 @@ const Assessment: React.FC = () => {
               </Button>
             </Space>
           </Form>
-          <InvestRadarChart id="invest_radar_chart" rawData={invest} />
+          <div className={styles.radar}>
+            <InvestRadarChart id="invest_radar_chart" rawData={invest} />
+            <Indicator desc={indicator2} />
+          </div>
         </Card>
       </>
     </BasicLayout>

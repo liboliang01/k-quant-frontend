@@ -1,13 +1,23 @@
 import KGContainer from '@/components/KG/custom';
 import BasicLayout from '@/layout/BasicLayout';
-import { Button, Card, Form, Select, Space } from 'antd';
+import {
+  Button,
+  Card,
+  Col,
+  Form,
+  Row,
+  Select,
+  Space,
+  Tree,
+  TreeProps,
+  message,
+} from 'antd';
 import axios from 'axios';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import BarChart from './BarChart';
-import KChart from './KChart';
 import companyName from './company_full_name.json';
 import DownloadModal from './downloadModal';
 import styles from './index.less';
+import LineChart from './lineChart';
 
 export const stockList = [
   'SH600000',
@@ -502,6 +512,8 @@ const Coming: React.FC = () => {
   const [newData, setNewData] = useState<any>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [currStock, setCurrStock] = useState<string>();
+  const [currExplainer, setCurrExplainer] = useState<string>();
+  const [eventList, setEventList] = useState<any>();
   const stockNameMap = useMemo(() => {
     const map = new Map();
     companyName.forEach((item) => {
@@ -585,12 +597,13 @@ const Coming: React.FC = () => {
       nodes[String(index + 2)] = {
         name: stockNameMap.get(item['stock'].slice(2)),
         type: `公司${index + 1}`,
-        desc: '',
+        desc: item['value'] || item['value']['events'],
       };
       links.push({
         source: 1,
         target: index + 2,
-        rela: Number(item['value']['total_score'] || item['value']).toFixed(2),
+        rela: '',
+        // Number(item['value']['total_score'] || item['value']).toFixed(2),
         type: '',
       });
     });
@@ -628,7 +641,7 @@ const Coming: React.FC = () => {
   }, [newData, currStock]);
 
   const candleList = useMemo(() => {
-    if (!newData.origin) return {};
+    if (!newData.origin) return [];
     const originalStock = stockNameMap.get(newData.origin.stock.slice(2));
     const origin: any = {};
     origin[originalStock] = JSON.parse(newData.origin.candle)['close'];
@@ -656,6 +669,8 @@ const Coming: React.FC = () => {
           forecast: params.forecast,
         },
       });
+      setCurrExplainer(params.model);
+      setEventList(undefined);
       setNewData(res.data.data);
       setCurrStock(params.stock);
       setLoading(false);
@@ -670,6 +685,43 @@ const Coming: React.FC = () => {
   useEffect(() => {
     onSearchNew();
   }, []);
+  const onClick = (item: any) => {
+    if (item.desc === '') {
+      message.info('请选择相关股票节点');
+      return;
+    }
+    const events = Object.values(item.desc.events).flat();
+    const rela_set = new Set();
+    events.forEach((item: any) => {
+      const regex = /\((.*?)\)/g;
+      const matches = [...item.matchAll(regex)];
+
+      rela_set.add(matches.pop()[1]);
+    });
+    const eventTree = Object.keys(item.desc.events).map((date) => {
+      return {
+        title: date,
+        key: date,
+        children: item.desc.events[date].map((event: string) => {
+          return {
+            title: event,
+            key: event,
+          };
+        }),
+      };
+    });
+    const res = {
+      name: item.name,
+      events: eventTree,
+      relations: Array.from(rela_set).filter((item) => item !== '未知Unknown'),
+    };
+    console.log(res);
+    setEventList(res);
+  };
+
+  const onSelect: TreeProps['onSelect'] = (selectedKeys, info) => {
+    console.log('selected', selectedKeys, info);
+  };
   return (
     <>
       <BasicLayout backgroundColor="#f5f5f5">
@@ -759,20 +811,72 @@ const Coming: React.FC = () => {
 
         {newData.origin && newData.relative && (
           <>
-            <div style={{ marginBottom: '20px' }} className={styles.chart_box}>
-              <Card style={{ marginRight: 20, height: 500, flex: 1 }}>
-                <div className={styles.card_box}>
-                  <KGContainer data={nodeLinkData}></KGContainer>
-                </div>
-              </Card>
+            <Card style={{ height: 500, flex: 1, marginBottom: '20px' }}>
+              <div className={styles.chart_box}>
+                {currExplainer === 'inputgradient' ? (
+                  <div className={styles.event_box}>
+                    {eventList ? (
+                      <>
+                        <div>
+                          <h3>
+                            {eventList.name} 与{' '}
+                            {stockNameMap.get(newData.origin.stock.slice(2))}
+                          </h3>
+                          <b>关系类型：</b>
+                          {eventList.relations.join(',')}
+                        </div>
+                        <div className={styles.jsonArea}>
+                          <b>相关事件：</b>
+                          <Tree
+                            showLine
+                            // switcherIcon={<DownOutlined />}
+                            defaultExpandedKeys={['0-0-0']}
+                            onSelect={onSelect}
+                            treeData={eventList.events}
+                          />
+                        </div>
+                      </>
+                    ) : (
+                      <h3>请选择相关股票节点</h3>
+                    )}
+                  </div>
+                ) : null}
 
-              {/* <Card style={{ height: 500, flex: 1 }}>
                 <div className={styles.card_box}>
-                  <LineChart rawData={candleList} id="close-line-chart" />
+                  <KGContainer
+                    data={nodeLinkData}
+                    onClick={onClick}
+                  ></KGContainer>
+                  {currExplainer === 'inputgradient' ? (
+                    <div className={styles.board}>
+                      <div>
+                        预测结果：
+                        {newData.origin.pred_result.explanation.toFixed(2)}
+                      </div>
+                      <div>
+                        股票排名({newData.origin.rank}/{newData.origin.total})
+                      </div>
+                    </div>
+                  ) : null}
                 </div>
-              </Card> */}
-            </div>
-            <Card
+              </div>
+            </Card>
+            <Row gutter={16}>
+              {candleList?.map((item, idx) => {
+                return (
+                  <Col span={12} style={{marginBottom:20}}>
+                    <Card>
+                      <LineChart
+                        rawData={[item]}
+                        id={'close-line-chart' + idx}
+                      />
+                    </Card>
+                  </Col>
+                );
+              })}
+            </Row>
+
+            {/* <Card
               title={`源股票 ${newData.origin.stock}(${stockNameMap.get(
                 newData.origin.stock.slice(2),
               )})`}
@@ -821,7 +925,7 @@ const Coming: React.FC = () => {
                   </div>
                 );
               })}
-            </Card>
+            </Card> */}
           </>
         )}
 

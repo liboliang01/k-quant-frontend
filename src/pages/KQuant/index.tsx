@@ -151,14 +151,14 @@ const FinKGUpdate: React.FC = () => {
         // },
       },
       {
-        title: '信息系数(Rank IC)',
+        title: '信息系数(IC)',
         dataIndex: 'IC',
         key: 'IC',
         sorter: (a: any, b: any) => a.IC - b.IC,
         render: (item: any) => Number(item).toFixed(3),
       },
       {
-        title: '信息比率(Rank ICIR)',
+        title: '信息比率(ICIR)',
         dataIndex: 'ICIR',
         key: 'ICIR',
         sorter: (a: any, b: any) => a.ICIR - b.ICIR,

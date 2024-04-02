@@ -49,6 +49,10 @@ const RadarChart = (props: PropTypes) => {
           { name: '透明性得分', max: 1 },
           { name: '解释效果得分', max: 1 },
         ],
+        axisName: {
+          // show: true,
+          color: 'black',
+        },
       },
       series: [
         {
@@ -62,7 +66,7 @@ const RadarChart = (props: PropTypes) => {
 
   const render = () => {
     var chartDom = document.getElementById(id);
-    var myChart = echarts.init(chartDom);
+    var myChart = echarts.init(chartDom, null, { renderer: 'svg' });
     chartRef.current = myChart;
 
     option && myChart.setOption(option);
@@ -71,9 +75,21 @@ const RadarChart = (props: PropTypes) => {
     render();
   }, []);
 
+  const getText = () => {
+    if (chartRef.current) {
+      const container = chartRef.current?._dom;
+      const text = container.querySelectorAll('text');
+      const textList = Array.from(text);
+      const textHTML = textList.map((item: any) => item.outerHTML);
+      console.log(textHTML);
+    }
+  };
+
   useEffect(() => {
     option && chartRef.current?.setOption(option, true);
+    getText();
   }, [option, chartRef.current]);
+
   return <div id={id} style={{ height: '500px', width: '100%' }}></div>;
 };
 

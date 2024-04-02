@@ -16,17 +16,39 @@
   margin-right: 5px;
 }
 
-.chart_box{
+.chart_box {
   display: flex;
-  justify-content: center;
-  align-items: center;
+  // justify-content: space-between;
+  // align-items: center;
   height: 500px;
   width: 100%;
-
-  .card_box{
-    height:450px;
-    width:100%
+  position: relative;
+  .board{
+    position: absolute;
+    top:50px;
+    right: 50px;
+    // height:75px;
+    width:150px;
+    border: 1px solid black;
+    border-radius: 5px;
+    padding: 10px;
+    box-sizing: border-box;
+  } 
+  .event_box {
+    height: 450px;
+    width: 400px;
+    flex: 0 0 auto;
+  }
+  .card_box {
+    height: 450px;
+    flex: 1;
   }
 }
 
-
+.jsonArea {
+  max-height: 400px;
+  overflow-y: scroll;
+  & > div {
+    max-height: 400px !important;
+  }
+}

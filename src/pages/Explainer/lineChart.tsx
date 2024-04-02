@@ -9,7 +9,6 @@ interface PropTypes {
 
 const LineChart = (props: PropTypes) => {
   const { rawData, id } = props;
-
   const chartRef = useRef<echarts.ECharts>();
   const option = useMemo(() => {
     if (Array.isArray(rawData) === false || rawData.length === 0) return {};
@@ -31,14 +30,14 @@ const LineChart = (props: PropTypes) => {
     });
     return {
       title: {
-        text: '收盘价',
+        text: Object.keys(rawData[0])[0],
       },
       tooltip: {
         trigger: 'axis',
       },
-      legend: {
-        data: legend,
-      },
+      // legend: {
+      //   data: legend,
+      // },
       grid: {
         left: '3%',
         right: '4%',
@@ -70,13 +69,14 @@ const LineChart = (props: PropTypes) => {
     option && myChart.setOption(option);
   };
   useEffect(() => {
+    console.log(rawData)
     render();
   }, []);
 
   useEffect(() => {
     option && chartRef.current?.setOption(option, true);
   }, [option, chartRef.current]);
-  return <div id={id} style={{ height: '100%', width: '100%' }}></div>;
+  return <div id={id} style={{ height: '200px', width: '100%' }}></div>;
 };
 
 export default LineChart;

@@ -386,84 +386,70 @@ const KB: React.FC = () => {
     {
       news: (
         <div>
-          国家能源局党组成员、副局长任京东主持会议并讲话，
-          <span style={{ color: 'red' }}>中国石油</span>副总经理黄永章、
-          <span style={{ color: 'red' }}>中国石化</span>
-          副总经理喻宝才出席会议。
+          减费让利显实效 
+          <span style={{ color: 'red' }}> 招商银行</span>上海分行首笔招企贷优惠利率提款成功落地。
         </div>
       ),
-      time: '2023-04-04',
+      time: '2024-03-27',
     },
     {
       news: (
         <div>
-          <span style={{ color: 'red' }}>中国石油</span>集团与
-          <span style={{ color: 'red' }}>中国能源建设</span>
-          集团在京签署战略合作协议。协议签署前，
-          中国石油集团董事长、党组书记戴厚良会见了中国能建集团董事长、党委书记宋海良，双方就深化合作交换了意见。
+          <span style={{ color: 'red' }}>安利股份：</span>2023年净利润同比下降51.03% 拟10派1.3元。
         </div>
       ),
-      time: '2023-10-23',
+      time: ' 2024-03-30',
     },
     {
       news: (
         <div>
-          <span style={{ color: 'red' }}>中石油</span>、
-          <span style={{ color: 'red' }}>中石化</span>
-          等8家公司注册100亿共同成立华光海安集团。
+          <span style={{ color: 'red' }}>武汉凡谷：</span>
+          2023年净利润同比下降69.53% 拟10派1.2元。
         </div>
       ),
-      time: '2023-11-21',
+      time: '2024-03-30',
     },
     {
       news: (
         <div>
-          <span style={{ color: 'red' }}>中国能建</span>发布吸收合并中国
-          <span style={{ color: 'red' }}>葛洲坝</span>
-          集团股份有限公司。
+          投资金额约600亿元 太盟、<span style={{ color: 'red' }}>中信资本</span>、Ares携手ADIA子公司及Mubadala共同投资大连新达盟。
+         
         </div>
       ),
-      time: '2021-07-27',
+      time: '2024-03-28',
     },
     {
       news: (
         <div>
-          今日，<span style={{ color: 'red' }}>中石油</span>和
-          <span style={{ color: 'red' }}>中石化</span>
-          宣布了财报。两公司都在过去季度取得了出色的业绩，这一利好消息引发了投资者的乐观情绪，推动了其股票价格的上涨。
+          <span style={{ color: 'red' }}>国家电投</span>上海能源科技发展有限公司董事长李海瑜被查。
         </div>
       ),
-      time: '2023-10-21',
+      time: '2024-03-30',
     },
     {
       news: (
         <div>
-          <span style={{ color: 'red' }}>东华能源</span>与
-          <span style={{ color: 'red' }}>华锦股份</span>
-          最新发布的市场报告显示，两家公司在同一产品线上争夺领先地位，竞争导致市场动荡。
+          市场综述 | 本周石油石化、有色金属板块表现强势<span style={{ color: 'red' }}>津荣天宇</span>收获2个涨停。
+          
         </div>
       ),
-      time: '2023-11-29',
+      time: '2024-03-30',
     },
     {
       news: (
         <div>
-          <span style={{ color: 'red' }}>中国石化</span>宣布了一项对
-          <span style={{ color: 'red' }}>东华能源</span>
-          的大规模的投资计划。
+          <span style={{ color: 'red' }}>招商证券</span>年报出炉：私募托管外包数量连续十年第一 投资交易业务营收增长近一倍。
         </div>
       ),
-      time: '2023-11-16',
+      time: '2024-03-30',
     },
     {
       news: (
         <div>
-          <span style={{ color: 'red' }}>华锦股份</span>和
-          <span style={{ color: 'red' }}>中国石油</span>
-          因商业合作方面的分歧进入司法程序。纠纷涉及产品专利权和市场份额的争夺，此次纠纷引发了业界广泛关注。
+          <span style={{ color: 'red' }}>中国石化</span>与道达尔能源将共同生产可持续航空燃料。
         </div>
       ),
-      time: '2023-09-17',
+      time: '2024-04-01',
     },
   ];
   return (

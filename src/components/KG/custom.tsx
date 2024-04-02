@@ -3,10 +3,11 @@ import styles from './index.less';
 
 interface PropsType {
   data: { nodes: any; links: any };
+  onClick: (item: any) => void;
 }
 
 const KGContainer: React.FC<PropsType> = (props) => {
-  const { data } = props;
+  const { data, onClick } = props;
   const render = () => {
     try {
       const rootNode = document.getElementById('k-quant-kg-container');
@@ -17,8 +18,8 @@ const KGContainer: React.FC<PropsType> = (props) => {
 
       var config = {
         //鼠标mouseover后的弹窗
-        content: null,
-        contentHook: (item: any) => item.desc || null,
+        // content: '11111111',
+        // contentHook: (item: any) => item.desc || null,
         //节点配色方案（可为空)
         nodeColor: [
           //粉红
@@ -55,6 +56,7 @@ const KGContainer: React.FC<PropsType> = (props) => {
         height:
           (document.getElementById('k-quant-kg-container')?.clientHeight || 5) -
           10,
+        onClick,
       };
       const copyData = JSON.parse(JSON.stringify(data));
       initKG2(copyData, config, '#k-quant-kg-container');

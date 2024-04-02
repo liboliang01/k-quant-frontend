@@ -703,6 +703,13 @@ initKG2 = function (data, config, container) {
     return dx;
   }
 
+  var tooltip = d3
+    .select('body')
+    .append('div') //添加div并设置成透明
+    .attr('class', 'tooltip');
+  // .style('opacity', 0.0);
+
+  var lastFocusNode;
   var circle = svg
     .append('svg:g')
     .selectAll('circle')
@@ -733,7 +740,7 @@ initKG2 = function (data, config, container) {
       if (d.type === '公司3') {
         return 25;
       }
-      if (d.type === '公司4' ||d.type==='empty_node') {
+      if (d.type === '公司4' || d.type === 'empty_node') {
         return 15;
       }
       if (d.name === '中国石油 (601857)' || d.name === '中国石化 (600028)') {
@@ -741,7 +748,74 @@ initKG2 = function (data, config, container) {
       }
       return 30;
     })
+    .on('click', function (node) {
+      //单击时让连接线加粗
+      //再次点击还原
+      path.style('stroke-width', function (line) {
+        //当与连接点连接时变粗
+        if (line.type === 'update') {
+          return 10;
+        }
+        if (line.source.name == node.name || line.target.name == node.name) {
+          if (line.focus && node.focus) {
+            line.focus = false;
+            return 1;
+          } else {
+            line.focus = true;
+            return 2.5;
+          }
+        } else {
+          return 1;
+        }
+      });
+      circle.style('stroke-width', 1); //所有的圆圈边框
+      //焦点取反
+      node.focus = !node.focus;
+      //判断是不是点击的同一个node
+      if (lastFocusNode != node && lastFocusNode != null) {
+        lastFocusNode.focus = false;
+      }
+      //进行判断
+      if (node.focus) {
+        //被选中的圆圈边框
+        // console.log(node)
+        config?.onClick(node)
+        // sessionStorage.setItem('currNode',JSON.stringify(node.desc.events))
+        d3.select(this).style('stroke-width', 2.5);
+      } else {
+        d3.select(this).style('stroke-width', 1);
+      }
+      lastFocusNode = node;
+    })
+    .on('dblclick', function (d) {
+      //双击节点时节点恢复拖拽
+      d.fixed = false;
+    })
+    .on('mouseover', function (d) {
+      //config：替换成需要回显的html
+      var content;
+      if (config.contentHook) {
+        content = config.contentHook(d);
+      } else {
+        content = config.content;
+      }
+      tooltip
+        .html(content)
+        .style('left', d3.event.pageX + 'px')
+        .style('top', d3.event.pageY + 20 + 'px')
+        .style('opacity', 1.0);
+    })
+    .on('mousemove', function (d) {
+      tooltip
+        .style('left', d3.event.pageX + 'px')
+        .style('top', d3.event.pageY + 20 + 'px');
+    })
+    .on('mouseout', function (d) {
+      tooltip.style('opacity', 0.0);
+    })
     .call(force.drag);
+
+  // .call(drag()); //使顶点可以被拖动
 
   var text = svg
     .append('g')
@@ -914,29 +988,29 @@ initKG2 = function (data, config, container) {
     });
 
     edges_text
-    .attr('transform', function (d, i) {
-      //连线上的文字
-      if (d.target.x < d.source.x) {
-        //判断起点和终点的位置，来让文字一直显示在线的上方且一直是正对用户
-        let bbox = this.getBBox(); //获取矩形空间,并且调整翻转中心。（因为svg与css中的翻转不同，具体区别可看http://www.zhangxinxu.com/wordpress/2015/10/understand-svg-transform/）
-        let rx = bbox.x + bbox.width / 2;
-        let ry = bbox.y + bbox.height / 2;
-        return 'rotate(180 ' + rx + ' ' + ry + ')';
-      } else {
-        return 'rotate(0)';
-      }
-    })
-    .attr('dx', function (d, i) {
-      return (
-        Math.sqrt(
-          Math.pow(d.target.x - d.source.x, 2) +
-            Math.pow(d.target.y - d.source.y, 2),
-        ) /
-          2 -
-        20
-      );
-      //设置文字一直显示在线的中间
-    });
+      .attr('transform', function (d, i) {
+        //连线上的文字
+        if (d.target.x < d.source.x) {
+          //判断起点和终点的位置，来让文字一直显示在线的上方且一直是正对用户
+          let bbox = this.getBBox(); //获取矩形空间,并且调整翻转中心。（因为svg与css中的翻转不同，具体区别可看http://www.zhangxinxu.com/wordpress/2015/10/understand-svg-transform/）
+          let rx = bbox.x + bbox.width / 2;
+          let ry = bbox.y + bbox.height / 2;
+          return 'rotate(180 ' + rx + ' ' + ry + ')';
+        } else {
+          return 'rotate(0)';
+        }
+      })
+      .attr('dx', function (d, i) {
+        return (
+          Math.sqrt(
+            Math.pow(d.target.x - d.source.x, 2) +
+              Math.pow(d.target.y - d.source.y, 2),
+          ) /
+            2 -
+          20
+        );
+        //设置文字一直显示在线的中间
+      });
 
     circle.attr('transform', function (d) {
       return 'translate(' + d.x + ',' + d.y + ')';
