@@ -4,6 +4,7 @@ import {
   Card,
   DatePicker,
   Form,
+  Image,
   InputNumber,
   Select,
   Space,
@@ -21,6 +22,7 @@ import styles from './index.less';
 import Indicator from './indicator';
 import InvestModal from './investModal';
 import InvestRadarChart from './investRadarChart';
+const { Title, Paragraph } = Typography;
 
 const model_list = ['LSTM', 'GRU', 'MLP', 'NRSR', 'relation_GATs'];
 const explanation_list = ['inputGradientExplainer', 'xpathExplainer'];
@@ -252,6 +254,37 @@ const Assessment: React.FC = () => {
   return (
     <BasicLayout backgroundColor="#f5f5f5">
       <>
+        <Card
+          style={{
+            marginBottom: '20px',
+            // textAlign: 'center',
+            padding: '0 0 30px 0',
+          }}
+        >
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <Title
+              level={2}
+              style={{ marginTop: 0, display: 'block', textAlign: 'center' }}
+            >
+              多角度智能量化投资模型的综合评价体系
+            </Title>
+            <Paragraph style={{ width: '400px' }}>
+              <ul>
+                <li>针对不同预测与解释模型的组合进行多维度性能评价</li>
+                <li>针对不同投资组合进行表现评估</li>
+              </ul>
+            </Paragraph>
+
+            <Image src={'images/assessment.png'} preview={false} />
+          </div>
+        </Card>
         <Card style={{ marginBottom: '20px' }} title={'模型组合评价'}>
           <Form
             name="dynamic_form_nest_item"

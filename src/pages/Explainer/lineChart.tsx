@@ -5,10 +5,11 @@ import { useEffect, useMemo, useRef } from 'react';
 interface PropTypes {
   rawData: any;
   id: string;
+  color: string;
 }
 
 const LineChart = (props: PropTypes) => {
-  const { rawData, id } = props;
+  const { rawData, id, color } = props;
   const chartRef = useRef<echarts.ECharts>();
   const option = useMemo(() => {
     if (Array.isArray(rawData) === false || rawData.length === 0) return {};
@@ -19,7 +20,7 @@ const LineChart = (props: PropTypes) => {
     const dates = Object.keys(rawData[0][legend[0]]).map((item: any) => {
       return moment(Number(item)).format('YYYY-MM-DD');
     });
-    const series = rawData.map((item: any,idx:number) => {
+    const series = rawData.map((item: any, idx: number) => {
       const key = Object.keys(item);
       return {
         name: key[0],
@@ -35,9 +36,8 @@ const LineChart = (props: PropTypes) => {
       tooltip: {
         trigger: 'axis',
       },
-      // legend: {
-      //   data: legend,
-      // },
+      // 
+      color:color,
       grid: {
         left: '3%',
         right: '4%',
@@ -56,6 +56,7 @@ const LineChart = (props: PropTypes) => {
       },
       yAxis: {
         type: 'value',
+        scale: true,
       },
       series: series,
     };
@@ -69,7 +70,7 @@ const LineChart = (props: PropTypes) => {
     option && myChart.setOption(option);
   };
   useEffect(() => {
-    console.log(rawData)
+    console.log(rawData);
     render();
   }, []);
 

@@ -3,9 +3,7 @@ import BasicLayout from '@/layout/BasicLayout';
 import {
   Button,
   Card,
-  Col,
   Form,
-  Row,
   Select,
   Space,
   Tree,
@@ -505,6 +503,34 @@ const nodeList = [
   },
 ];
 
+const nodeColor = [
+  //粉红
+  {
+    fill: 'rgb(249, 235, 249)',
+    stroke: 'rgb(162, 84, 162)',
+    text: 'rgb(162, 84, 162)',
+  },
+  //灰色
+  {
+    fill: 'rgb(112, 202, 225)',
+    stroke: '#23b3d7',
+    text: 'rgb(93, 76, 93)',
+  },
+  { fill: '#ccc', stroke: 'rgb(145, 138, 138)', text: '#333' },
+  { fill: '#D9C8AE', stroke: '#c0a378', text: 'rgb(60, 60, 60)' },
+  {
+    fill: 'rgb(178, 229, 183)',
+    stroke: 'rgb(98, 182, 105)',
+    text: 'rgb(60, 60, 60)',
+  },
+  //红
+  {
+    fill: 'rgb(248, 152, 152)',
+    stroke: 'rgb(233, 115, 116)',
+    text: 'rgb(60, 60, 60)',
+  },
+];
+
 const Coming: React.FC = () => {
   const [form] = Form.useForm();
   const [dateList, setDateList] = useState<string[]>([]);
@@ -642,12 +668,13 @@ const Coming: React.FC = () => {
 
   const candleList = useMemo(() => {
     if (!newData.origin) return [];
-    const originalStock = stockNameMap.get(newData.origin.stock.slice(2));
+    const originalStock =
+      '[被解释股票]' + stockNameMap.get(newData.origin.stock.slice(2));
     const origin: any = {};
     origin[originalStock] = JSON.parse(newData.origin.candle)['close'];
     const relativeList = newData.relative.map((item: any) => {
       const { candle, stock } = item;
-      const relaStock = stockNameMap.get(stock.slice(2));
+      const relaStock = '[相关股票]' + stockNameMap.get(stock.slice(2));
       const res: any = {};
       res[relaStock] = JSON.parse(candle)['close'];
       return res;
@@ -715,7 +742,6 @@ const Coming: React.FC = () => {
       events: eventTree,
       relations: Array.from(rela_set).filter((item) => item !== '未知Unknown'),
     };
-    console.log(res);
     setEventList(res);
   };
 
@@ -861,20 +887,32 @@ const Coming: React.FC = () => {
                 </div>
               </div>
             </Card>
-            <Row gutter={16}>
-              {candleList?.map((item, idx) => {
-                return (
-                  <Col span={12} style={{marginBottom:20}}>
-                    <Card>
-                      <LineChart
-                        rawData={[item]}
-                        id={'close-line-chart' + idx}
-                      />
-                    </Card>
-                  </Col>
-                );
-              })}
-            </Row>
+            <div style={{ display: 'flex' }}>
+              <div style={{ flex: 1, marginRight: 20 }}>
+                <Card>
+                  <LineChart
+                    rawData={[candleList[0]]}
+                    id={'close-line-chart' + 0}
+                    color={nodeColor[0]['stroke']}
+                  />
+                </Card>
+              </div>
+              <div style={{ flex: 1 }}>
+                {candleList.slice(1)?.map((item, idx) => {
+                  return (
+                    <div style={{ marginBottom: 20 }}>
+                      <Card>
+                        <LineChart
+                          rawData={[item]}
+                          id={'close-line-chart' + idx + 1}
+                          color={nodeColor[idx + 1]['stroke']}
+                        />
+                      </Card>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
 
             {/* <Card
               title={`源股票 ${newData.origin.stock}(${stockNameMap.get(
