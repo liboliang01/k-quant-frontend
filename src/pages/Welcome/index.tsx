@@ -4,7 +4,7 @@ import LeaderCard from '@/components/LeaderCard';
 import SchoolCard from '@/components/SchoolCard';
 import { DownOutlined } from '@ant-design/icons';
 import { history } from '@umijs/max';
-import { Button, Image } from 'antd';
+import { Button, Image, Timeline } from 'antd';
 import React, { useEffect, useMemo, useState } from 'react';
 import type { Engine } from 'tsparticles-engine';
 import { loadHyperspacePreset } from 'tsparticles-preset-hyperspace';
@@ -54,6 +54,8 @@ const ShenYanDesc = [
 ];
 
 const PaperList = [
+  'Cost-aware Outdated Facts Correction in the Knowledge Bases. DASFAA 2024.',
+  'PKBC: A Product-Specific Knowledge base Taxonomy Framework. DASFAA 2024.',
   '"Triple-d: Denoising Distant Supervision for High-quality Data Creation." ICDE, 2024.',
   '"HIT-An Effective Approach to Build a Dynamic Financial Knowledge Base."  DASFAA. 2023',
   '"T-FinKB: A Platform of Temporal Financial Knowledge Base Construction." ICDE, 2023.',
@@ -118,7 +120,7 @@ const Welcome: React.FC = () => {
   };
 
   return (
-    <div style={{ backgroundColor: 'black' }}>
+    <div style={{ backgroundColor: 'white' }}>
       {/* <div className={styles.anchor}>
         <Anchor
           affix={false}
@@ -155,7 +157,7 @@ const Welcome: React.FC = () => {
       <div
         className={styles.welcomeContainer}
         id="welcome"
-        style={{ backgroundColor: 'black' }}
+        style={{ backgroundColor: 'white' }}
       >
         {/* <Particles
           options={{
@@ -178,9 +180,9 @@ const Welcome: React.FC = () => {
             {curStr}
           </div>
           <Button
-            type="dashed"
+            type="primary"
             ghost
-            style={{ color: 'white', marginTop: 20 }}
+            style={{ marginTop: 20 }}
             onClick={start}
           >
             Start Now
@@ -287,10 +289,10 @@ const Welcome: React.FC = () => {
           >
             <h2 style={{ textAlign: 'start' }}>Knowledge Graph</h2>
             <Button
-              type="dashed"
+              type="primary"
               ghost
-              style={{ color: 'white', marginTop: 20 }}
-              onClick={() => history.push('/query')}
+              style={{marginTop: 20 }}
+              onClick={() => history.push('/KB')}
             >
               Read More
             </Button>
@@ -312,9 +314,9 @@ const Welcome: React.FC = () => {
           >
             <h2 style={{ textAlign: 'start' }}>All available data sources</h2>
             <Button
-              type="dashed"
+              type="primary"
               ghost
-              style={{ color: 'white', marginTop: 20 }}
+              style={{marginTop: 20 }}
               onClick={() => history.push('/datasources')}
             >
               Read More
@@ -390,6 +392,52 @@ const Welcome: React.FC = () => {
             <SchoolCard name="HKUST_GZ" icon="images/HKUST.jpg" />
             <SchoolCard name="SJTU" icon="images/SJTU.jpg" />
             <SchoolCard name="CSMAR" icon="images/csmar.png" />
+          </div>
+        </div>
+      </div>
+      <div className={styles.box2} id="news">
+        <div className={styles.competitions}>
+          <h1 style={{ marginBottom: 20 }}>News</h1>
+          <div className={styles.achievement_box}>
+            <Timeline
+              mode={'left'}
+              pending="Updating..."
+              reverse={true}
+              items={[
+                {
+                  label: '2024-04-17 [The K-Quant website]',
+                  children: (
+                    <>
+                      <p>KB construction page supports automatic updates</p>
+                      <p>K-Quant prediction page supports automatic updates</p>
+                      <p>XAI page updated with new functions</p>
+                    </>
+                  ),
+                },
+                {
+                  label: '2024-04-17 [The Zenedo HiDy dataset]',
+                  children: (
+                    <>
+                      <p>
+                        The Zenedo HiDy dataset is also updated (latest version
+                        is published on March) - Now HiDy currently contains 34
+                        relation types, more than 504,736 relations, 17 entity
+                        types, and more than 51,095 entities.
+                      </p>
+                      <p>
+                        This month our news API is expired, we are still fixing
+                        it by further using our own crawling.
+                      </p>
+                    </>
+                  ),
+                },
+                {
+                  label: '2024-04-17',
+                  children:
+                    'Now we also support Events KB (45206 pieces), we will add this news to our website.',
+                },
+              ]}
+            ></Timeline>
           </div>
         </div>
       </div>

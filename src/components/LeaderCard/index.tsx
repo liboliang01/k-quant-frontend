@@ -21,8 +21,8 @@ const LeaderCard: React.FC<PropsType> = (props) => {
         height="100"
       />
       <div>
-        <h3 className="fw-bold h4 mb-1 text-white">{name}</h3>
-        <h4 className="fw-light h5 mb-3 text-white">{subTitle}</h4>
+        <h3 className="fw-bold h4 mb-1 ">{name}</h3>
+        <h4 className="fw-light h5 mb-3 ">{subTitle}</h4>
         <div style={{ display: 'flex' }}>
           <ul className="mb-4" style={{ width: '100%', textAlign: 'left' }}>
             {descList.map((item) => {

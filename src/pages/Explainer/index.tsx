@@ -688,7 +688,7 @@ const Coming: React.FC = () => {
         ...values,
       };
       setLoading(true);
-      const res = await axios.get(`http://47.106.95.15:8000/get_score_new/`, {
+      const res = await axios.get(`http://47.106.95.15:8000/get_score_new2/`, {
         params: {
           stock: params.stock,
           date: params.date,
@@ -696,6 +696,7 @@ const Coming: React.FC = () => {
           forecast: params.forecast,
         },
       });
+
       setCurrExplainer(params.model);
       setEventList(undefined);
       setNewData(res.data.data);
@@ -718,13 +719,14 @@ const Coming: React.FC = () => {
       return;
     }
     const events = Object.values(item.desc.events).flat();
-    const rela_set = new Set();
-    events.forEach((item: any) => {
-      const regex = /\((.*?)\)/g;
-      const matches = [...item.matchAll(regex)];
+    // console.log(events)
+    // const rela_set = new Set();
+    // events.forEach((item: any) => {
+    //   const regex = /\((.*?)\)/g;
+    //   const matches = [...item.matchAll(regex)];
 
-      rela_set.add(matches.pop()[1]);
-    });
+    //   rela_set.add(matches.pop()[1]);
+    // });
     const eventTree = Object.keys(item.desc.events).map((date) => {
       return {
         title: date,
@@ -740,7 +742,8 @@ const Coming: React.FC = () => {
     const res = {
       name: item.name,
       events: eventTree,
-      relations: Array.from(rela_set).filter((item) => item !== '未知Unknown'),
+      // relations: Array.from(rela_set).filter((item) => item !== '未知Unknown'),
+      relations: item.desc.relation,
     };
     setEventList(res);
   };
@@ -756,13 +759,13 @@ const Coming: React.FC = () => {
             <Form.Item
               label="解释模型"
               name="model"
-              initialValue={'inputgradient'}
+              initialValue={'input'}
               rules={[{ required: true }]}
             >
               <Select
                 style={{ width: 200 }}
                 options={[
-                  { value: 'inputgradient', label: 'inputGradient' },
+                  { value: 'input', label: 'inputGradient' },
                   { value: 'xpath', label: 'Xpath' },
                 ]}
               />
@@ -839,51 +842,51 @@ const Coming: React.FC = () => {
           <>
             <Card style={{ height: 500, flex: 1, marginBottom: '20px' }}>
               <div className={styles.chart_box}>
-                {currExplainer === 'inputgradient' ? (
-                  <div className={styles.event_box}>
-                    {eventList ? (
-                      <>
-                        <div>
-                          <h3>
-                            {eventList.name} 与{' '}
-                            {stockNameMap.get(newData.origin.stock.slice(2))}
-                          </h3>
-                          <b>关系类型：</b>
-                          {eventList.relations.join(',')}
-                        </div>
-                        <div className={styles.jsonArea}>
-                          <b>相关事件：</b>
-                          <Tree
-                            showLine
-                            // switcherIcon={<DownOutlined />}
-                            defaultExpandedKeys={['0-0-0']}
-                            onSelect={onSelect}
-                            treeData={eventList.events}
-                          />
-                        </div>
-                      </>
-                    ) : (
-                      <h3>请选择相关股票节点</h3>
-                    )}
-                  </div>
-                ) : null}
+                {/* {currExplainer === 'input' ? ( */}
+                <div className={styles.event_box}>
+                  {eventList ? (
+                    <>
+                      <div>
+                        <h3>
+                          {eventList.name} 与{' '}
+                          {stockNameMap.get(newData.origin.stock.slice(2))}
+                        </h3>
+                        <b>关系类型：</b>
+                        {eventList.relations.join(',')}
+                      </div>
+                      <div className={styles.jsonArea}>
+                        <b>相关事件：</b>
+                        <Tree
+                          showLine
+                          // switcherIcon={<DownOutlined />}
+                          defaultExpandedKeys={['0-0-0']}
+                          onSelect={onSelect}
+                          treeData={eventList.events}
+                        />
+                      </div>
+                    </>
+                  ) : (
+                    <h3>请选择相关股票节点</h3>
+                  )}
+                </div>
+                {/* ) : null} */}
 
                 <div className={styles.card_box}>
                   <KGContainer
                     data={nodeLinkData}
                     onClick={onClick}
                   ></KGContainer>
-                  {currExplainer === 'inputgradient' ? (
-                    <div className={styles.board}>
+                  <div className={styles.board}>
+                    {currExplainer === 'input' ? (
                       <div>
                         预测结果：
                         {newData.origin.pred_result.explanation.toFixed(2)}
                       </div>
-                      <div>
-                        股票排名({newData.origin.rank}/{newData.origin.total})
-                      </div>
+                    ) : null}
+                    <div>
+                      股票排名({newData.origin.rank}/{newData.origin.total})
                     </div>
-                  ) : null}
+                  </div>
                 </div>
               </div>
             </Card>

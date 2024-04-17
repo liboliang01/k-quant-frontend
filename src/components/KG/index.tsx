@@ -4,10 +4,11 @@ import styles from './index.less';
 interface PropsType {
   data: { nodes: any; links: any };
   title: string;
+  onClick: () => void;
 }
 
 const KGContainer: React.FC<PropsType> = (props) => {
-  const { data, title } = props;
+  const { data, title, onClick } = props;
   const render = () => {
     try {
       const rootNode = document.getElementById('k-quant-kg-container');
@@ -30,6 +31,7 @@ const KGContainer: React.FC<PropsType> = (props) => {
         height:
           (document.getElementById('k-quant-kg-container')?.clientHeight || 5) -
           10,
+        onClick,
       };
       const copyData = JSON.parse(JSON.stringify(data));
       initKG2(copyData, config, '#k-quant-kg-container');

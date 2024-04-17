@@ -217,20 +217,20 @@ const FinKGUpdate: React.FC = () => {
         sorter: (a: any, b: any) => a.ICIR - b.ICIR,
         render: (item: any) => Number(item).toFixed(3),
       },
-      {
-        title: '信息系数(Rank IC)[Gradient Based]',
-        dataIndex: 'IC_incre',
-        key: 'IC_incre',
-        sorter: (a: any, b: any) => a.IC_incre - b.IC_incre,
-        render: (item: any) => Number(item).toFixed(3),
-      },
-      {
-        title: '信息比率(Rank ICIR)[Gradient Based]',
-        dataIndex: 'ICIR_incre',
-        key: 'ICIR_incre',
-        sorter: (a: any, b: any) => a.ICIR_incre - b.ICIR_incre,
-        render: (item: any) => Number(item).toFixed(3),
-      },
+      // {
+      //   title: '信息系数(Rank IC)[Gradient Based]',
+      //   dataIndex: 'IC_incre',
+      //   key: 'IC_incre',
+      //   sorter: (a: any, b: any) => a.IC_incre - b.IC_incre,
+      //   render: (item: any) => Number(item).toFixed(3),
+      // },
+      // {
+      //   title: '信息比率(Rank ICIR)[Gradient Based]',
+      //   dataIndex: 'ICIR_incre',
+      //   key: 'ICIR_incre',
+      //   sorter: (a: any, b: any) => a.ICIR_incre - b.ICIR_incre,
+      //   render: (item: any) => Number(item).toFixed(3),
+      // },
       {
         title: '信息系数(Rank IC)[DoubleAdapt]',
         dataIndex: 'IC_DA',
@@ -272,7 +272,11 @@ const FinKGUpdate: React.FC = () => {
         let key = Object.keys(item)[0];
         const val = item[key];
         // 删除ensemble_retrain和Perfomance_based_ensemble
-        if (key === 'ensemble_retrain' || key === 'Perfomance_based_ensemble') {
+        if (
+          key === 'ensemble_retrain' ||
+          key === 'Perfomance_based_ensemble'
+         
+        ) {
           return 'delete';
         }
         // 将ensemble_no_retrain改名为ensemble_retrain
@@ -400,8 +404,8 @@ const FinKGUpdate: React.FC = () => {
     stock: string,
     modelList: string[],
   ) => {
-    if(modelList.length===0){
-      return 
+    if (modelList.length === 0) {
+      return;
     }
     const res = await axios.get(
       `http://47.106.95.15:8000/get_multi_graph_data/`,

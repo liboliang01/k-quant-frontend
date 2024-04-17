@@ -78,16 +78,16 @@ const colors = [
 const DoubleAxiasBarChart: React.FC<PropTypes> = (props) => {
   const { tableData, isUpdate } = props;
   const domRef = useRef<echarts.ECharts>();
-
+  console.log(tableData);
   const maxmin = useMemo(() => {
     const values: any[] = [];
     const typeList = isUpdate
-      ? ['IC', 'ICIR', 'IC_incre', 'ICIR_incre', 'IC_DA', 'ICIR_DA']
+      ? ['IC', 'ICIR',  'IC_DA', 'ICIR_DA']
       : ['IC', 'ICIR'];
     typeList.forEach((item, idx) => {
       const list: any[] = [];
       tableData.forEach((dataItem) => {
-        list.push(dataItem[item]*1000);
+        list.push(dataItem[item] * 1000);
       });
       const s = {
         data: list,
@@ -104,12 +104,16 @@ const DoubleAxiasBarChart: React.FC<PropTypes> = (props) => {
       const data2 = values[1].data;
       const data3 = values[2].data;
       const data4 = values[3].data;
-      const data5 = values[4].data;
-      const data6 = values[5].data;
-      max1 = Math.max(...data1, ...data3, ...data5);
-      max2 = Math.max(...data2, ...data4, ...data6);
-      min1 = Math.min(...data1, ...data3, ...data5);
-      min2 = Math.min(...data2, ...data4, ...data6);
+      // const data5 = values[4].data;
+      // const data6 = values[5].data;
+      // max1 = Math.max(...data1, ...data3, ...data5);
+      // max2 = Math.max(...data2, ...data4, ...data6);
+      // min1 = Math.min(...data1, ...data3, ...data5);
+      // min2 = Math.min(...data2, ...data4, ...data6);
+      max1 = Math.max(...data1, ...data3);
+      max2 = Math.max(...data2, ...data4);
+      min1 = Math.min(...data1, ...data3);
+      min2 = Math.min(...data2, ...data4);
     } else {
       const data1 = values[0].data;
       const data2 = values[1].data;
@@ -142,10 +146,10 @@ const DoubleAxiasBarChart: React.FC<PropTypes> = (props) => {
     min1 = min1 > 0 ? 0 : min1;
     min2 = min2 > 0 ? 0 : min2;
 
-    min1/=1000
-    min2/=1000
-    max1/=1000
-    max2/=1000
+    min1 /= 1000;
+    min2 /= 1000;
+    max1 /= 1000;
+    max2 /= 1000;
     console.log({ min1, min2, max1, max2 });
     return { min1, min2, max1, max2 };
   }, [tableData, isUpdate]);
@@ -169,7 +173,7 @@ const DoubleAxiasBarChart: React.FC<PropTypes> = (props) => {
     );
     const values: any[] = [];
     const typeList = isUpdate
-      ? ['IC', 'ICIR', 'IC_incre', 'ICIR_incre', 'IC_DA', 'ICIR_DA']
+      ? ['IC', 'ICIR', 'IC_DA', 'ICIR_DA']
       : ['IC', 'ICIR'];
     typeList.forEach((item, idx) => {
       const list: any[] = [];
@@ -242,7 +246,7 @@ const DoubleAxiasBarChart: React.FC<PropTypes> = (props) => {
             show: true,
           },
           axisLabel: {
-            formatter: (value)=>value.toFixed(3),
+            formatter: (value) => value.toFixed(3),
           },
           // max: max1,
           // min: min1,
@@ -256,7 +260,7 @@ const DoubleAxiasBarChart: React.FC<PropTypes> = (props) => {
             show: true,
           },
           axisLabel: {
-            formatter: (value)=>value.toFixed(3),
+            formatter: (value) => value.toFixed(3),
           },
           // max: max2,
           // min: min2,

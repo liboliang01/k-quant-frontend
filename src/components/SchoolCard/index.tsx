@@ -20,7 +20,7 @@ const SchoolCard: React.FC<PropsType> = (props) => {
           height="100"
         />
         <div>
-          <h3 className="fw-bold h4 mb-1 mt-3 text-white">{name}</h3>
+          <h3 className="fw-bold h4 mb-1 mt-3">{name}</h3>
         </div>
       </div>
     </div>

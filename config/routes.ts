@@ -55,6 +55,12 @@ const routes = [
         component: './Assessment',
       },
       {
+        name: 'News',
+        path: '/News',
+        component: './Progress',
+        hideInMenu: true,
+      },
+      {
         name: 'More Information',
         path: '/more',
         component: './More',
@@ -63,7 +69,7 @@ const routes = [
         name: 'new-home',
         path: '/newHome',
         component: './newHome',
-        // hideInMenu: true,
+        hideInMenu: true,
       },
       {
         name: '404',
