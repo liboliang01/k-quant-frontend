@@ -215,6 +215,44 @@ const Welcome: React.FC = () => {
           </div>
         </div>
       </div> */}
+      <div className={styles.box2} id="news">
+        <div className={styles.competitions}>
+          <h1 style={{ marginBottom: 20 }}>News</h1>
+          <div className={styles.achievement_box}>
+            <Timeline
+            style={{marginTop:20}}
+              mode={'left'}
+              pending="Updating..."
+              reverse={true}
+              items={[
+                {
+                  label: '2024-04-17 [The K-Quant website]',
+                  children: (
+                    <>
+                      <p>KB construction page supports automatic updates</p>
+                      <p>K-Quant prediction page supports automatic updates</p>
+                      <p>XAI page updated with new functions</p>
+                    </>
+                  ),
+                },
+                {
+                  label: '2024-04-17 [The Zenedo HiDy dataset]',
+                  children: (
+                    <>
+                      <p>
+                        The Zenedo HiDy dataset is also updated (latest version
+                        is published on March) - Now HiDy currently contains 34
+                        relation types, more than 504,736 relations, 17 entity
+                        types, and more than 51,095 entities.
+                      </p>
+                    </>
+                  ),
+                },
+              ]}
+            ></Timeline>
+          </div>
+        </div>
+      </div>
       <div className={styles.box2} id="competitions">
         <div className={styles.competitions}>
           <h1 style={{ marginBottom: 20 }}>Competition</h1>
@@ -291,16 +329,16 @@ const Welcome: React.FC = () => {
             <Button
               type="primary"
               ghost
-              style={{marginTop: 20 }}
+              style={{ marginTop: 20 }}
               onClick={() => history.push('/KB')}
             >
               Read More
             </Button>
           </div>
           <div className={styles.cardContent}>
-            <DescCard desc={'Entities'} title={'30,000+'} />
-            <DescCard desc={'Relations'} title={'20+'} />
-            <DescCard desc={'Short term Events'} title={'4,000+'} />
+            <DescCard desc={'Entities'} title={'51,095+'} />
+            <DescCard desc={'Relations'} title={'34+'} />
+            <DescCard desc={'Events'} title={'45,000+'} />
             <DescCard desc={'High-frequency Events'} title={'10+'} />
           </div>
           <div
@@ -316,7 +354,7 @@ const Welcome: React.FC = () => {
             <Button
               type="primary"
               ghost
-              style={{marginTop: 20 }}
+              style={{ marginTop: 20 }}
               onClick={() => history.push('/datasources')}
             >
               Read More
@@ -395,52 +433,7 @@ const Welcome: React.FC = () => {
           </div>
         </div>
       </div>
-      <div className={styles.box2} id="news">
-        <div className={styles.competitions}>
-          <h1 style={{ marginBottom: 20 }}>News</h1>
-          <div className={styles.achievement_box}>
-            <Timeline
-              mode={'left'}
-              pending="Updating..."
-              reverse={true}
-              items={[
-                {
-                  label: '2024-04-17 [The K-Quant website]',
-                  children: (
-                    <>
-                      <p>KB construction page supports automatic updates</p>
-                      <p>K-Quant prediction page supports automatic updates</p>
-                      <p>XAI page updated with new functions</p>
-                    </>
-                  ),
-                },
-                {
-                  label: '2024-04-17 [The Zenedo HiDy dataset]',
-                  children: (
-                    <>
-                      <p>
-                        The Zenedo HiDy dataset is also updated (latest version
-                        is published on March) - Now HiDy currently contains 34
-                        relation types, more than 504,736 relations, 17 entity
-                        types, and more than 51,095 entities.
-                      </p>
-                      <p>
-                        This month our news API is expired, we are still fixing
-                        it by further using our own crawling.
-                      </p>
-                    </>
-                  ),
-                },
-                {
-                  label: '2024-04-17',
-                  children:
-                    'Now we also support Events KB (45206 pieces), we will add this news to our website.',
-                },
-              ]}
-            ></Timeline>
-          </div>
-        </div>
-      </div>
+
       <div className={styles.footerContainer}>
         <Footer />
       </div>
