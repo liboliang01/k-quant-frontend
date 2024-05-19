@@ -18,6 +18,8 @@ const color_list = [
   '#ea7ccc',
 ];
 
+const model_list = ['LSTM', 'GRU', 'MLP', 'NRSR', 'relation_GATs'];
+
 const RadarChart = (props: PropTypes) => {
   const { rawData, id } = props;
 
@@ -25,7 +27,7 @@ const RadarChart = (props: PropTypes) => {
   const option = useMemo(() => {
     const data = rawData.map((item: Record<string, number>, idx: number) => {
       return {
-        name: `组合${idx + 1}`,
+        name: model_list[idx],
         value: Object.values(item),
         areaStyle: {
           color: color_list[idx],
@@ -81,7 +83,7 @@ const RadarChart = (props: PropTypes) => {
       const text = container.querySelectorAll('text');
       const textList = Array.from(text);
       const textHTML = textList.map((item: any) => item.outerHTML);
-      console.log(textHTML);
+      // console.log(textHTML);
     }
   };
 

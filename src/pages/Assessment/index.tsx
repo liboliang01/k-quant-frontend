@@ -1,13 +1,17 @@
-import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import {
   Button,
   Card,
+  Col,
   DatePicker,
+  Divider,
   Form,
   Image,
   InputNumber,
-  Select,
+  List,
+  Radio,
+  Row,
   Space,
+  Tree,
   Typography,
 } from 'antd';
 import axios from 'axios';
@@ -17,11 +21,13 @@ import BasicLayout from '../../layout/BasicLayout';
 import KChart from '../Explainer/KChart';
 import companyName from '../Explainer/company_full_name.json';
 import CredibilityRadarChart from './credibilityRadarChart';
-import { credibility, invest, stock } from './data';
+import { invest } from './data';
 import styles from './index.less';
 import Indicator from './indicator';
+import input_mock_data from './input_result.json';
 import InvestModal from './investModal';
 import InvestRadarChart from './investRadarChart';
+import xpath_mock_data from './xpath_result.json';
 const { Title, Paragraph } = Typography;
 
 const model_list = ['LSTM', 'GRU', 'MLP', 'NRSR', 'relation_GATs'];
@@ -93,7 +99,12 @@ const Assessment: React.FC = () => {
   const [form3] = Form.useForm();
   const [form4] = Form.useForm();
   const [form4Data, setForm4Data] = useState<any>({});
-  const [candleList, setCandleList] = useState<any[]>();
+  const [candleList, setCandleList] = useState<any[]>([]);
+  const [explainer, setExplainer] = useState('inputGradient');
+  const [currentModel, setCurrentModel] = useState('NRSR');
+  const [scoreList, setScoreList] = useState([]);
+  const [stockList, setStockList] = useState({});
+  const [stock, setStock] = useState({});
   const onFinish = (values: any) => {
     console.log('Received values of form:', values);
   };
@@ -128,37 +139,11 @@ const Assessment: React.FC = () => {
       prediction_model: 'relation_GATs',
       seq_len: 30,
     },
-    // {
-    //   date: [dayjs('2019-06-01'), dayjs('2019-06-15')],
-    //   explanation_model: 'inputGradientExplainer',
-    //   prediction_model: 'LSTM',
-    //   seq_len: 60,
-    // },
-    // {
-    //   date: [dayjs('2019-06-01'), dayjs('2019-06-15')],
-    //   explanation_model: 'inputGradientExplainer',
-    //   prediction_model: 'GRU',
-    //   seq_len: 60,
-    // },
-    // {
-    //   date: [dayjs('2019-06-01'), dayjs('2019-06-15')],
-    //   explanation_model: 'inputGradientExplainer',
-    //   prediction_model: 'MLP',
-    //   seq_len: 60,
-    // },
-    // {
-    //   date: [dayjs('2019-06-01'), dayjs('2019-06-15')],
-    //   explanation_model: 'inputGradientExplainer',
-    //   prediction_model: 'NRSR',
-    //   seq_len: 60,
-    // },
-    // {
-    //   date: [dayjs('2019-06-01'), dayjs('2019-06-15')],
-    //   explanation_model: 'inputGradientExplainer',
-    //   prediction_model: 'relation_GATs',
-    //   seq_len: 60,
-    // },
   ];
+  const model_pairs = {
+    without_k: ['LSTM', 'GRU', 'MLP'],
+    with_k: ['NRSR', 'relation_GATs'],
+  };
   const stock_recommend = {
     date: [dayjs('2019-06-01'), dayjs('2019-06-15')],
     explanation_model: 'inputGradientExplainer',
@@ -220,28 +205,34 @@ const Assessment: React.FC = () => {
     setForm4Data(data);
   };
 
-  const get_candle_data = async () => {
+  const get_candle_data = async (stockList) => {
+    console.log('stock_list',stockList)
+    setStock(stockList)
     const res: any[] = [];
-    for (let item of stock) {
+    for (let item of stockList) {
       const r = await axios.get(
         `http://47.106.95.15:8000/get_pic_data/?stock=${item.substring(
           0,
           6,
-        )}&date=2019-06-15`,
+        )}&date=2024-03-12`,
       );
       res.push(r.data);
     }
+    console.log('candle',res)
     setCandleList(res);
   };
   useEffect(() => {
     setFieldsValue({
       credibility_assessment: credibility_assessment_initial_data,
       date: [dayjs('2019-06-01'), dayjs('2019-06-15')],
+      seq_len: '15',
+      duration: 'three_month',
+      explainer: 'inputGradient',
     });
     setFieldsValue2(stock_recommend);
-    get_candle_data();
     setFieldsValue3(invest_initial_data);
     setFieldsValue4({ select_dict_list: invest_comb_data });
+    onSearch();
   }, []);
   const stockNameMap = useMemo(() => {
     const map = new Map();
@@ -251,6 +242,65 @@ const Assessment: React.FC = () => {
     });
     return map;
   }, [companyName]);
+  const layout = {
+    labelCol: { span: 4 },
+  };
+
+  const onSearch = () => {
+    form.validateFields().then(async (values) => {
+      const params = {
+        ...values,
+      };
+      setExplainer(params.explainer);
+      const mock_data =
+        params.explainer === 'inputGradient'
+          ? input_mock_data
+          : xpath_mock_data;
+      const curr_data = mock_data[params.seq_len][params.duration];
+      const curr_score = Object.keys(curr_data).map((item) => {
+        return curr_data[item]['score'];
+      });
+      console.log(curr_data);
+
+      setScoreList(curr_score);
+      setStockList(curr_data);
+      get_candle_data(curr_data['NRSR']['stocks']);
+    });
+  };
+
+  const onSelect: TreeProps['onSelect'] = (selectedKeys, info) => {
+    console.log('selected', selectedKeys, info);
+  };
+
+  const treeData = useMemo(() => {
+    if (!Array.isArray(form4Data)) {
+      return [];
+    }
+    const tree = [];
+    form4Data.forEach((item) => {
+      const name = Object.keys(item)[0];
+      const child = item[name];
+      const temp = {
+        key: name,
+        title: name,
+        children: [],
+      };
+      Object.keys(child).forEach((c) => {
+        temp.children.push({
+          key: `${c}-${child[c]}支`,
+          title: `${c}-${child[c]}支`,
+        });
+      });
+      tree.push(temp);
+    });
+    console.log(tree);
+    return tree;
+  }, [form4Data]);
+
+  const chooseModel = (item) => {
+    setCurrentModel(item);
+    get_candle_data(stockList[item]['stocks']);
+  };
   return (
     <BasicLayout backgroundColor="#f5f5f5">
       <>
@@ -285,139 +335,139 @@ const Assessment: React.FC = () => {
             <Image src={'images/assessment.png'} preview={false} />
           </div>
         </Card>
-        <Card style={{ marginBottom: '20px' }} title={'模型组合评价'}>
-          <Form
-            name="dynamic_form_nest_item"
-            onFinish={onFinish}
-            style={{ maxWidth: '100%' }}
-            autoComplete="off"
-            form={form}
-          >
-            <Form.Item
-              name={'date'}
-              label="时间段"
-              rules={[{ required: true, message: '请选择时间段' }]}
-              style={{ position: 'absolute' }}
-            >
-              <RangePicker />
-            </Form.Item>
-            <Form.List name="credibility_assessment">
-              {(fields, { add, remove }) => (
-                <>
-                  <Form.Item
-                    style={{
-                      marginBottom: 10,
-                      marginLeft: 400,
-                    }}
-                  >
-                    <Space
-                      style={{
-                        display: 'flex',
-                        width: '100%',
-                      }}
-                      align="baseline"
-                    >
-                      <Button
-                        type="dashed"
-                        style={{ display: 'block', width: '100%' }}
-                        onClick={() => add()}
-                        block
-                        icon={<PlusOutlined />}
-                      >
-                        添加模型组合
-                      </Button>
-                      <Button type="primary" htmlType="submit">
-                        查询
-                      </Button>
-                    </Space>
-                  </Form.Item>
 
-                  {fields.map(({ key, name, ...restField }) => {
-                    return (
-                      <Space
-                        key={key}
-                        style={{ display: 'flex', marginBottom: -25 }}
-                        align="baseline"
-                      >
-                        <div>{`组合${key + 1}`}</div>
-                        <Form.Item
-                          {...restField}
-                          name={[name, 'prediction_model']}
-                          label="预测模型"
-                          rules={[
-                            { required: true, message: '请选择预测模型' },
-                          ]}
-                        >
-                          <Select
-                            placeholder="请选择预测模型"
-                            style={{ width: 200 }}
-                            size="small"
-                          >
-                            {model_list.map((item) => {
-                              return (
-                                <Select.Option key={item} name={item}>
-                                  {item}
-                                </Select.Option>
-                              );
-                            })}
-                          </Select>
-                        </Form.Item>
-                        <Form.Item
-                          {...restField}
-                          name={[name, 'explanation_model']}
-                          label="解释模型"
-                          rules={[
-                            { required: true, message: '请选择解释模型' },
-                          ]}
-                        >
-                          <Select
-                            placeholder="请选择解释模型"
-                            style={{ width: 200 }}
-                            size="small"
-                          >
-                            {explanation_list.map((item) => {
-                              return (
-                                <Select.Option key={item} name={item}>
-                                  {item}
-                                </Select.Option>
-                              );
-                            })}
-                          </Select>
-                        </Form.Item>
-                        <Form.Item
-                          {...restField}
-                          name={[name, 'seq_len']}
-                          label="时间窗口"
-                          rules={[
-                            { required: true, message: '请输入时间窗口' },
-                          ]}
-                        >
-                          <InputNumber
-                            addonAfter="天"
-                            placeholder="60天"
-                            size="small"
-                            style={{ width: 200 }}
-                          />
-                        </Form.Item>
-                        <MinusCircleOutlined onClick={() => remove(name)} />
-                      </Space>
-                    );
-                  })}
-                </>
-              )}
-            </Form.List>
+        <Card style={{ marginBottom: '20px' }} title={'生成模型组合'}>
+          <Form form={form} {...layout}>
+            <Form.Item
+              label="时间段"
+              name="duration"
+              initialValue={'three_month'}
+            >
+              <Radio.Group>
+                <Radio value="three_month">近10天</Radio>
+                <Radio value="six_month">近20天</Radio>
+                <Radio value="one_year">近30天</Radio>
+              </Radio.Group>
+            </Form.Item>
+            <Form.Item label="时间窗口" name="seq_len" initialValue={'15'}>
+              <Radio.Group>
+                <Radio value="15">15天</Radio>
+                <Radio value="30">30天</Radio>
+                <Radio value="60">60天</Radio>
+              </Radio.Group>
+            </Form.Item>
+            <Form.Item
+              label="解释模型"
+              name="explainer"
+              initialValue={'inputGradient'}
+            >
+              <Radio.Group>
+                <Radio value="inputGradient">inputGradient</Radio>
+                <Radio value="xPath">xPath</Radio>
+              </Radio.Group>
+            </Form.Item>
+            <Form.Item>
+              <Row>
+                <Col span={4}></Col>
+                <Col>
+                  <Space>
+                    <Button type="primary" onClick={onSearch}>
+                      生成组合
+                    </Button>
+                    <Button onClick={() => {}}>重置</Button>
+                  </Space>
+                </Col>
+              </Row>
+            </Form.Item>
           </Form>
+        </Card>
+
+        <Card style={{ marginBottom: '20px', paddingBottom: 20 }}>
+          {/* <Divider orientation="left">未使用知识的模型组合</Divider> */}
+          <Row>
+            <Col span={6}>
+              <div style={{ fontSize: 20 }}>未使用知识的模型组合:</div>
+            </Col>
+            <Col span={18}>
+              <List
+                bordered
+                size={'small'}
+                dataSource={model_pairs.without_k}
+                renderItem={(item) => (
+                  <List.Item style={{ width: '100%', display: 'block' }}>
+                    <Row>
+                      <Col span={8}>
+                        <Typography.Text>[预测模型]:</Typography.Text> {item}
+                      </Col>
+                      <Col span={8}>
+                        <Typography.Text>[解释模型]:</Typography.Text> 无
+                      </Col>
+                      <Col span={8}>
+                        <Button
+                          size={'small'}
+                          onClick={() => chooseModel(item)}
+                        >
+                          选择
+                        </Button>
+                      </Col>
+                    </Row>
+                  </List.Item>
+                )}
+              />
+            </Col>
+          </Row>
+
+          <Divider />
+          <Row>
+            <Col span={6}>
+              <div style={{ fontSize: 20 }}>使用知识的模型组合:</div>
+            </Col>
+            <Col span={18}>
+              <List
+                bordered
+                size={'small'}
+                dataSource={model_pairs.with_k}
+                renderItem={(item) => (
+                  <List.Item style={{ width: '100%', display: 'block' }}>
+                    <Row>
+                      <Col span={8}>
+                        <Typography.Text>[预测模型]:</Typography.Text> {item}
+                      </Col>
+                      <Col span={8}>
+                        <Typography.Text mark>[解释模型]:</Typography.Text>{' '}
+                        {explainer}
+                      </Col>
+                      <Col span={8}>
+                        <Button
+                          size={'small'}
+                          onClick={() => chooseModel(item)}
+                        >
+                          选择
+                        </Button>
+                      </Col>
+                    </Row>
+                  </List.Item>
+                )}
+              />
+            </Col>
+          </Row>
+        </Card>
+
+        <Card style={{ marginBottom: '20px' }} title={'模型组合评价'}>
           <div className={styles.radar}>
             <CredibilityRadarChart
               id="credibility_radar_chart"
-              rawData={credibility}
+              rawData={scoreList}
             />
             <Indicator desc={indicator1} />
           </div>
         </Card>
 
-        <Card style={{ marginBottom: '20px' }} title={'推荐股票'}>
-          <Form
+        <Card
+          style={{ marginBottom: '20px' }}
+          title={`Top3 推荐股票 [${currentModel}]`}
+        >
+          {/* <Form
             name="stock_forecast_form"
             onFinish={onFinish}
             style={{ maxWidth: '100%' }}
@@ -495,16 +545,16 @@ const Assessment: React.FC = () => {
                 </Button>
               </Form.Item>
             </Space>
-          </Form>
-          {candleList?.length &&
+          </Form> */}
+          {candleList.length!==0 &&
             stock.map((item, idx) => {
               return (
-                <>
+                <div key={item}>
                   <div className={styles.title}>{`${item}(${stockNameMap.get(
                     item.substring(0, 6),
                   )})`}</div>
                   <KChart rawData={candleList[idx]} id={`${item}-k-chart`} />
-                </>
+                </div>
               );
             })}
         </Card>
@@ -559,28 +609,36 @@ const Assessment: React.FC = () => {
               style={{
                 display: 'flex',
                 margin: '10px 0 20px 0',
-                height: 300,
+                // height: 300,
                 alignItems: 'flex-end',
               }}
               align="baseline"
             >
               <div>投资组合:</div>
-              <Form.Item label={'投资组合'} noStyle shouldUpdate>
+              {/* <Form.Item label={'投资组合'} noStyle shouldUpdate>
                 {() => (
-                  <Typography>
-                    <pre
-                      style={{
-                        height: 300,
-                        width: 500,
-                        overflowY: 'scroll',
-                        margin: 0,
-                      }}
-                    >
-                      {JSON.stringify(form4Data, null, 2)}
-                    </pre>
-                  </Typography>
+                  // <Typography>
+                  //   <pre
+                  //     style={{
+                  //       height: 300,
+                  //       width: 500,
+                  //       overflowY: 'scroll',
+                  //       margin: 0,
+                  //     }}
+                  //   >
+                  //     {JSON.stringify(form4Data, null, 2)}
+                  //   </pre>
+                  // </Typography>
+                 
                 )}
-              </Form.Item>
+              </Form.Item> */}
+              <Tree
+                showLine
+                defaultExpandAll={true}
+                // defaultExpandedKeys={['投资组合 1']}
+                onSelect={onSelect}
+                treeData={treeData}
+              />
               <InvestModal outForm={form4} setData={setOutPre} />
               <Button type="primary" htmlType="submit">
                 查询

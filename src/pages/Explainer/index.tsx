@@ -6,6 +6,7 @@ import {
   Form,
   Select,
   Space,
+  Spin,
   Tree,
   TreeProps,
   message,
@@ -16,6 +17,8 @@ import companyName from './company_full_name.json';
 import DownloadModal from './downloadModal';
 import styles from './index.less';
 import LineChart from './lineChart';
+
+const HencexDateList = ['2024-01-02', '2024-01-03', '2024-01-04', '2024-01-05'];
 
 export const stockList = [
   'SH600000',
@@ -247,262 +250,6 @@ export const stockList = [
   'SZ300498',
 ];
 
-const nodeList = [
-  {
-    nodes: {
-      '1': {
-        name: '中国石油(1)',
-        type: '公司',
-        desc: '国家能源局党组成员、副局长任京东主持会议并讲话，中国石油副总经理黄永章、中国石化副总经理喻宝才出席会议。',
-      },
-      '2': {
-        name: '中国石化(1)',
-        type: '公司',
-        desc: '国家能源局党组成员、副局长任京东主持会议并讲话，中国石油副总经理黄永章、中国石化副总经理喻宝才出席会议。',
-      },
-      '3': {
-        name: '中国石油(2)',
-        type: '公司',
-        desc: '中国石油集团与中国能源建设集团在京签署战略合作协议。协议签署前，中国石油集团董事长、党组书记戴厚良会见了中国能建集团董事长、党委书记宋海良，双方就深化合作交换了意见。',
-      },
-      '4': {
-        name: '中国能源建设(1)',
-        type: '公司',
-        desc: '中国石油集团与中国能源建设集团在京签署战略合作协议。协议签署前，中国石油集团董事长、党组书记戴厚良会见了中国能建集团董事长、党委书记宋海良，双方就深化合作交换了意见。',
-      },
-      '5': {
-        name: '中石油(3)',
-        type: '公司',
-        desc: '中石油、中石化等8家公司注册100亿共同成立华光海安集团。',
-      },
-      '6': {
-        name: '中石化(2)',
-        type: '公司',
-        desc: '中石油、中石化等8家公司注册100亿共同成立华光海安集团。',
-      },
-      '7': {
-        name: '中国能建(2)',
-        type: '公司',
-        desc: '中国能建发布吸收合并中国葛洲坝集团股份有限公司。',
-      },
-      '8': {
-        name: '葛洲坝',
-        type: '公司',
-        desc: '中国能建发布吸收合并中国葛洲坝集团股份有限公司。',
-      },
-      '9': {
-        name: '中石油(4)',
-        type: '公司',
-        desc: '今日，中石油和中石化宣布了财报。两公司都在过去季度取得了出色的业绩，这一利好消息引发了投资者的乐观情绪，推动了其股票价格的上涨。',
-      },
-      '10': {
-        name: '中石化(4)',
-        type: '公司',
-        desc: '今日，中石油和中石化宣布了财报。两公司都在过去季度取得了出色的业绩，这一利好消息引发了投资者的乐观情绪，推动了其股票价格的上涨。',
-      },
-      '11': {
-        name: '东华能源(1)',
-        type: '公司',
-        desc: '东华能源与华锦股份最新发布的市场报告显示，两家公司在同一产品线上争夺领先地位，竞争导致市场动荡。',
-      },
-      '12': {
-        name: '华锦股份(1)',
-        type: '公司',
-        desc: '东华能源与华锦股份最新发布的市场报告显示，两家公司在同一产品线上争夺领先地位，竞争导致市场动荡。',
-      },
-      '13': {
-        name: '中国石化(5)',
-        type: '公司',
-        desc: '中国石化宣布了一项对东华能源的大规模的投资计划。',
-      },
-      '14': {
-        name: '东华能源(2)',
-        type: '公司',
-        desc: '中国石化宣布了一项对东华能源的大规模的投资计划。',
-      },
-      '15': {
-        name: '中国石油(5)',
-        type: '公司',
-        desc: '华锦股份和中国石油因商业合作方面的分歧进入司法程序。纠纷涉及产品专利权和市场份额的争夺，此次纠纷引发了业界广泛关注。',
-      },
-      '16': {
-        name: '华锦股份(2)',
-        type: '公司',
-        desc: '华锦股份和中国石油因商业合作方面的分歧进入司法程序。纠纷涉及产品专利权和市场份额的争夺，此次纠纷引发了业界广泛关注。',
-      },
-    },
-    links: [
-      { source: 1, target: 2, rela: '同行 2023-04-04', type: '同行关系' },
-      { source: 3, target: 4, rela: '合作 2023-10-23', type: '合作关系' },
-      { source: 5, target: 6, rela: '合作 2023-11-21', type: '合作关系' },
-      { source: 7, target: 8, rela: '上级 2021-07-27', type: '上级' },
-      { source: 9, target: 10, rela: '同涨 2023-10-21', type: '同涨' },
-      { source: 11, target: 12, rela: '竞争 2023-11-29', type: '竞争' },
-      { source: 13, target: 14, rela: '投资 2023-11-16', type: '投资' },
-      { source: 15, target: 16, rela: '纠纷 2023-09-17', type: '纠纷' },
-    ],
-  },
-  {
-    nodes: {
-      '1': {
-        name: '中国石油 (601857)',
-        type: '公司',
-      },
-      // '2': {
-      //   name: '中国石油',
-      //   type: '同名公司',
-      // },
-      // '3': {
-      //   name: '中石油',
-      //   type: '同名公司',
-      // },
-      '4': {
-        name: '中国石化 (600028)',
-        type: '公司',
-      },
-      // '5': {
-      //   name: '中国石化',
-      //   type: '同名公司',
-      // },
-      // '6': {
-      //   name: '中石化',
-      //   type: '同名公司',
-      // },
-      '7': {
-        name: '中国能源建设 (601868)',
-        type: '公司',
-      },
-      // '8': {
-      //   name: '中国能源建设',
-      //   type: '同名公司',
-      // },
-      // '9': {
-      //   name: '中国能建',
-      //   type: '同名公司',
-      // },
-      '10': {
-        name: '葛洲坝 (已退市)',
-        type: '已退市公司',
-      },
-      '11': {
-        name: '东华能源 (002221)',
-        type: '公司',
-      },
-      // '12': {
-      //   name: '东华能源',
-      //   type: '同名公司',
-      // },
-      '13': {
-        name: '华锦股份 (000059)',
-        type: '公司',
-      },
-      // '14': {
-      //   name: '华锦股份',
-      //   type: '同名公司',
-      // },
-    },
-    links: [
-      // { source: 1, target: 2, rela: '同公司', type: '同公司' },
-      // { source: 1, target: 3, rela: '同公司', type: '同公司' },
-      { source: 1, target: 4, rela: '同行 2023-04-04', type: '同行关系' },
-      { source: 1, target: 4, rela: '同涨 2023-10-21', type: '同行关系' },
-      { source: 1, target: 4, rela: '合作 2023-11-21', type: '同行关系' },
-      // { source: 4, target: 5, rela: '同公司', type: '同公司' },
-      // { source: 4, target: 6, rela: '同公司', type: '同公司' },
-      { source: 1, target: 7, rela: '合作 2023-10-23', type: '合作' },
-      { source: 4, target: 7, rela: '同行 2023-09-16', type: '同行' },
-      // { source: 7, target: 8, rela: '同公司', type: '同公司' },
-      // { source: 7, target: 9, rela: '同公司', type: '同公司' },
-      { source: 7, target: 10, rela: '上级 2023-11-21', type: '上级' },
-      { source: 4, target: 11, rela: '投资 2023-11-16', type: '投资' },
-      // { source: 11, target: 12, rela: '同公司', type: '同公司' },
-      { source: 1, target: 13, rela: '纠纷 2023-09-17', type: '纠纷' },
-      { source: 11, target: 13, rela: '竞争 2023-11-29', type: '竞争' },
-      // { source: 13, target: 14, rela: '同公司', type: '同公司' },
-    ],
-  },
-  {
-    nodes: {
-      '1': {
-        name: '中国石油 (601857)',
-        type: '公司',
-      },
-      // '2': {
-      //   name: '中国石油',
-      //   type: '同名公司',
-      // },
-      // '3': {
-      //   name: '中石油',
-      //   type: '同名公司',
-      // },
-      '4': {
-        name: '中国石化 (600028)',
-        type: '公司',
-      },
-      // '5': {
-      //   name: '中国石化',
-      //   type: '同名公司',
-      // },
-      // '6': {
-      //   name: '中石化',
-      //   type: '同名公司',
-      // },
-      '7': {
-        name: '中国能源建设 (601868)',
-        type: '公司',
-      },
-      // '8': {
-      //   name: '中国能源建设',
-      //   type: '同名公司',
-      // },
-      // '9': {
-      //   name: '中国能建',
-      //   type: '同名公司',
-      // },
-      '10': {
-        name: '葛洲坝 (已退市)',
-        type: '已退市公司',
-      },
-      '11': {
-        name: '东华能源 (002221)',
-        type: '公司',
-      },
-      // '12': {
-      //   name: '东华能源',
-      //   type: '同名公司',
-      // },
-      '13': {
-        name: '华锦股份 (000059)',
-        type: '公司',
-      },
-      // '14': {
-      //   name: '华锦股份',
-      //   type: '同名公司',
-      // },
-    },
-    links: [
-      // { source: 1, target: 2, rela: '同公司', type: '同公司' },
-      // { source: 1, target: 3, rela: '同公司', type: '同公司' },
-      { source: 1, target: 4, rela: '同行 2023-04-04', type: '同行关系' },
-      { source: 1, target: 4, rela: '同涨 2023-10-21', type: '同行关系' },
-      { source: 1, target: 4, rela: '合作 2023-11-21', type: '同行关系' },
-      // { source: 4, target: 5, rela: '同公司', type: '同公司' },
-      // { source: 4, target: 6, rela: '同公司', type: '同公司' },
-      { source: 1, target: 7, rela: '合作 2023-10-23', type: '合作' },
-      { source: 1, target: 7, rela: '同行 2023-04-04', type: 'update' },
-      { source: 4, target: 7, rela: '同行 2023-09-16', type: '同行' },
-      // { source: 7, target: 8, rela: '同公司', type: '同公司' },
-      // { source: 7, target: 9, rela: '同公司', type: '同公司' },
-      { source: 7, target: 10, rela: '上级 2023-11-21', type: '上级' },
-      { source: 4, target: 11, rela: '投资 2023-11-16', type: '投资' },
-      // { source: 11, target: 12, rela: '同公司', type: '同公司' },
-      { source: 1, target: 13, rela: '纠纷 2023-09-17', type: '纠纷' },
-      { source: 11, target: 13, rela: '竞争 2023-11-29', type: '竞争' },
-      // { source: 13, target: 14, rela: '同公司', type: '同公司' },
-    ],
-  },
-];
-
 const nodeColor = [
   //粉红
   {
@@ -534,12 +281,13 @@ const nodeColor = [
 const Coming: React.FC = () => {
   const [form] = Form.useForm();
   const [dateList, setDateList] = useState<string[]>([]);
+  const [allDateList, setAllDateList] = useState<string[]>([]);
   const [data, setData] = useState<any[]>([]);
   const [newData, setNewData] = useState<any>([]);
-  const [loading, setLoading] = useState<boolean>(false);
   const [currStock, setCurrStock] = useState<string>();
   const [currExplainer, setCurrExplainer] = useState<string>();
   const [eventList, setEventList] = useState<any>();
+  const [loading, setLoading] = useState<boolean>(false);
   const stockNameMap = useMemo(() => {
     const map = new Map();
     companyName.forEach((item) => {
@@ -548,62 +296,11 @@ const Coming: React.FC = () => {
     });
     return map;
   }, [companyName]);
-  // const columns = [
-  //   {
-  //     title: '股票代码',
-  //     dataIndex: 'relative_stock',
-  //     key: 'relative_stock',
-  //     render: (item: string) => {
-  //       return (
-  //         <>
-  //           {item}({stockNameMap.get(item.slice(2))})
-  //           <ImagePreviewer
-  //             text={'查看蜡烛图'}
-  //             url={`http://47.106.95.15:8000/get_pic/?stock=${item.substring(
-  //               2,
-  //               8,
-  //             )}&date=${form.getFieldValue('date')}`}
-  //           />
-  //         </>
-  //       );
-  //     },
-  //   },
-  //   {
-  //     title: '评分',
-  //     dataIndex: 'score',
-  //     key: 'score',
-  //     sorter: (a: any, b: any) => a.score - b.score,
-  //     render: (item: any) => Number(item).toFixed(2),
-  //   },
-  //   {
-  //     title: '股票代码（源）',
-  //     dataIndex: 'stock',
-  //     key: 'stock',
-  //     onCell: (__: any, index: number | undefined) => {
-  //       if (index === 0) {
-  //         return { rowSpan: data.length };
-  //       }
-  //       return { rowSpan: 0 };
-  //     },
-  //     render: (item: string) => {
-  //       return (
-  //         <>
-  //           {item}({stockNameMap.get(item.slice(2))})
-  //           <ImagePreviewer
-  //             text={'查看蜡烛图'}
-  //             url={`http://47.106.95.15:8000/get_pic/?stock=${item.substring(
-  //               2,
-  //               8,
-  //             )}&date=${form.getFieldValue('date')}`}
-  //           />
-  //         </>
-  //       );
-  //     },
-  //   },
-  // ];
+
   const getDate = useCallback(async () => {
     const res = await axios.get('http://47.106.95.15:8000/get_trade_date/');
     setDateList(res.data.data);
+    setAllDateList(res.data.data);
   }, []);
   useEffect(() => {
     getDate();
@@ -619,9 +316,13 @@ const Coming: React.FC = () => {
       const b_val = Number(b['value']['total_score'] || b['value']);
       return b_val - a_val;
     });
+    const currStockName = stockNameMap.get(currStock.slice(2));
     newData.relative.forEach((item: any, index: number) => {
       nodes[String(index + 2)] = {
-        name: stockNameMap.get(item['stock'].slice(2)),
+        name:
+          stockNameMap.get(item['stock'].slice(2)) === currStockName
+            ? currStockName + '2'
+            : stockNameMap.get(item['stock'].slice(2)),
         type: `公司${index + 1}`,
         desc: item['value'] || item['value']['events'],
       };
@@ -634,24 +335,6 @@ const Coming: React.FC = () => {
       });
     });
 
-    const emptyNodes: Record<string, any> = {};
-    const len = newData.relative.length + 1;
-
-    [0, 0, 0].forEach((item, idx) => {
-      const name = `其他${idx + 1}`;
-      emptyNodes[String(len + idx + 1)] = {
-        name: name,
-        type: 'empty_node',
-        desc: '',
-      };
-      links.push({
-        source: 1,
-        target: len + idx + 1,
-        rela: '',
-        type: '',
-      });
-    });
-
     return {
       nodes: {
         '1': {
@@ -660,7 +343,6 @@ const Coming: React.FC = () => {
           desc: '',
         },
         ...nodes,
-        ...emptyNodes,
       },
       links,
     };
@@ -683,6 +365,7 @@ const Coming: React.FC = () => {
   }, [newData.origin]);
 
   const onSearchNew = () => {
+    setLoading(true);
     form.validateFields().then(async (values): Promise<any> => {
       const params = {
         ...values,
@@ -703,6 +386,7 @@ const Coming: React.FC = () => {
       setCurrStock(params.stock);
       setLoading(false);
     });
+    setLoading(false);
   };
 
   const onReset = () => {
@@ -743,14 +427,30 @@ const Coming: React.FC = () => {
       name: item.name,
       events: eventTree,
       // relations: Array.from(rela_set).filter((item) => item !== '未知Unknown'),
-      relations: item.desc.relation,
+      relations: Array.from(new Set(item.desc.relation)).map((item) => {
+        if (item === '同行业') {
+          return '合作';
+        } else {
+          return item;
+        }
+      }),
     };
     setEventList(res);
+    // console.log(res);
   };
 
   const onSelect: TreeProps['onSelect'] = (selectedKeys, info) => {
     console.log('selected', selectedKeys, info);
   };
+
+  const onExplainerChange = (value)=>{
+    if(value==='hencex'){
+      form.setFieldValue('date','2024-01-03')
+      setDateList(HencexDateList)
+    }else{
+      setDateList(allDateList)
+    }
+  }
   return (
     <>
       <BasicLayout backgroundColor="#f5f5f5">
@@ -766,8 +466,11 @@ const Coming: React.FC = () => {
                 style={{ width: 200 }}
                 options={[
                   { value: 'input', label: 'inputGradient' },
-                  { value: 'xpath', label: 'Xpath' },
+                  { value: 'xpath', label: 'XpathExplainer' },
+                  { value: 'gnn', label: 'GNNExplainer' },
+                  { value: 'hencex', label: 'HencexExplainer' },
                 ]}
+                onSelect={onExplainerChange}
               />
             </Form.Item>
             <Form.Item
@@ -808,7 +511,7 @@ const Coming: React.FC = () => {
             <Form.Item
               label="交易日"
               name="date"
-              initialValue={'2022-06-01'}
+              initialValue={'2024-01-03'}
               rules={[{ required: true }]}
             >
               <Select
@@ -837,87 +540,87 @@ const Coming: React.FC = () => {
             </div>
           </Form>
         </Card>
+        <Spin spinning={loading}>
+          {newData.origin && newData.relative && (
+            <>
+              <Card style={{ height: 500, flex: 1, marginBottom: '20px' }}>
+                <div className={styles.chart_box}>
+                  {/* {currExplainer === 'input' ? ( */}
+                  <div className={styles.event_box}>
+                    {eventList ? (
+                      <>
+                        <div>
+                          <h3>
+                            {eventList.name} 与{' '}
+                            {stockNameMap.get(newData.origin.stock.slice(2))}
+                          </h3>
+                          <b>关系类型：</b>
+                          {eventList.relations.join(',')}
+                        </div>
+                        <div className={styles.jsonArea}>
+                          <b>相关事件：</b>
+                          <Tree
+                            showLine
+                            // switcherIcon={<DownOutlined />}
+                            defaultExpandedKeys={['0-0-0']}
+                            onSelect={onSelect}
+                            treeData={eventList.events}
+                          />
+                        </div>
+                      </>
+                    ) : (
+                      <h3>请选择相关股票节点</h3>
+                    )}
+                  </div>
+                  {/* ) : null} */}
 
-        {newData.origin && newData.relative && (
-          <>
-            <Card style={{ height: 500, flex: 1, marginBottom: '20px' }}>
-              <div className={styles.chart_box}>
-                {/* {currExplainer === 'input' ? ( */}
-                <div className={styles.event_box}>
-                  {eventList ? (
-                    <>
+                  <div className={styles.card_box}>
+                    <KGContainer
+                      data={nodeLinkData}
+                      onClick={onClick}
+                    ></KGContainer>
+                    <div className={styles.board}>
+                      {currExplainer === 'input' ? (
+                        <div>
+                          预测结果：
+                          {newData.origin.pred_result.explanation.toFixed(2)}
+                        </div>
+                      ) : null}
                       <div>
-                        <h3>
-                          {eventList.name} 与{' '}
-                          {stockNameMap.get(newData.origin.stock.slice(2))}
-                        </h3>
-                        <b>关系类型：</b>
-                        {eventList.relations.join(',')}
+                        股票排名({newData.origin.rank}/{newData.origin.total})
                       </div>
-                      <div className={styles.jsonArea}>
-                        <b>相关事件：</b>
-                        <Tree
-                          showLine
-                          // switcherIcon={<DownOutlined />}
-                          defaultExpandedKeys={['0-0-0']}
-                          onSelect={onSelect}
-                          treeData={eventList.events}
-                        />
-                      </div>
-                    </>
-                  ) : (
-                    <h3>请选择相关股票节点</h3>
-                  )}
-                </div>
-                {/* ) : null} */}
-
-                <div className={styles.card_box}>
-                  <KGContainer
-                    data={nodeLinkData}
-                    onClick={onClick}
-                  ></KGContainer>
-                  <div className={styles.board}>
-                    {currExplainer === 'input' ? (
-                      <div>
-                        预测结果：
-                        {newData.origin.pred_result.explanation.toFixed(2)}
-                      </div>
-                    ) : null}
-                    <div>
-                      股票排名({newData.origin.rank}/{newData.origin.total})
                     </div>
                   </div>
                 </div>
+              </Card>
+              <div style={{ display: 'flex' }}>
+                <div style={{ flex: 1, marginRight: 20 }}>
+                  <Card>
+                    <LineChart
+                      rawData={[candleList[0]]}
+                      id={'close-line-chart' + 0}
+                      color={nodeColor[0]['stroke']}
+                    />
+                  </Card>
+                </div>
+                <div style={{ flex: 1 }}>
+                  {candleList.slice(1)?.map((item, idx) => {
+                    return (
+                      <div style={{ marginBottom: 20 }}>
+                        <Card>
+                          <LineChart
+                            rawData={[item]}
+                            id={'close-line-chart' + idx + 1}
+                            color={nodeColor[idx + 1]['stroke']}
+                          />
+                        </Card>
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
-            </Card>
-            <div style={{ display: 'flex' }}>
-              <div style={{ flex: 1, marginRight: 20 }}>
-                <Card>
-                  <LineChart
-                    rawData={[candleList[0]]}
-                    id={'close-line-chart' + 0}
-                    color={nodeColor[0]['stroke']}
-                  />
-                </Card>
-              </div>
-              <div style={{ flex: 1 }}>
-                {candleList.slice(1)?.map((item, idx) => {
-                  return (
-                    <div style={{ marginBottom: 20 }}>
-                      <Card>
-                        <LineChart
-                          rawData={[item]}
-                          id={'close-line-chart' + idx + 1}
-                          color={nodeColor[idx + 1]['stroke']}
-                        />
-                      </Card>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
 
-            {/* <Card
+              {/* <Card
               title={`源股票 ${newData.origin.stock}(${stockNameMap.get(
                 newData.origin.stock.slice(2),
               )})`}
@@ -967,8 +670,9 @@ const Coming: React.FC = () => {
                 );
               })}
             </Card> */}
-          </>
-        )}
+            </>
+          )}
+        </Spin>
 
         {/* <Table
           columns={columns}

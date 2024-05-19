@@ -64,6 +64,7 @@ const routes = [
         name: 'More Information',
         path: '/more',
         component: './More',
+        hideInMenu: true,
       },
       {
         name: 'new-home',

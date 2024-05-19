@@ -7,11 +7,8 @@ import ReactJson from 'react-json-view';
 import KGContainer from '../../components/KG';
 import InfoCircleCard from './InfoCircleCard';
 import entities from './img/entities.png';
-import news from './img/news.png';
 import relations from './img/relations.png';
-import reports from './img/reports.png';
 import types from './img/types.png';
-import years from './img/years.png';
 import styles from './index.less';
 import CenterModeSlider from './slider';
 
@@ -291,34 +288,34 @@ const dataList = [
 const attributes_list = [
   {
     name: '实体',
-    number: '51,000+',
+    number: '51,095+',
     image: entities,
   },
   {
     name: '关系',
-    number: '492,600+',
+    number: '504,736+',
     image: relations,
   },
-  {
-    name: '研究报告',
-    number: '50,000+',
-    image: reports,
-  },
-  {
-    name: '金融新闻',
-    number: '2,000,000+',
-    image: news,
-  },
+  // {
+  //   name: '研究报告',
+  //   number: '50,000+',
+  //   image: reports,
+  // },
+  // {
+  //   name: '金融新闻',
+  //   number: '2,000,000+',
+  //   image: news,
+  // },
   {
     name: '关系类型',
-    number: '20+',
+    number: '34+',
     image: types,
   },
-  {
-    name: '数据年份',
-    number: '5+',
-    image: years,
-  },
+  // {
+  //   name: '数据年份',
+  //   number: '5+',
+  //   image: years,
+  // },
 ];
 
 const options = [
@@ -397,75 +394,71 @@ const KB: React.FC = () => {
     {
       news: (
         <div>
-          减费让利显实效
-          <span style={{ color: 'red' }}> 招商银行</span>
-          上海分行首笔招企贷优惠利率提款成功落地。
+          5月17日，<span style={{ color: 'red' }}>中国电信</span>
+          、中国移动、中国联通、中国广电联合宣布启动5G异网漫游商用推广
         </div>
       ),
-      time: '2024-03-27',
+      time: '2024-05-17',
     },
     {
       news: (
         <div>
-          <span style={{ color: 'red' }}>安利股份：</span>
-          2023年净利润同比下降51.03% 拟10派1.3元。
+          <span style={{ color: 'red' }}>中信建投</span>
+          研报表示，4月美国新能源汽车销量12.7万辆，同比+11.0%，环比-1.9%，渗透率9.3%，环比+0.6pct
         </div>
       ),
-      time: ' 2024-03-30',
+      time: ' 2024-05-17',
     },
     {
       news: (
         <div>
-          <span style={{ color: 'red' }}>武汉凡谷：</span>
-          2023年净利润同比下降69.53% 拟10派1.2元。
+          长江电力、<span style={{ color: 'red' }}>宁德时代</span>
+          、保利发展分别净买入6.00亿元、5.94亿元、5.30亿元
         </div>
       ),
-      time: '2024-03-30',
+      time: '2024-05-17',
     },
     {
       news: (
         <div>
-          投资金额约600亿元 太盟、<span style={{ color: 'red' }}>中信资本</span>
-          、Ares携手ADIA子公司及Mubadala共同投资大连新达盟。
+          据财联社，记者从知情人士处获悉，继与
+          <span style={{ color: 'red' }}>广汽集团</span>
+          、长安汽车、吉利控股、奇瑞汽车、江汽集团、路特斯等六家主机厂达成充换电战略合作后，中国一汽集团也将加入蔚来换电联盟
         </div>
       ),
-      time: '2024-03-28',
+      time: '2024-05-17',
     },
     {
       news: (
         <div>
-          <span style={{ color: 'red' }}>国家电投</span>
-          上海能源科技发展有限公司董事长李海瑜被查。
+          <span style={{ color: 'red' }}>中国能建</span>葛洲坝集团消息，5月16日，中国能建葛洲坝集团与武汉市汉阳市政建设集团有限公司签署战略合作协议，将在城市综合开发、工程施工、勘察设计、文化产业、数字信息化、资质获取等领域开展全方位、多领域、深层次合作
         </div>
       ),
-      time: '2024-03-30',
+      time: '2024-05-16',
     },
     {
       news: (
         <div>
-          市场综述 | 本周石油石化、有色金属板块表现强势
-          <span style={{ color: 'red' }}>津荣天宇</span>收获2个涨停。
+          广汽集团消息，5月16日，广汽集团旗下广汽埃安与<span style={{ color: 'red' }}>宁德时代</span>、时代电服签署换电项目合作框架协议
         </div>
       ),
-      time: '2024-03-30',
+      time: '2024-05-16',
     },
     {
       news: (
         <div>
-          <span style={{ color: 'red' }}>招商证券</span>
-          年报出炉：私募托管外包数量连续十年第一 投资交易业务营收增长近一倍。
+          AI，PC概念盘初冲高，思泉新材涨超9%，星环科技、亿道信息涨超4%，<span style={{ color: 'red' }}>中科创达</span>、英力股份等跟涨
         </div>
       ),
-      time: '2024-03-30',
+      time: '2024-05-14',
     },
     {
       news: (
         <div>
-          <span style={{ color: 'red' }}>中国石化</span>
-          与道达尔能源将共同生产可持续航空燃料。
+          港股午间收盘，恒生指数涨0.47%，恒生科技指数涨1.02%，高铁概念走高，<span style={{ color: 'red' }}>中国中车</span>涨超8%，时代电气涨超7%
         </div>
       ),
-      time: '2024-04-01',
+      time: '2024-05-13',
     },
   ];
 
@@ -567,7 +560,7 @@ const KB: React.FC = () => {
           )}
         </div>
       </div>
-      
+
       <div className={styles.api}>
         <Title level={3}>在线调用API</Title>
         您希望获取多久的数据？

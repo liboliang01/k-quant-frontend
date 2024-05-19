@@ -151,14 +151,14 @@ const FinKGUpdate: React.FC = () => {
         // },
       },
       {
-        title: '信息系数(IC)',
+        title: '信息系数(Rank IC)',
         dataIndex: 'IC',
         key: 'IC',
         sorter: (a: any, b: any) => a.IC - b.IC,
         render: (item: any) => Number(item).toFixed(3),
       },
       {
-        title: '信息比率(ICIR)',
+        title: '信息比率(Rank ICIR)',
         dataIndex: 'ICIR',
         key: 'ICIR',
         sorter: (a: any, b: any) => a.ICIR - b.ICIR,
@@ -272,11 +272,7 @@ const FinKGUpdate: React.FC = () => {
         let key = Object.keys(item)[0];
         const val = item[key];
         // 删除ensemble_retrain和Perfomance_based_ensemble
-        if (
-          key === 'ensemble_retrain' ||
-          key === 'Perfomance_based_ensemble'
-         
-        ) {
+        if (key === 'ensemble_retrain' || key === 'Perfomance_based_ensemble') {
           return 'delete';
         }
         // 将ensemble_no_retrain改名为ensemble_retrain
@@ -296,9 +292,15 @@ const FinKGUpdate: React.FC = () => {
         value: item.name,
         label: `${intlMap.get(item.name)}(${item.name})`,
       }));
+
+      // console.log('ml', ml);
       setModelList(ml);
       setCurrModel(ml[0].value);
-      setCurrModelList([ml[0].value]);
+      if (params.actionType === 'get_update_data') {
+        setCurrModelList([ml[0].value, ml[0].value + '_DA']);
+      } else {
+        setCurrModelList([ml[0].value]);
+      }
       getMultiGraphData(
         values.actionType,
         params.duration,
@@ -344,21 +346,17 @@ const FinKGUpdate: React.FC = () => {
     }
   };
 
-  const onModelChange = (value: string) => {
-    setCurrModel(value);
-    form.validateFields().then((values) => {
-      getGraphData(
-        values.actionType,
-        values.duration,
-        values.strategy,
-        values.stock,
-        value,
-      );
-    });
-  };
 
   const onModelChangeNew = (value: string[]) => {
-    setCurrModelList(value);
+    if(actionType === 'get_update_data'){
+      const da_value = JSON.parse(JSON.stringify(value))
+      value.forEach(item=>{
+        da_value.push(item+'_DA')
+      })
+      setCurrModelList(da_value)
+    }else{
+      setCurrModelList(value);
+    }
     form.validateFields().then((values) => {
       getMultiGraphData(
         values.actionType,
@@ -455,6 +453,8 @@ const FinKGUpdate: React.FC = () => {
 
   const get_multi_graph_data = useCallback(() => {}, []);
 
+console.log('currModelList',currModelList)
+
   return (
     <BasicLayout backgroundColor="#f5f5f5">
       <Card title="模型看板" style={{ marginBottom: '20px' }}>
@@ -536,9 +536,7 @@ const FinKGUpdate: React.FC = () => {
                 <div>
                   {isUpdate && (
                     <div style={{ color: 'black' }}>
-                      Gradient Based增量更新方法相较于全量更新速度提高
-                      <span style={{ fontWeight: 'bold' }}>60%</span>
-                      ,DoubleAdapt增量更新方法相较于全量更新速度提高
+                      DoubleAdapt增量更新方法相较于全量更新速度提高
                       <span style={{ fontWeight: 'bold' }}>200%</span>
                     </div>
                   )}
