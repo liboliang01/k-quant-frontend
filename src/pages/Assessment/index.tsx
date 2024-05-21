@@ -6,7 +6,6 @@ import {
   Divider,
   Form,
   Image,
-  InputNumber,
   List,
   Radio,
   Row,
@@ -38,23 +37,42 @@ const { RangePicker } = DatePicker;
 
 const select_dict_list = [
   {
-    '002460.SZ': 3,
-  },
-  {
-    '600009.SH': 1,
-  },
-  {
-    '600000.SH': 100,
-  },
-  {
-    '600015.SH': 1,
-  },
-  {
-    '600703.SH': 1,
-  },
-  {
-    '300072.SZ': 1,
-  },
+    '600061.SH': 0.1,
+    '601009.SH': 0.2,
+    '601066.SH': 0.1,
+    '600519.SH': 0.3,
+    '600606.SH': 0.3
+},
+{
+    '600061.SH': 0.2,
+    '601009.SH': 0.2,
+    '600887.SH': 0.4,
+    '600132.SH': 0.2,
+},
+{
+    '600010.SH': 0.8,
+    '600132.SH': 0.1,
+    '600489.SH': 0.1
+
+},
+{
+    '600760.SH': 0.3,
+    '600000.SH': 0.2,
+    '600600.SH': 0.2,
+    '601088.SH': 0.3
+
+},
+{
+    '600837.SH': 0.7,
+    '601009.SH': 0.2,
+    '601066.SH': 0.1,
+
+},
+{
+    '601009.SH': 0.1,
+    '601066.SH': 0.5,
+    '600132.SH': 0.4
+},
 ];
 
 const indicator1 = {
@@ -152,9 +170,9 @@ const Assessment: React.FC = () => {
     num_recommendation_stocks: 3,
   };
   const invest_initial_data = {
-    date: [dayjs('2019-06-01'), dayjs('2019-06-15')],
-    return_preference: 0,
-    risk_preference: 90,
+    duration: 'three_month',
+    return_preference: '1',
+    risk_preference: '60',
   };
 
   const invest_comb_data = select_dict_list.map((item) => {
@@ -206,8 +224,8 @@ const Assessment: React.FC = () => {
   };
 
   const get_candle_data = async (stockList) => {
-    console.log('stock_list',stockList)
-    setStock(stockList)
+    console.log('stock_list', stockList);
+    setStock(stockList);
     const res: any[] = [];
     for (let item of stockList) {
       const r = await axios.get(
@@ -218,7 +236,7 @@ const Assessment: React.FC = () => {
       );
       res.push(r.data);
     }
-    console.log('candle',res)
+    console.log('candle', res);
     setCandleList(res);
   };
   useEffect(() => {
@@ -287,8 +305,8 @@ const Assessment: React.FC = () => {
       };
       Object.keys(child).forEach((c) => {
         temp.children.push({
-          key: `${c}-${child[c]}支`,
-          title: `${c}-${child[c]}支`,
+          key: `${c}-${child[c]*100}%`,
+          title: `${c}-${child[c]*100}%`,
         });
       });
       tree.push(temp);
@@ -467,86 +485,7 @@ const Assessment: React.FC = () => {
           style={{ marginBottom: '20px' }}
           title={`Top3 推荐股票 [${currentModel}]`}
         >
-          {/* <Form
-            name="stock_forecast_form"
-            onFinish={onFinish}
-            style={{ maxWidth: '100%' }}
-            autoComplete="off"
-            form={form2}
-          >
-            <Space
-              style={{ display: 'flex', marginBottom: -20 }}
-              align="baseline"
-            >
-              <Form.Item
-                name={'prediction_model'}
-                label="预测模型"
-                rules={[{ required: true, message: '请选择预测模型' }]}
-              >
-                <Select placeholder="请选择预测模型" style={{ width: 200 }}>
-                  {model_list.map((item) => {
-                    return (
-                      <Select.Option key={item} name={item}>
-                        {item}
-                      </Select.Option>
-                    );
-                  })}
-                </Select>
-              </Form.Item>
-              <Form.Item
-                name={'explanation_model'}
-                label="解释模型"
-                rules={[{ required: true, message: '请选择解释模型' }]}
-              >
-                <Select placeholder="请选择解释模型" style={{ width: 200 }}>
-                  {explanation_list.map((item) => {
-                    return (
-                      <Select.Option key={item} name={item}>
-                        {item}
-                      </Select.Option>
-                    );
-                  })}
-                </Select>
-              </Form.Item>
-              <Form.Item
-                name={'seq_len'}
-                label="时间窗口"
-                rules={[{ required: true, message: '请输入时间窗口' }]}
-              >
-                <InputNumber
-                  addonAfter="天"
-                  placeholder="60天"
-                  style={{ width: 100 }}
-                />
-              </Form.Item>
-              <Form.Item
-                name={'date'}
-                label="时间段"
-                rules={[{ required: true, message: '请选择时间段' }]}
-              >
-                <RangePicker />
-              </Form.Item>
-            </Space>
-            <Space style={{ display: 'flex' }} align="baseline">
-              <Form.Item
-                name={'num_recommendation_stocks'}
-                label="推荐股票数"
-                rules={[{ required: true, message: '请输入推荐股票数' }]}
-              >
-                <InputNumber
-                  addonAfter="股"
-                  placeholder="3"
-                  style={{ width: 100 }}
-                />
-              </Form.Item>
-              <Form.Item>
-                <Button type="primary" htmlType="submit">
-                  查询
-                </Button>
-              </Form.Item>
-            </Space>
-          </Form> */}
-          {candleList.length!==0 &&
+          {candleList.length !== 0 &&
             stock.map((item, idx) => {
               return (
                 <div key={item}>
@@ -566,45 +505,41 @@ const Assessment: React.FC = () => {
             style={{ maxWidth: '100%' }}
             autoComplete="off"
             form={form3}
+            // {...layout}
           >
-            <Space
-              style={{ display: 'flex', marginBottom: -20 }}
-              align="baseline"
+            <Form.Item
+              label="时间段"
+              name="duration"
+              initialValue={'three_month'}
             >
-              <Form.Item
-                name={'return_preference'}
-                label="回报偏好"
-                rules={[{ required: true, message: '请输入回报偏好' }]}
-              >
-                <InputNumber
-                  addonAfter="%"
-                  placeholder="0"
-                  style={{ width: 100 }}
-                  max={100}
-                  min={0}
-                />
-              </Form.Item>
-              <Form.Item
-                name={'risk_preference'}
-                label="风险偏好"
-                rules={[{ required: true, message: '请输入风险偏好' }]}
-              >
-                <InputNumber
-                  addonAfter="%"
-                  placeholder="90"
-                  style={{ width: 100 }}
-                  max={100}
-                  min={0}
-                />
-              </Form.Item>
-              <Form.Item
-                name={'date'}
-                label="时间段"
-                rules={[{ required: true, message: '请选择时间段' }]}
-              >
-                <RangePicker />
-              </Form.Item>
-            </Space>
+              <Radio.Group>
+                <Radio value="three_month">近10天</Radio>
+                <Radio value="six_month">近20天</Radio>
+                <Radio value="one_year">近30天</Radio>
+              </Radio.Group>
+            </Form.Item>
+            <Form.Item
+              label="回报偏好"
+              name="return_preference"
+              initialValue={'1'}
+            >
+              <Radio.Group>
+                <Radio value="1">1%</Radio>
+                <Radio value="5">5%</Radio>
+                <Radio value="10">10%</Radio>
+              </Radio.Group>
+            </Form.Item>
+            <Form.Item
+              label="风险偏好"
+              name="risk_preference"
+              initialValue={'60'}
+            >
+              <Radio.Group>
+                <Radio value="60">60%</Radio>
+                <Radio value="70">70%</Radio>
+                <Radio value="80">80%</Radio>
+              </Radio.Group>
+            </Form.Item>
             <Space
               style={{
                 display: 'flex',
@@ -614,35 +549,18 @@ const Assessment: React.FC = () => {
               }}
               align="baseline"
             >
-              <div>投资组合:</div>
-              {/* <Form.Item label={'投资组合'} noStyle shouldUpdate>
-                {() => (
-                  // <Typography>
-                  //   <pre
-                  //     style={{
-                  //       height: 300,
-                  //       width: 500,
-                  //       overflowY: 'scroll',
-                  //       margin: 0,
-                  //     }}
-                  //   >
-                  //     {JSON.stringify(form4Data, null, 2)}
-                  //   </pre>
-                  // </Typography>
-                 
-                )}
-              </Form.Item> */}
-              <Tree
-                showLine
-                defaultExpandAll={true}
-                // defaultExpandedKeys={['投资组合 1']}
-                onSelect={onSelect}
-                treeData={treeData}
-              />
-              <InvestModal outForm={form4} setData={setOutPre} />
-              <Button type="primary" htmlType="submit">
-                查询
-              </Button>
+                <div>投资组合:</div>
+                <Tree
+                  showLine
+                  defaultExpandAll={true}
+                  // defaultExpandedKeys={['投资组合 1']}
+                  onSelect={onSelect}
+                  treeData={treeData}
+                />
+                <InvestModal outForm={form4} setData={setOutPre} />
+                <Button type="primary" htmlType="submit">
+                  查询
+                </Button>
             </Space>
           </Form>
           <div className={styles.radar}>

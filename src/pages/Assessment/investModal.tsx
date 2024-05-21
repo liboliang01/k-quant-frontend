@@ -8,7 +8,7 @@ import {
   Modal,
   Select,
   Space,
-  Typography,
+  Alert
 } from 'antd';
 import React, { useMemo, useState } from 'react';
 import companyName from '../Explainer/company_full_name.json';
@@ -248,7 +248,7 @@ interface PropType {
 }
 
 const InvestModal: React.FC<PropType> = (props) => {
-  const { outForm,setData } = props;
+  const { outForm, setData } = props;
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
 
@@ -270,7 +270,7 @@ const InvestModal: React.FC<PropType> = (props) => {
     setTimeout(() => {
       setLoading(false);
       setOpen(false);
-      setData(outForm.getFieldsValue())
+      setData(outForm.getFieldsValue());
     }, 500);
   };
 
@@ -308,122 +308,130 @@ const InvestModal: React.FC<PropType> = (props) => {
           </Button>,
         ]}
       >
-        <Form
-          labelCol={{ span: 6 }}
-          wrapperCol={{ span: 18 }}
-          form={outForm}
-          name="dynamic_form_complex"
-          style={{ maxWidth: '100%' }}
-          autoComplete="off"
-          initialValues={{ items: [{}] }}
-        >
-          <Form.List name="select_dict_list">
-            {(fields, { add, remove }) => (
-              <div
-                style={{ display: 'flex', rowGap: 16, flexDirection: 'column' }}
-              >
-                {fields.map((field) => (
-                  <Card
-                    size="small"
-                    title={`投资组合 ${field.name + 1}`}
-                    key={field.key}
-                    extra={
-                      <CloseOutlined
-                        onClick={() => {
-                          remove(field.name);
-                        }}
-                      />
-                    }
-                  >
-                    {/* <Form.Item label="Name" name={[field.name, 'name']}>
+        <div>
+        <Alert message="示例投资组合，仅作演示用途，无法编辑。" type="error" />
+          <Form
+            labelCol={{ span: 6 }}
+            wrapperCol={{ span: 18 }}
+            form={outForm}
+            name="dynamic_form_complex"
+            style={{ maxWidth: '100%' }}
+            autoComplete="off"
+            initialValues={{ items: [{}] }}
+            disabled={true}
+          >
+            <Form.List name="select_dict_list">
+              {(fields, { add, remove }) => (
+                <div
+                  style={{
+                    display: 'flex',
+                    rowGap: 16,
+                    flexDirection: 'column',
+                  }}
+                >
+                  {fields.map((field) => (
+                    <Card
+                      size="small"
+                      title={`投资组合 ${field.name + 1}`}
+                      key={field.key}
+                      extra={
+                        <CloseOutlined
+                          onClick={() => {
+                            remove(field.name);
+                          }}
+                        />
+                      }
+                    >
+                      {/* <Form.Item label="Name" name={[field.name, 'name']}>
                       <Input />
                     </Form.Item> */}
 
-                    {/* Nest Form.List */}
-                    <Form.Item label="股票组合">
-                      <Form.List name={[field.name, 'list']}>
-                        {(subFields, subOpt) => (
-                          <div
-                            style={{
-                              display: 'flex',
-                              flexDirection: 'column',
-                              rowGap: 16,
-                            }}
-                          >
-                            {subFields.map((subField) => (
-                              <Space key={subField.key}>
-                                <Form.Item
-                                  noStyle
-                                  name={[subField.name, 'stockName']}
-                                  style={{ flexBasis: '50%' }}
-                                >
-                                  <Select
-                                    placeholder="股票名"
-                                    style={{ width: 250 }}
-                                    filterOption={filterOption}
-                                    showSearch
-                                  >
-                                    {stock_list.map((item) => {
-                                      return (
-                                        <Select.Option
-                                          key={item}
-                                          value={item}
-                                          label={`${item}(${stockNameMap.get(
-                                            item.slice(2),
-                                          )})`}
-                                        >{`${item}(${stockNameMap.get(
-                                          item.slice(2),
-                                        )})`}</Select.Option>
-                                      );
-                                    })}
-                                  </Select>
-                                </Form.Item>
-                                <Form.Item
-                                  noStyle
-                                  name={[subField.name, 'number']}
-                                >
-                                  <InputNumber
-                                    placeholder="股票数量"
-                                    addonAfter='股'
-                                    style={{ width: 250 }}
-                                  />
-                                </Form.Item>
-                                <CloseOutlined
-                                  onClick={() => {
-                                    subOpt.remove(subField.name);
-                                  }}
-                                />
-                              </Space>
-                            ))}
-                            <Button
-                              type="dashed"
-                              onClick={() => subOpt.add()}
-                              block
+                      {/* Nest Form.List */}
+                      <Form.Item label="股票组合">
+                        <Form.List name={[field.name, 'list']}>
+                          {(subFields, subOpt) => (
+                            <div
+                              style={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                rowGap: 16,
+                              }}
                             >
-                              + 股票组合
-                            </Button>
-                          </div>
-                        )}
-                      </Form.List>
-                    </Form.Item>
-                  </Card>
-                ))}
+                              {subFields.map((subField) => (
+                                <Space key={subField.key}>
+                                  <Form.Item
+                                    noStyle
+                                    name={[subField.name, 'stockName']}
+                                    style={{ flexBasis: '50%' }}
+                                  >
+                                    <Select
+                                      placeholder="股票名"
+                                      style={{ width: 250 }}
+                                      filterOption={filterOption}
+                                      showSearch
+                                    >
+                                      {stock_list.map((item) => {
+                                        return (
+                                          <Select.Option
+                                            key={item}
+                                            value={item}
+                                            label={`${item}(${stockNameMap.get(
+                                              item.slice(2),
+                                            )})`}
+                                          >{`${item}(${stockNameMap.get(
+                                            item.slice(2),
+                                          )})`}</Select.Option>
+                                        );
+                                      })}
+                                    </Select>
+                                  </Form.Item>
+                                  <Form.Item
+                                    noStyle
+                                    name={[subField.name, 'number']}
+                                  >
+                                    <InputNumber
+                                      placeholder="股票数量"
+                                      addonAfter="占比"
+                                      style={{ width: 250 }}
+                                    />
+                                  </Form.Item>
+                                  <CloseOutlined
+                                    onClick={() => {
+                                      subOpt.remove(subField.name);
+                                    }}
+                                  />
+                                </Space>
+                              ))}
+                              <Button
+                                type="dashed"
+                                onClick={() => subOpt.add()}
+                                block
+                              >
+                                + 股票组合
+                              </Button>
+                            </div>
+                          )}
+                        </Form.List>
+                      </Form.Item>
+                    </Card>
+                  ))}
 
-                <Button type="dashed" onClick={() => add()} block>
-                  + 投资组合
-                </Button>
-              </div>
-            )}
-          </Form.List>
+                  <Button type="dashed" onClick={() => add()} block>
+                    + 投资组合
+                  </Button>
+                </div>
+              )}
+            </Form.List>
 
-          {/* <Form.Item noStyle shouldUpdate>
+            {/* <Form.Item noStyle shouldUpdate>
             {() => (
               <Typography>
                 <pre>{JSON.stringify(outForm.getFieldsValue(), null, 2)}</pre>
               </Typography>
             )}
           </Form.Item> */}
-        </Form>
+          </Form>
+        </div>
       </Modal>
     </>
   );

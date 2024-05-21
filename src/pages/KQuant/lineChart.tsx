@@ -115,7 +115,7 @@ const LineCharts = (props: PropsType) => {
       type: '成交量',
       color: idx % 3 === 0,
     }))
-    .reverse();
+    // .reverse();
 
   const render = () => {
     const line = new DualAxes('kquant-line-chart', {

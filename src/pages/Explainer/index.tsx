@@ -288,6 +288,7 @@ const Coming: React.FC = () => {
   const [currExplainer, setCurrExplainer] = useState<string>();
   const [eventList, setEventList] = useState<any>();
   const [loading, setLoading] = useState<boolean>(false);
+  const [sameStock, setSameStock] = useState<string>('');
   const stockNameMap = useMemo(() => {
     const map = new Map();
     companyName.forEach((item) => {
@@ -318,6 +319,9 @@ const Coming: React.FC = () => {
     });
     const currStockName = stockNameMap.get(currStock.slice(2));
     newData.relative.forEach((item: any, index: number) => {
+      if(stockNameMap.get(item['stock'].slice(2)) === currStockName){
+        setSameStock(currStockName)
+      }
       nodes[String(index + 2)] = {
         name:
           stockNameMap.get(item['stock'].slice(2)) === currStockName
@@ -366,6 +370,7 @@ const Coming: React.FC = () => {
 
   const onSearchNew = () => {
     setLoading(true);
+    setSameStock('')
     form.validateFields().then(async (values): Promise<any> => {
       const params = {
         ...values,
@@ -403,14 +408,6 @@ const Coming: React.FC = () => {
       return;
     }
     const events = Object.values(item.desc.events).flat();
-    // console.log(events)
-    // const rela_set = new Set();
-    // events.forEach((item: any) => {
-    //   const regex = /\((.*?)\)/g;
-    //   const matches = [...item.matchAll(regex)];
-
-    //   rela_set.add(matches.pop()[1]);
-    // });
     const eventTree = Object.keys(item.desc.events).map((date) => {
       return {
         title: date,
@@ -425,7 +422,13 @@ const Coming: React.FC = () => {
     });
     const res = {
       name: item.name,
-      events: eventTree,
+      events: eventTree.sort((evt1,evt2)=>{
+        const evtKey1 = evt1.key;
+        const timeStamp1 = (new Date(evtKey1)).getTime();
+        const evtKey2 = evt2.key;
+        const timeStamp2 = (new Date(evtKey2)).getTime();
+        return timeStamp2-timeStamp1;
+      }),
       // relations: Array.from(rela_set).filter((item) => item !== '未知Unknown'),
       relations: Array.from(new Set(item.desc.relation)).map((item) => {
         if (item === '同行业') {
@@ -436,7 +439,6 @@ const Coming: React.FC = () => {
       }),
     };
     setEventList(res);
-    // console.log(res);
   };
 
   const onSelect: TreeProps['onSelect'] = (selectedKeys, info) => {
@@ -589,6 +591,11 @@ const Coming: React.FC = () => {
                       <div>
                         股票排名({newData.origin.rank}/{newData.origin.total})
                       </div>
+                      {sameStock !== '' ? (
+                        <div>
+                          <b>{sameStock}</b>与<b>{sameStock}2</b>属于同一支股票，参考自身的关系
+                        </div>
+                      ) : null}
                     </div>
                   </div>
                 </div>
