@@ -334,9 +334,10 @@ const KB: React.FC = () => {
   const get_pipline = useCallback(async () => {
     setSpin(true);
     const res = await axios.get(
-      `http://143.89.126.57:8001/api/get_static_pipline?required_days=${value}`,
+      `http://47.106.95.15:8000/get_static_pipiline/?duration=${value}`,
     );
-    const j_res = JSON.parse(res.data);
+    console.log('res',res)
+    const j_res = JSON.parse(res.data.data);
     const r = j_res.map(
       (item: { head_code: any; tail_code: any; relation: any; time: any }) => ({
         head_code: item.head_code,
@@ -394,71 +395,77 @@ const KB: React.FC = () => {
     {
       news: (
         <div>
-          5月17日，<span style={{ color: 'red' }}>中国电信</span>
-          、中国移动、中国联通、中国广电联合宣布启动5G异网漫游商用推广
+          <span style={{ color: 'red' }}>重药集团</span>与
+          <span style={{ color: 'red' }}>智翔金泰</span>签订战略合作协议
         </div>
       ),
-      time: '2024-05-17',
+      time: '2024-06-20',
+    },
+    // {
+    //   news: (
+    //     <div>
+    //       <span style={{ color: 'red' }}>中信建投</span>
+    //       研报表示，4月美国新能源汽车销量12.7万辆，同比+11.0%，环比-1.9%，渗透率9.3%，环比+0.6pct
+    //     </div>
+    //   ),
+    //   time: ' 2024-05-17',
+    // },
+    {
+      news: (
+        <div>
+          <span style={{ color: 'red' }}>特锐德</span>：预中标
+          <span style={{ color: 'red' }}>中国华能</span>GIS设备框架协议采购项目
+        </div>
+      ),
+      time: '2024-06-20',
     },
     {
       news: (
         <div>
-          <span style={{ color: 'red' }}>中信建投</span>
-          研报表示，4月美国新能源汽车销量12.7万辆，同比+11.0%，环比-1.9%，渗透率9.3%，环比+0.6pct
+          <span style={{ color: 'red' }}>威马</span>被判赔偿
+          <span style={{ color: 'red' }}>吉利</span>约6.4亿元
+          创我国知识产权侵权诉讼判赔数额新高
         </div>
       ),
-      time: ' 2024-05-17',
+      time: '2024-06-20',
     },
     {
       news: (
         <div>
-          长江电力、<span style={{ color: 'red' }}>宁德时代</span>
-          、保利发展分别净买入6.00亿元、5.94亿元、5.30亿元
+          <span style={{ color: 'red' }}>北汽集团</span>与电池巨头
+          <span style={{ color: 'red' }}>宁德时代</span>今日签订战略合作协议
         </div>
       ),
-      time: '2024-05-17',
+      time: '2024-06-20',
     },
     {
       news: (
         <div>
-          据财联社，记者从知情人士处获悉，继与
-          <span style={{ color: 'red' }}>广汽集团</span>
-          、长安汽车、吉利控股、奇瑞汽车、江汽集团、路特斯等六家主机厂达成充换电战略合作后，中国一汽集团也将加入蔚来换电联盟
+          百元股概念20日主力净流出9.64亿元,{' '}
+          <span style={{ color: 'red' }}>比迪</span>、
+          <span style={{ color: 'red' }}>贵州茅台</span>居前
         </div>
       ),
-      time: '2024-05-17',
+      time: '2024-06-20',
     },
     {
       news: (
         <div>
-          <span style={{ color: 'red' }}>中国能建</span>葛洲坝集团消息，5月16日，中国能建葛洲坝集团与武汉市汉阳市政建设集团有限公司签署战略合作协议，将在城市综合开发、工程施工、勘察设计、文化产业、数字信息化、资质获取等领域开展全方位、多领域、深层次合作
+          化妆品概念20日主力净流出3.93亿元,
+          <span style={{ color: 'red' }}>仁和药业</span>、
+          <span style={{ color: 'red' }}>华润三九</span>居前
         </div>
       ),
-      time: '2024-05-16',
+      time: '2024-06-20',
     },
     {
       news: (
         <div>
-          广汽集团消息，5月16日，广汽集团旗下广汽埃安与<span style={{ color: 'red' }}>宁德时代</span>、时代电服签署换电项目合作框架协议
+          <span style={{ color: 'red' }}>佰维存储</span>涨6.56%，
+          <span style={{ color: 'red' }}>东吴证券</span>一个月前给出“买入”评级
         </div>
       ),
-      time: '2024-05-16',
-    },
-    {
-      news: (
-        <div>
-          AI，PC概念盘初冲高，思泉新材涨超9%，星环科技、亿道信息涨超4%，<span style={{ color: 'red' }}>中科创达</span>、英力股份等跟涨
-        </div>
-      ),
-      time: '2024-05-14',
-    },
-    {
-      news: (
-        <div>
-          港股午间收盘，恒生指数涨0.47%，恒生科技指数涨1.02%，高铁概念走高，<span style={{ color: 'red' }}>中国中车</span>涨超8%，时代电气涨超7%
-        </div>
-      ),
-      time: '2024-05-13',
+      time: '2024-06-19',
     },
   ];
 
@@ -468,15 +475,15 @@ const KB: React.FC = () => {
   return (
     <BasicLayout>
       <div className={styles.leader_board}>
-        <Title level={3}>
+        <Title level={2}>
           <span className={styles.red}>HiDy</span> – A{' '}
           <span className={styles.red}>Hi</span>erarchical{' '}
           <span className={styles.red}>Dy</span>namic Knowledge Base (KB)
         </Title>
-        <Title level={3} style={{ margin: 0 }}>
+        <Title level={2} style={{ margin: 0 }}>
           <span className={styles.red}>层次化动态知识库：HiDy</span>
         </Title>
-        <Title level={2} style={{ marginTop: 0 }}>
+        <Title level={1} style={{ marginTop: 0 }}>
           {/* More <span className={styles.red}>Diverse</span> Downstream
           Applications More <span className={styles.red}>Knowledge Types</span>{' '}
           in Four Hierarchy */}
@@ -485,7 +492,7 @@ const KB: React.FC = () => {
         </Title>
         <div className={styles.bottom}>
           <div className={styles.left_text}>
-            <Title level={4} style={{ color: 'gray' }}>
+            <Title level={3} style={{ color: 'gray' }}>
               {/* Compare with existing public KBs */}
               与现有开源A股市场知识库对比
             </Title>

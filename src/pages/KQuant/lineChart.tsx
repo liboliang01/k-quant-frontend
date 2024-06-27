@@ -156,7 +156,8 @@ const LineCharts = (props: PropsType) => {
               domList = domList + div;
             }
           });
-          return `<div class="box"><div>${title}</div><div>${domList}</div><div style="margin-top:10px"><a href="/#/explainer/${title}" target="_blank">查看当日Explainer</a></div></div>`;
+          
+          return `<div class="box"><div>${title}</div><div>${domList}</div><div style="margin-top:10px"><a href="/new/index.html#/explainer/${title}" target="_blank">查看当日Explainer</a></div></div>`;
         },
       },
       yAxis: {

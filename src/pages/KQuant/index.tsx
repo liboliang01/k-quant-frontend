@@ -43,7 +43,7 @@ const intlMap = new Map([
   ['GATs', '图注意力网络'],
   ['average', '平均集成'],
   ['blend', '线性拟合'],
-  ['dynamic_ensemble', '动态拟合'],
+  ['dynamic_ensemble', '线性拟合'],
   // ['ensemble_no_retrain', '多模型重采样融合'],
   ['ensemble_retrain', '多模型重采样融合'],
   // ['Perfomance_based_ensemble', '多模型重采样融合3'],
@@ -272,13 +272,17 @@ const FinKGUpdate: React.FC = () => {
         let key = Object.keys(item)[0];
         const val = item[key];
         // 删除ensemble_retrain和Perfomance_based_ensemble
-        if (key === 'ensemble_retrain' || key === 'Perfomance_based_ensemble') {
+        if (key === 'ensemble_retrain' || key === 'Perfomance_based_ensemble' ||key === 'blend') {
           return 'delete';
         }
         // 将ensemble_no_retrain改名为ensemble_retrain
         if (key === 'ensemble_no_retrain') {
           key = 'ensemble_retrain';
         }
+        if (key === 'dynamic_ensemble') {
+          key = 'blend';
+        }
+        
         return {
           name: key,
           ...val,
@@ -441,11 +445,11 @@ const FinKGUpdate: React.FC = () => {
   const startEndTime: [string, string] = useMemo(() => {
     switch (duration) {
       case 'THERE_MONTH':
-        return ['2023-04-03', '2023-06-30'];
+        return ['2024-03-20', '2024-06-20'];
       case 'SIX_MONTH':
-        return ['2023-01-03', '2023-06-30'];
+        return ['2023-12-20', '2024-06-20'];
       case 'ONE_YEAR':
-        return ['2022-06-01', '2023-06-30'];
+        return ['2023-06-20', '2024-06-20'];
       default:
         return ['', ''];
     }
@@ -473,7 +477,7 @@ console.log('currModelList',currModelList)
           <Form.Item label="股票池" name="stock" initialValue={'csi300'}>
             <Radio.Group>
               <Radio value="csi300">沪深300</Radio>
-              {!isUpdate && (
+              {true && (
                 <>
                   <Radio value="dianzi">
                     电子(25支)
@@ -630,17 +634,10 @@ console.log('currModelList',currModelList)
               ).toUpperCase()}多头策略在${startEndTime[0]}至${
                 startEndTime[1]
               }的回测累积收益曲线`}</div>
-              {/* <Select
-              defaultActiveFirstOption={true}
-              value={currModel}
-              onChange={onModelChange}
-              style={{ width: 400 }}
-              options={modelList}
-            /> */}
             </div>
             <LineChart data={multiGraphDataList} modelList={currModelList} />
 
-            {actionType === 'get_update_data' ? (
+            {/* {actionType === 'get_update_data' ? (
               <Row gutter={16} style={{ marginTop: '20px' }}>
                 <Col span={6}>
                   <Statistic
@@ -702,7 +699,7 @@ console.log('currModelList',currModelList)
                   />
                 </Col>
               </Row>
-            )}
+            )} */}
           </Card>
         )}
       <Card

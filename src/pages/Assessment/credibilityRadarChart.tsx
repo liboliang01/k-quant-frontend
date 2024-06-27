@@ -18,7 +18,7 @@ const color_list = [
   '#ea7ccc',
 ];
 
-const model_list = ['LSTM', 'GRU', 'MLP', 'NRSR', 'relation_GATs'];
+const model_list = ['LSTM', 'GRU', 'MLP', 'KEnhance', 'relation_GATs'];
 
 const RadarChart = (props: PropTypes) => {
   const { rawData, id } = props;

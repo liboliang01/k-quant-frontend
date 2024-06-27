@@ -41,6 +41,8 @@ const introductions: PropsType[] = [
     image: update,
     remarks: [
       // '专利：一种基于图规则挖掘的知识图谱更新系统(申请号：2023104765162)',
+      '论文：Cost-aware Outdated Facts Correction in the Knowledge Bases（DASFAA2024，CCF B类会议，最佳学生论文奖）',
+      '论文：KartGPS: Knowledge Base Update with Temporal Graph Pattern-based Semantic Rules. International Conference on Data Engineering（ICDE2024，CCF A类会议）',
       '专利：基于图规则挖掘的知识图谱更新系统（申请号：202310459275.0）',
       '专利：基于网络表格的知识图谱补全方法及系统（申请号：202310438729.6）'
     ],

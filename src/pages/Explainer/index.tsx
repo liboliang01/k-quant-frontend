@@ -13,6 +13,7 @@ import {
 } from 'antd';
 import axios from 'axios';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { useParams } from 'umi';
 import companyName from './company_full_name.json';
 import DownloadModal from './downloadModal';
 import styles from './index.less';
@@ -279,6 +280,7 @@ const nodeColor = [
 ];
 
 const Coming: React.FC = () => {
+  const params = useParams();
   const [form] = Form.useForm();
   const [dateList, setDateList] = useState<string[]>([]);
   const [allDateList, setAllDateList] = useState<string[]>([]);
@@ -289,6 +291,9 @@ const Coming: React.FC = () => {
   const [eventList, setEventList] = useState<any>();
   const [loading, setLoading] = useState<boolean>(false);
   const [sameStock, setSameStock] = useState<string>('');
+
+  // console.log('params', params);
+
   const stockNameMap = useMemo(() => {
     const map = new Map();
     companyName.forEach((item) => {
@@ -319,8 +324,8 @@ const Coming: React.FC = () => {
     });
     const currStockName = stockNameMap.get(currStock.slice(2));
     newData.relative.forEach((item: any, index: number) => {
-      if(stockNameMap.get(item['stock'].slice(2)) === currStockName){
-        setSameStock(currStockName)
+      if (stockNameMap.get(item['stock'].slice(2)) === currStockName) {
+        setSameStock(currStockName);
       }
       nodes[String(index + 2)] = {
         name:
@@ -370,7 +375,7 @@ const Coming: React.FC = () => {
 
   const onSearchNew = () => {
     setLoading(true);
-    setSameStock('')
+    setSameStock('');
     form.validateFields().then(async (values): Promise<any> => {
       const params = {
         ...values,
@@ -400,8 +405,20 @@ const Coming: React.FC = () => {
   };
 
   useEffect(() => {
+    console.log(params.date)
+    if(params.date!==':date' && params.date!==undefined){
+      var date1 = new Date(params.date);
+      var date2 = new Date("2024-01-01");
+      var result = date1 > date2; 
+      if(result){
+        form.setFieldValue('date',params.date)
+      } else{
+        message.error(`${params.date}无可解释数据，请选择2024年日期`)
+      }
+    }
     onSearchNew();
   }, []);
+
   const onClick = (item: any) => {
     if (item.desc === '') {
       message.info('请选择相关股票节点');
@@ -422,12 +439,12 @@ const Coming: React.FC = () => {
     });
     const res = {
       name: item.name,
-      events: eventTree.sort((evt1,evt2)=>{
+      events: eventTree.sort((evt1, evt2) => {
         const evtKey1 = evt1.key;
-        const timeStamp1 = (new Date(evtKey1)).getTime();
+        const timeStamp1 = new Date(evtKey1).getTime();
         const evtKey2 = evt2.key;
-        const timeStamp2 = (new Date(evtKey2)).getTime();
-        return timeStamp2-timeStamp1;
+        const timeStamp2 = new Date(evtKey2).getTime();
+        return timeStamp2 - timeStamp1;
       }),
       // relations: Array.from(rela_set).filter((item) => item !== '未知Unknown'),
       relations: Array.from(new Set(item.desc.relation)).map((item) => {
@@ -445,14 +462,14 @@ const Coming: React.FC = () => {
     console.log('selected', selectedKeys, info);
   };
 
-  const onExplainerChange = (value)=>{
-    if(value==='hencex'){
-      form.setFieldValue('date','2024-01-03')
-      setDateList(HencexDateList)
-    }else{
-      setDateList(allDateList)
+  const onExplainerChange = (value) => {
+    if (value === 'hencex') {
+      form.setFieldValue('date', '2024-01-03');
+      setDateList(HencexDateList);
+    } else {
+      setDateList(allDateList);
     }
-  }
+  };
   return (
     <>
       <BasicLayout backgroundColor="#f5f5f5">
@@ -484,7 +501,7 @@ const Coming: React.FC = () => {
               <Select
                 style={{ width: 200 }}
                 options={[
-                  { value: 'NRSR', label: 'NRSR' },
+                  { value: 'NRSR', label: 'KEnhance' },
                   { value: 'GATs', label: 'GATs' },
                 ]}
               />
@@ -593,7 +610,8 @@ const Coming: React.FC = () => {
                       </div>
                       {sameStock !== '' ? (
                         <div>
-                          <b>{sameStock}</b>与<b>{sameStock}2</b>属于同一支股票，参考自身的关系
+                          <b>{sameStock}</b>与<b>{sameStock}2</b>
+                          属于同一支股票，参考自身的关系
                         </div>
                       ) : null}
                     </div>

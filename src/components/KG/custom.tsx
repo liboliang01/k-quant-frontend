@@ -61,7 +61,7 @@ const KGContainer: React.FC<PropsType> = (props) => {
       const copyData = JSON.parse(JSON.stringify(data));
       initKG2(copyData, config, '#k-quant-kg-container');
     } catch (err) {
-      Materialize.toast('渲染存在异常', 2000);
+      // Materialize.toast('渲染存在异常', 2000);
       console.info(err);
     }
   };

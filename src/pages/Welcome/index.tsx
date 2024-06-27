@@ -220,7 +220,7 @@ const Welcome: React.FC = () => {
           <h1 style={{ marginBottom: 20 }}>News</h1>
           <div className={styles.achievement_box}>
             <Timeline
-            style={{marginTop:20}}
+              style={{ marginTop: 20 }}
               mode={'left'}
               pending="Updating..."
               reverse={true}
@@ -244,6 +244,18 @@ const Welcome: React.FC = () => {
                         is published on March) - Now HiDy currently contains 34
                         relation types, more than 504,736 relations, 17 entity
                         types, and more than 51,095 entities.
+                      </p>
+                    </>
+                  ),
+                },
+                {
+                  label: '2024-06-03 [Latest dataset is updated]',
+                  children: (
+                    <>
+                      <p>
+                        HiDy currently contains 34 relation types, more than
+                        505,821 relations, 17 entity types, and more than 51,095
+                        entities.
                       </p>
                     </>
                   ),

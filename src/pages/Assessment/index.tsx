@@ -20,12 +20,12 @@ import BasicLayout from '../../layout/BasicLayout';
 import KChart from '../Explainer/KChart';
 import companyName from '../Explainer/company_full_name.json';
 import CredibilityRadarChart from './credibilityRadarChart';
-import { invest } from './data';
 import styles from './index.less';
 import Indicator from './indicator';
 import input_mock_data from './input_result.json';
 import InvestModal from './investModal';
 import InvestRadarChart from './investRadarChart';
+import recommend_mock_data from './recommend_result.json';
 import xpath_mock_data from './xpath_result.json';
 const { Title, Paragraph } = Typography;
 
@@ -41,38 +41,35 @@ const select_dict_list = [
     '601009.SH': 0.2,
     '601066.SH': 0.1,
     '600519.SH': 0.3,
-    '600606.SH': 0.3
-},
-{
+    '600606.SH': 0.3,
+  },
+  {
     '600061.SH': 0.2,
     '601009.SH': 0.2,
     '600887.SH': 0.4,
     '600132.SH': 0.2,
-},
-{
+  },
+  {
     '600010.SH': 0.8,
     '600132.SH': 0.1,
-    '600489.SH': 0.1
-
-},
-{
+    '600489.SH': 0.1,
+  },
+  {
     '600760.SH': 0.3,
     '600000.SH': 0.2,
     '600600.SH': 0.2,
-    '601088.SH': 0.3
-
-},
-{
+    '601088.SH': 0.3,
+  },
+  {
     '600837.SH': 0.7,
     '601009.SH': 0.2,
     '601066.SH': 0.1,
-
-},
-{
+  },
+  {
     '601009.SH': 0.1,
     '601066.SH': 0.5,
-    '600132.SH': 0.4
-},
+    '600132.SH': 0.4,
+  },
 ];
 
 const indicator1 = {
@@ -123,6 +120,7 @@ const Assessment: React.FC = () => {
   const [scoreList, setScoreList] = useState([]);
   const [stockList, setStockList] = useState({});
   const [stock, setStock] = useState({});
+  const [stockRecommendList, setStockRecommendList] = useState([]);
   const onFinish = (values: any) => {
     console.log('Received values of form:', values);
   };
@@ -251,6 +249,7 @@ const Assessment: React.FC = () => {
     setFieldsValue3(invest_initial_data);
     setFieldsValue4({ select_dict_list: invest_comb_data });
     onSearch();
+    chooseInvestGroup();
   }, []);
   const stockNameMap = useMemo(() => {
     const map = new Map();
@@ -278,7 +277,7 @@ const Assessment: React.FC = () => {
       const curr_score = Object.keys(curr_data).map((item) => {
         return curr_data[item]['score'];
       });
-      console.log(curr_data);
+      console.log('curr_data',curr_data);
 
       setScoreList(curr_score);
       setStockList(curr_data);
@@ -305,8 +304,8 @@ const Assessment: React.FC = () => {
       };
       Object.keys(child).forEach((c) => {
         temp.children.push({
-          key: `${c}-${child[c]*100}%`,
-          title: `${c}-${child[c]*100}%`,
+          key: `${name}-${c}-${child[c] * 100}%`,
+          title: `${c}-${child[c] * 100}%`,
         });
       });
       tree.push(temp);
@@ -318,6 +317,24 @@ const Assessment: React.FC = () => {
   const chooseModel = (item) => {
     setCurrentModel(item);
     get_candle_data(stockList[item]['stocks']);
+  };
+
+  const chooseInvestGroup = () => {
+    form3.validateFields().then(async (values) => {
+      console.log(values);
+      const risk = values.risk_preference;
+      const return_preference = values.return_preference;
+      const duration = values.duration;
+      const mockData = recommend_mock_data[return_preference][risk][duration];
+      const mockList = [];
+      Array(6)
+        .fill(0)
+        .forEach((item, idx) => {
+          mockList.push(mockData[String(idx + 1)].score);
+        });
+      console.log(mockList);
+      setStockRecommendList(mockList);
+    });
   };
   return (
     <BasicLayout backgroundColor="#f5f5f5">
@@ -400,6 +417,18 @@ const Assessment: React.FC = () => {
           </Form>
         </Card>
 
+        
+
+        <Card style={{ marginBottom: '20px' }} title={'模型组合评价'}>
+          <div className={styles.radar}>
+            <CredibilityRadarChart
+              id="credibility_radar_chart"
+              rawData={scoreList}
+            />
+            <Indicator desc={indicator1} />
+          </div>
+        </Card>
+
         <Card style={{ marginBottom: '20px', paddingBottom: 20 }}>
           {/* <Divider orientation="left">未使用知识的模型组合</Divider> */}
           <Row>
@@ -421,12 +450,12 @@ const Assessment: React.FC = () => {
                         <Typography.Text>[解释模型]:</Typography.Text> 无
                       </Col>
                       <Col span={8}>
-                        <Button
+                        {/* <Button
                           size={'small'}
                           onClick={() => chooseModel(item)}
                         >
-                          选择
-                        </Button>
+                          查看推荐股票
+                        </Button> */}
                       </Col>
                     </Row>
                   </List.Item>
@@ -449,19 +478,20 @@ const Assessment: React.FC = () => {
                   <List.Item style={{ width: '100%', display: 'block' }}>
                     <Row>
                       <Col span={8}>
-                        <Typography.Text>[预测模型]:</Typography.Text> {item}
+                        <Typography.Text>[预测模型]:</Typography.Text>{' '}
+                        {item === 'NRSR' ? 'KEnhance' : item}
                       </Col>
                       <Col span={8}>
-                        <Typography.Text mark>[解释模型]:</Typography.Text>{' '}
+                        <Typography.Text mark>[解释模型]:</Typography.Text>
                         {explainer}
                       </Col>
                       <Col span={8}>
-                        <Button
+                        {/* <Button
                           size={'small'}
                           onClick={() => chooseModel(item)}
                         >
-                          选择
-                        </Button>
+                          查看推荐股票
+                        </Button> */}
                       </Col>
                     </Row>
                   </List.Item>
@@ -471,19 +501,9 @@ const Assessment: React.FC = () => {
           </Row>
         </Card>
 
-        <Card style={{ marginBottom: '20px' }} title={'模型组合评价'}>
-          <div className={styles.radar}>
-            <CredibilityRadarChart
-              id="credibility_radar_chart"
-              rawData={scoreList}
-            />
-            <Indicator desc={indicator1} />
-          </div>
-        </Card>
-
         <Card
           style={{ marginBottom: '20px' }}
-          title={`Top3 推荐股票 [${currentModel}]`}
+          title={`Top3 推荐股票 [${currentModel==='NRSR'?'KEnhance':currentModel}]`}
         >
           {candleList.length !== 0 &&
             stock.map((item, idx) => {
@@ -549,22 +569,25 @@ const Assessment: React.FC = () => {
               }}
               align="baseline"
             >
-                <div>投资组合:</div>
-                <Tree
-                  showLine
-                  defaultExpandAll={true}
-                  // defaultExpandedKeys={['投资组合 1']}
-                  onSelect={onSelect}
-                  treeData={treeData}
-                />
-                <InvestModal outForm={form4} setData={setOutPre} />
-                <Button type="primary" htmlType="submit">
-                  查询
-                </Button>
+              <div>投资组合:</div>
+              <Tree
+                showLine
+                defaultExpandAll={true}
+                // defaultExpandedKeys={['投资组合 1']}
+                onSelect={onSelect}
+                treeData={treeData}
+              />
+              <InvestModal outForm={form4} setData={setOutPre} />
+              <Button type="primary" onClick={chooseInvestGroup}>
+                查询
+              </Button>
             </Space>
           </Form>
           <div className={styles.radar}>
-            <InvestRadarChart id="invest_radar_chart" rawData={invest} />
+            <InvestRadarChart
+              id="invest_radar_chart"
+              rawData={stockRecommendList}
+            />
             <Indicator desc={indicator2} />
           </div>
         </Card>

@@ -15,7 +15,7 @@ const InfoCircleCard: React.FC<PropsType> = (props) => {
 
     // </div>
     <div className={styles.container}>
-      <div>
+      <div style={{marginRight:20}}>
         <Image src={image} preview={false} width={75} height={75}/>
       </div>
       <div>
