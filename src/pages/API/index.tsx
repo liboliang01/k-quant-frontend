@@ -8,6 +8,7 @@ import { Typography } from 'antd';
 import React from 'react';
 import ApiModal from './ApiModal';
 import styles from './index.less';
+import BasicLayout from '@/layout/BasicLayout';
 
 const APIDataList = [
   {
@@ -738,23 +739,25 @@ const APIDataList = [
 
 const APIPage: React.FC = () => {
   return (
-    <div className={styles.pageContainer}>
-      <div style={{ display: 'flex', alignItems: 'end' }}>
-        <Typography.Title>API文档</Typography.Title>
-        <Typography.Link
-          href="http://143.89.126.57:8001/docs#/"
-          target="_blank"
-          style={{ marginBottom: 19 }}
-        >
-          想查看旧版api文档？点击此处
-        </Typography.Link>
+    <BasicLayout backgroundColor="#f5f5f5">
+      <div className={styles.pageContainer}>
+        <div style={{ display: 'flex', alignItems: 'end' }}>
+          <Typography.Title>API文档</Typography.Title>
+          <Typography.Link
+            href="http://143.89.126.57:8001/docs#/"
+            target="_blank"
+            style={{ marginBottom: 19 }}
+          >
+            想查看旧版api文档？点击此处
+          </Typography.Link>
+        </div>
+        <div className={styles.cardContainer}>
+          {APIDataList.map((item) => {
+            return <ApiModal {...item} />;
+          })}
+        </div>
       </div>
-      <div className={styles.cardContainer}>
-        {APIDataList.map((item) => {
-          return <ApiModal {...item} />;
-        })}
-      </div>
-    </div>
+    </BasicLayout>
   );
 };
 

@@ -54,15 +54,32 @@ const ShenYanDesc = [
 ];
 
 const PaperList = [
-  'Cost-aware Outdated Facts Correction in the Knowledge Bases. DASFAA 2024.',
-  'PKBC: A Product-Specific Knowledge base Taxonomy Framework. DASFAA 2024.',
-  '"Triple-d: Denoising Distant Supervision for High-quality Data Creation." ICDE, 2024.',
-  '"HIT-An Effective Approach to Build a Dynamic Financial Knowledge Base."  DASFAA. 2023',
-  '"T-FinKB: A Platform of Temporal Financial Knowledge Base Construction." ICDE, 2023.',
-  '"TE-DyGE: Temporal Evolution-Enhanced Dynamic Graph Embedding Network." DASFAA, 2023.',
-  '"Orca: Scalable Temporal Graph Neural Network Training with Theoretical Guarantees", SIGMOD, 2022.',
-  '"HENCE-X: Toward Heterogeneity-agnostic Multi-level Explainability for Deep Graph Networks", VLDB, 2023.',
-  '"On Data-Aware Global Explainability of Graph Neural Networks", VLDB, 2023.',
+  // 'Cost-aware Outdated Facts Correction in the Knowledge Bases. DASFAA 2024.',
+  // 'PKBC: A Product-Specific Knowledge base Taxonomy Framework. DASFAA 2024.',
+  // '"Triple-d: Denoising Distant Supervision for High-quality Data Creation." ICDE, 2024.',
+  // '"HIT-An Effective Approach to Build a Dynamic Financial Knowledge Base."  DASFAA. 2023',
+  // '"T-FinKB: A Platform of Temporal Financial Knowledge Base Construction." ICDE, 2023.',
+  // '"TE-DyGE: Temporal Evolution-Enhanced Dynamic Graph Embedding Network." DASFAA, 2023.',
+  // '"Orca: Scalable Temporal Graph Neural Network Training with Theoretical Guarantees", SIGMOD, 2022.',
+  // '"HENCE-X: Toward Heterogeneity-agnostic Multi-level Explainability for Deep Graph Networks", VLDB, 2023.',
+  // '"On Data-Aware Global Explainability of Graph Neural Networks", VLDB, 2023.',
+
+  'T-FinKB: A Platform of Temporal Financial Knowledge Base Construction. ICDE2023.',
+  'Triple-d: Denoising Distant Supervision for High-quality Data Creation. International Conference on Data Engineering. ICDE2024.',
+  'HIT - An Effective Approach to Build a Dynamic Financial Knowledge Base. DASFAA2023.',
+  'Cost-aware Outdated Facts Correction in the Knowledge Bases. DASFAA2024 (Best Student Paper Award).',
+  'KartGPS: Knowledge Base Update with Temporal Graph Pattern-based Semantic Rules. ICDE 2024.',
+  'Caerus: A Scalable Caching-based Framework for Temporal Graph Neural Networks. SIGMOD2022 (Best Paper Award).',
+  'TE-DyGE: Temporal Evolution-enhanced Dynamic Graph Embedding Network. DASFAA2023.',
+  'StockMixer: A Simple yet Strong MLP-based Architecture for Stock Price Forecasting. AAAI 2024.',
+  'MASTER: Market-Guided Stock Transformer for Stock Price Forecasting. AAAI2024.',
+  'Rethinking Channel Dependence for Multivariate Time Series Forecasting: Learning from Leading Indicators. ICLR2024.',
+  'StockCL: Selective Contrastive Learning for Stock Trend Forecasting via Learnable Concepts. DASFAA2024.',
+  'DoubleAdapt: A Meta learning Approach to Incremental Learning for Stock Trend Forecasting. KDD2023.',
+  'HENCE-X: Toward Heterogeneity-agnostic Multi-level Explainability for Deep Graph Networks. VLDB2023.',
+  'Towards Fine-grained Explainability for Heterogeneous Graph Neural Network. AAAI2023.',
+  'On Data-Aware Global Explainability of Graph Neural Networks. VLDB 2023.',
+  'Self-Interpretable Graph Learning with Sufficient and Necessary Explanations. AAAI2024.',
 ];
 
 const PatentList = [
@@ -303,12 +320,12 @@ const Welcome: React.FC = () => {
                 <li>{item}</li>
               ))}
             </ul>
-            <p style={{ color: '#1677ff', marginBottom: 0 }}>Patent</p>
+            {/* <p style={{ color: '#1677ff', marginBottom: 0 }}>Patent</p>
             <ul>
               {PatentList.map((item) => (
                 <li>{item}</li>
               ))}
-            </ul>
+            </ul> */}
           </div>
         </div>
       </div>

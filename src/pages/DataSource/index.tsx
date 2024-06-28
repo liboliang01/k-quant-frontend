@@ -404,7 +404,7 @@ const FinKGUpdate: React.FC = () => {
                 href="#"
               >
                 <img src="./images/UST.jpg" width="30" className="bg-light" />
-                <span className="text-light">&nbsp; K-Quant HKUST</span>
+                <span className="text-light">&nbsp; K-Quant</span>
               </a>
               <div className="mb-4">
                 <p className="text-white">

@@ -8,7 +8,7 @@ export default defineConfig({
   initialState: {},
   request: {},
   layout: {
-    title: 'K-QUANT HKUST',
+    title: 'K-QUANT',
     contentStyle: {},
   },
   links: [{ rel: 'icon', href: 'images/UST.jpg' }],
