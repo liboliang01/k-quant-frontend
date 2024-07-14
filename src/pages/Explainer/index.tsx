@@ -12,14 +12,16 @@ import {
   message,
 } from 'antd';
 import axios from 'axios';
+import moment from 'moment';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useParams } from 'umi';
 import companyName from './company_full_name.json';
 import DownloadModal from './downloadModal';
 import styles from './index.less';
 import LineChart from './lineChart';
+import { date_map } from './map.js';
 
-const HencexDateList = ['2024-01-02', '2024-01-03', '2024-01-04', '2024-01-05'];
+const HencexDateList = ['2024-06-24', '2024-06-25', '2024-06-26', '2024-06-27'];
 
 export const stockList = [
   'SH600000',
@@ -307,6 +309,7 @@ const Coming: React.FC = () => {
     const res = await axios.get('http://47.106.95.15:8000/get_trade_date/');
     setDateList(res.data.data);
     setAllDateList(res.data.data);
+    console.log('date', res.data.data);
   }, []);
   useEffect(() => {
     getDate();
@@ -405,15 +408,15 @@ const Coming: React.FC = () => {
   };
 
   useEffect(() => {
-    console.log(params.date)
-    if(params.date!==':date' && params.date!==undefined){
+    console.log(params.date);
+    if (params.date !== ':date' && params.date !== undefined) {
       var date1 = new Date(params.date);
-      var date2 = new Date("2024-01-01");
-      var result = date1 > date2; 
-      if(result){
-        form.setFieldValue('date',params.date)
-      } else{
-        message.error(`${params.date}无可解释数据，请选择2024年日期`)
+      var date2 = new Date('2024-01-01');
+      var result = date1 > date2;
+      if (result) {
+        form.setFieldValue('date', params.date);
+      } else {
+        message.error(`${params.date}无可解释数据，请选择2024年日期`);
       }
     }
     onSearchNew();
@@ -426,6 +429,9 @@ const Coming: React.FC = () => {
     }
     const events = Object.values(item.desc.events).flat();
     const eventTree = Object.keys(item.desc.events).map((date) => {
+      // var dateTime = new Date(date);
+      // dateTime = dateTime.setDate(dateTime.getDate() + 10);
+      // dateTime = moment(new Date(dateTime)).format('YYYY-MM-DD');
       return {
         title: date,
         key: date,
@@ -464,7 +470,7 @@ const Coming: React.FC = () => {
 
   const onExplainerChange = (value) => {
     if (value === 'hencex') {
-      form.setFieldValue('date', '2024-01-03');
+      form.setFieldValue('date', '2024-06-27');
       setDateList(HencexDateList);
     } else {
       setDateList(allDateList);
@@ -487,7 +493,7 @@ const Coming: React.FC = () => {
                   { value: 'input', label: 'inputGradient' },
                   { value: 'xpath', label: 'XpathExplainer' },
                   { value: 'gnn', label: 'GNNExplainer' },
-                  { value: 'hencex', label: 'HencexExplainer' },
+                  // { value: 'hencex', label: 'HencexExplainer' },
                 ]}
                 onSelect={onExplainerChange}
               />
@@ -530,7 +536,7 @@ const Coming: React.FC = () => {
             <Form.Item
               label="交易日"
               name="date"
-              initialValue={'2024-01-03'}
+              initialValue={'2024-07-09'}
               rules={[{ required: true }]}
             >
               <Select
@@ -542,7 +548,10 @@ const Coming: React.FC = () => {
                     .toLowerCase()
                     .includes(input.toLowerCase())
                 }
-                options={dateList.map((item) => ({ label: item, value: item }))}
+                options={dateList.map((item) => {
+                
+                  return { label: item, value: item };
+                })}
               />
             </Form.Item>
             <br />

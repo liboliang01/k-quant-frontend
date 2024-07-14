@@ -1,6 +1,7 @@
 import * as echarts from 'echarts';
 import moment from 'moment';
 import { useEffect, useMemo, useRef } from 'react';
+import {date_map} from './map.js'
 
 interface PropTypes {
   rawData: any;

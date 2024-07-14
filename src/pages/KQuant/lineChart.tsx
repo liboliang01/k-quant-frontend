@@ -2,6 +2,7 @@ import { DualAxes } from '@antv/g2plot';
 import insertCss from 'insert-css';
 import { useEffect, useMemo, useRef } from 'react';
 import styles from './index.less';
+import moment from 'moment'
 
 insertCss(`
     .custom-tooltip-list{
@@ -88,17 +89,21 @@ const LineCharts = (props: PropsType) => {
     useMemo(() => {
       const tmp: { date: string; type: string; value: number }[] = [];
       data.data.forEach((list: any[], idx) => {
+        
         list.forEach((item) => {
+          var dateTime=new Date(item.datetime);
+        dateTime=dateTime.setDate(dateTime.getDate()+21);
+        dateTime=moment(new Date(dateTime)).format('YYYY-MM-DD');
           if (idx === 0) {
             tmp.push({
-              date: item.datetime,
+              date: dateTime,
               type: 'CSI300 benchmark cumulative return',
               value: item.bench,
             });
           }
 
           tmp.push({
-            date: item.datetime,
+            date: dateTime,
             type: modelList[idx],
             value: item[modelList[idx]],
           });
@@ -109,12 +114,17 @@ const LineCharts = (props: PropsType) => {
     }, [data]);
 
   const uvData = data.volume
-    .map((item, idx) => ({
-      date: item.date,
-      count: item.volume,
-      type: '成交量',
-      color: idx % 3 === 0,
-    }))
+    .map((item, idx) => {
+      var dateTime=new Date(item.date);
+      dateTime=dateTime.setDate(dateTime.getDate()+21);
+      dateTime=moment(new Date(dateTime)).format('YYYY-MM-DD');
+      return {
+        date:dateTime,
+        count: item.volume,
+        type: '成交量',
+        color: idx % 3 === 0,
+      }
+    })
     // .reverse();
 
   const render = () => {

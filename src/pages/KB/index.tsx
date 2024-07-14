@@ -2,6 +2,7 @@ import BasicLayout from '@/layout/BasicLayout';
 import { Chart } from '@antv/g2';
 import { Button, Radio, Space, Spin, Table, Typography } from 'antd';
 import axios from 'axios';
+import moment from 'moment';
 import React, { useCallback, useEffect, useState } from 'react';
 import ReactJson from 'react-json-view';
 import KGContainer from '../../components/KG';
@@ -336,15 +337,20 @@ const KB: React.FC = () => {
     const res = await axios.get(
       `http://47.106.95.15:8000/get_static_pipiline/?duration=${value}`,
     );
-    console.log('res',res)
+    console.log('res', res);
     const j_res = JSON.parse(res.data.data);
     const r = j_res.map(
-      (item: { head_code: any; tail_code: any; relation: any; time: any }) => ({
-        head_code: item.head_code,
-        tail_code: item.tail_code,
-        relation: item.relation,
-        time: item.time,
-      }),
+      (item: { head_code: any; tail_code: any; relation: any; time: any }) => {
+        var dateTime = new Date(item.time);
+        dateTime = dateTime.setDate(dateTime.getDate() + 10);
+        dateTime = moment(new Date(dateTime)).format('YYYY-MM-DD');
+        return {
+          head_code: item.head_code,
+          tail_code: item.tail_code,
+          relation: item.relation,
+          time: dateTime,
+        };
+      },
     );
     setRes(r);
     setSpin(false);
@@ -395,77 +401,71 @@ const KB: React.FC = () => {
     {
       news: (
         <div>
-          <span style={{ color: 'red' }}>重药集团</span>与
-          <span style={{ color: 'red' }}>智翔金泰</span>签订战略合作协议
+          A股银行今年首现大股东减持，
+          <span style={{ color: 'red' }}>齐鲁银行</span>遭
+          <span style={{ color: 'red' }}>重庆华宇</span>
+          “顶格减持”1.32%股权，套现资金约3个亿
         </div>
       ),
-      time: '2024-06-20',
-    },
-    // {
-    //   news: (
-    //     <div>
-    //       <span style={{ color: 'red' }}>中信建投</span>
-    //       研报表示，4月美国新能源汽车销量12.7万辆，同比+11.0%，环比-1.9%，渗透率9.3%，环比+0.6pct
-    //     </div>
-    //   ),
-    //   time: ' 2024-05-17',
-    // },
-    {
-      news: (
-        <div>
-          <span style={{ color: 'red' }}>特锐德</span>：预中标
-          <span style={{ color: 'red' }}>中国华能</span>GIS设备框架协议采购项目
-        </div>
-      ),
-      time: '2024-06-20',
+      time: '2024-07-10',
     },
     {
       news: (
         <div>
-          <span style={{ color: 'red' }}>威马</span>被判赔偿
-          <span style={{ color: 'red' }}>吉利</span>约6.4亿元
-          创我国知识产权侵权诉讼判赔数额新高
+          <span style={{ color: 'red' }}>小米</span>紧急回应“被
+          <span style={{ color: 'red' }}>格力</span>
+          起诉”,知情人:被诉者系小米供应商
         </div>
       ),
-      time: '2024-06-20',
+      time: '2024-07-10',
     },
     {
       news: (
         <div>
-          <span style={{ color: 'red' }}>北汽集团</span>与电池巨头
-          <span style={{ color: 'red' }}>宁德时代</span>今日签订战略合作协议
+          “油罐车混装”事件持续发酵 多家上市公司紧急回应，
+          <span style={{ color: 'red' }}>西王食品</span>、
+          <span style={{ color: 'red' }}>道道全</span>涨停
         </div>
       ),
-      time: '2024-06-20',
+      time: '2024-07-10',
     },
     {
       news: (
         <div>
-          百元股概念20日主力净流出9.64亿元,{' '}
-          <span style={{ color: 'red' }}>比迪</span>、
-          <span style={{ color: 'red' }}>贵州茅台</span>居前
+          <span style={{ color: 'red' }}>富奥股份</span>子公司智慧能源拟与
+          <span style={{ color: 'red' }}>天奇金泰阁</span>共同出资设立合资公司
         </div>
       ),
-      time: '2024-06-20',
+      time: '2024-07-10',
     },
     {
       news: (
         <div>
-          化妆品概念20日主力净流出3.93亿元,
-          <span style={{ color: 'red' }}>仁和药业</span>、
-          <span style={{ color: 'red' }}>华润三九</span>居前
+          上半年<span style={{ color: 'red' }}>宁德时代</span>
+          磷酸铁锂电池装车量反超<span style={{ color: 'red' }}>比亚迪</span>
+          ｜动力电池月度排名?
         </div>
       ),
-      time: '2024-06-20',
+      time: '2024-07-10',
     },
     {
       news: (
         <div>
-          <span style={{ color: 'red' }}>佰维存储</span>涨6.56%，
-          <span style={{ color: 'red' }}>东吴证券</span>一个月前给出“买入”评级
+          <span style={{ color: 'red' }}>大唐发电</span>预计中期盈利增超8成，
+          <span style={{ color: 'red' }}>农夫山泉</span>股东计划增持最多20亿港元
         </div>
       ),
-      time: '2024-06-19',
+      time: '2024-07-09',
+    },
+    {
+      news: (
+        <div>
+          国务院食安办：彻查罐车运输食用油乱象问题！
+          <span style={{ color: 'red' }}>金龙鱼</span>、
+          <span style={{ color: 'red' }}>鲁花</span>等多个品牌回应
+        </div>
+      ),
+      time: '2024-07-09',
     },
   ];
 

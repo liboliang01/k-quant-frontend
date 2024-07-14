@@ -17,16 +17,16 @@ import axios from 'axios';
 import dayjs from 'dayjs';
 import React, { useEffect, useMemo, useState } from 'react';
 import BasicLayout from '../../layout/BasicLayout';
-import KChart from '../Explainer/KChart';
 import companyName from '../Explainer/company_full_name.json';
 import CredibilityRadarChart from './credibilityRadarChart';
 import styles from './index.less';
 import Indicator from './indicator';
-import input_mock_data from './input_result.json';
+import input_mock_data from './inputGradientExplainer_result.json';
 import InvestModal from './investModal';
 import InvestRadarChart from './investRadarChart';
-import recommend_mock_data from './recommend_result.json';
-import xpath_mock_data from './xpath_result.json';
+import recommend_mock_data from './recommend_result_new.json';
+import StockModal from './stockModal.tsx';
+import xpath_mock_data from './xpathExplainer_result.json';
 const { Title, Paragraph } = Typography;
 
 const model_list = ['LSTM', 'GRU', 'MLP', 'NRSR', 'relation_GATs'];
@@ -115,6 +115,7 @@ const Assessment: React.FC = () => {
   const [form4] = Form.useForm();
   const [form4Data, setForm4Data] = useState<any>({});
   const [candleList, setCandleList] = useState<any[]>([]);
+  const [candleLoading, setCandleLoading] = useState<boolean>(false);
   const [explainer, setExplainer] = useState('inputGradient');
   const [currentModel, setCurrentModel] = useState('NRSR');
   const [scoreList, setScoreList] = useState([]);
@@ -230,7 +231,7 @@ const Assessment: React.FC = () => {
         `http://47.106.95.15:8000/get_pic_data/?stock=${item.substring(
           0,
           6,
-        )}&date=2024-03-12`,
+        )}&date=2024-06-28`,
       );
       res.push(r.data);
     }
@@ -277,11 +278,13 @@ const Assessment: React.FC = () => {
       const curr_score = Object.keys(curr_data).map((item) => {
         return curr_data[item]['score'];
       });
-      console.log('curr_data',curr_data);
+      console.log('curr_data', curr_data);
 
       setScoreList(curr_score);
       setStockList(curr_data);
-      get_candle_data(curr_data['NRSR']['stocks']);
+      setCandleLoading(true);
+      get_candle_data(curr_data['KEnhance']['stocks']);
+      setCandleLoading(false);
     });
   };
 
@@ -417,8 +420,6 @@ const Assessment: React.FC = () => {
           </Form>
         </Card>
 
-        
-
         <Card style={{ marginBottom: '20px' }} title={'模型组合评价'}>
           <div className={styles.radar}>
             <CredibilityRadarChart
@@ -450,6 +451,13 @@ const Assessment: React.FC = () => {
                         <Typography.Text>[解释模型]:</Typography.Text> 无
                       </Col>
                       <Col span={8}>
+                        {stockList['GRU']!=undefined && (
+                          <StockModal
+                            modalName={item}
+                            stockList={stockList[item]['stocks']}
+                          />
+                        )}
+
                         {/* <Button
                           size={'small'}
                           onClick={() => chooseModel(item)}
@@ -486,6 +494,12 @@ const Assessment: React.FC = () => {
                         {explainer}
                       </Col>
                       <Col span={8}>
+                      {stockList['KEnhance']!=undefined && (
+                          <StockModal
+                            modalName={item}
+                            stockList={stockList[item === 'NRSR' ? 'KEnhance' : item]['stocks']}
+                          />
+                        )}
                         {/* <Button
                           size={'small'}
                           onClick={() => chooseModel(item)}
@@ -501,22 +515,26 @@ const Assessment: React.FC = () => {
           </Row>
         </Card>
 
-        <Card
+        {/* <Card
           style={{ marginBottom: '20px' }}
-          title={`Top3 推荐股票 [${currentModel==='NRSR'?'KEnhance':currentModel}]`}
+          title={`Top3 推荐股票 [${
+            currentModel === 'NRSR' ? 'KEnhance' : currentModel
+          }]`}
         >
-          {candleList.length !== 0 &&
-            stock.map((item, idx) => {
-              return (
-                <div key={item}>
-                  <div className={styles.title}>{`${item}(${stockNameMap.get(
-                    item.substring(0, 6),
-                  )})`}</div>
-                  <KChart rawData={candleList[idx]} id={`${item}-k-chart`} />
-                </div>
-              );
-            })}
-        </Card>
+          <Spin spinning={candleLoading}>
+            {candleList.length !== 0 &&
+              stock.map((item, idx) => {
+                return (
+                  <div key={item}>
+                    <div className={styles.title}>{`${item}(${stockNameMap.get(
+                      item.substring(0, 6),
+                    )})`}</div>
+                    <KChart rawData={candleList[idx]} id={`${item}-k-chart`} />
+                  </div>
+                );
+              })}
+          </Spin>
+        </Card> */}
 
         <Card title={'投资组合评价'}>
           <Form

@@ -69,7 +69,7 @@ const PaperList = [
   'HIT - An Effective Approach to Build a Dynamic Financial Knowledge Base. DASFAA2023.',
   'Cost-aware Outdated Facts Correction in the Knowledge Bases. DASFAA2024 (Best Student Paper Award).',
   'KartGPS: Knowledge Base Update with Temporal Graph Pattern-based Semantic Rules. ICDE 2024.',
-  'Caerus: A Scalable Caching-based Framework for Temporal Graph Neural Networks. SIGMOD2022 (Best Paper Award).',
+  'Orca: Scalable Temporal Graph Neural Network Training with Theoretical Guarantees.Yiming Li, Yanyan Shen, Lei Chen, Mingxuan Yuan. SIGMOD 2023.',
   'TE-DyGE: Temporal Evolution-enhanced Dynamic Graph Embedding Network. DASFAA2023.',
   'StockMixer: A Simple yet Strong MLP-based Architecture for Stock Price Forecasting. AAAI 2024.',
   'MASTER: Market-Guided Stock Transformer for Stock Price Forecasting. AAAI2024.',
@@ -242,6 +242,7 @@ const Welcome: React.FC = () => {
               pending="Updating..."
               reverse={true}
               items={[
+                
                 {
                   label: '2024-04-17 [The K-Quant website]',
                   children: (
@@ -274,6 +275,14 @@ const Welcome: React.FC = () => {
                         505,821 relations, 17 entity types, and more than 51,095
                         entities.
                       </p>
+                    </>
+                  ),
+                },
+                {
+                  label: '2024-07-09 [Best Paper Award!]',
+                  children: (
+                    <>
+                      Fintech Group "Cost-aware Outdated Facts Correction in the Knowledge Bases" by Hao XIN got the DASFAA 2024 Best Paper
                     </>
                   ),
                 },
@@ -366,7 +375,7 @@ const Welcome: React.FC = () => {
           </div>
           <div className={styles.cardContent}>
             <DescCard desc={'Entities'} title={'51,095+'} />
-            <DescCard desc={'Relations'} title={'34+'} />
+            <DescCard desc={'Relations'} title={'506,000+'} />
             <DescCard desc={'Events'} title={'45,000+'} />
             <DescCard desc={'High-frequency Events'} title={'10+'} />
           </div>

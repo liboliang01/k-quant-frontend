@@ -28,7 +28,7 @@ const Footer: React.FC = () => {
           <div className="align-items-center row">
             <div className="col-md pb-2 pt-2">
               <p className="mb-0">
-                &copy; 2002 - 2022. All Rights Reserved - HKUST
+                &copy; 2002 - 2022. All Rights Reserved.
               </p>
             </div>
             <div className="col-md-auto pb-2 pt-2">
