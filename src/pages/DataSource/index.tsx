@@ -403,8 +403,8 @@ const FinKGUpdate: React.FC = () => {
                 className="align-items-center d-inline-flex fw-bold h3 lh-1 link-primary mb-4 text-decoration-none text-uppercase"
                 href="#"
               >
-                <img src="./images/UST.jpg" width="30" className="bg-light" />
-                <span className="text-light">&nbsp; K-Quant</span>
+                {/* <img src="./images/UST.jpg" width="30" className="bg-light" /> */}
+                <span className="text-light">K-Quant</span>
               </a>
               <div className="mb-4">
                 <p className="text-white">

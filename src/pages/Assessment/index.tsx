@@ -21,12 +21,12 @@ import companyName from '../Explainer/company_full_name.json';
 import CredibilityRadarChart from './credibilityRadarChart';
 import styles from './index.less';
 import Indicator from './indicator';
-import input_mock_data from './inputGradientExplainer_result.json';
 import InvestModal from './investModal';
 import InvestRadarChart from './investRadarChart';
-import recommend_mock_data from './recommend_result_new.json';
 import StockModal from './stockModal.tsx';
-import xpath_mock_data from './xpathExplainer_result.json';
+import recommend_mock_data from '../../../public/json/recommend_result.json';
+import input_mock_data from '../../../public/json/inputGradientExplainer_result.json';
+import xpath_mock_data from '../../../public/json/xpathExplainer_result.json';
 const { Title, Paragraph } = Typography;
 
 const model_list = ['LSTM', 'GRU', 'MLP', 'NRSR', 'relation_GATs'];

@@ -11,7 +11,7 @@ export default defineConfig({
     title: 'K-QUANT',
     contentStyle: {},
   },
-  links: [{ rel: 'icon', href: 'images/UST.jpg' }],
+  // links: [{ rel: 'icon', href: 'images/UST.jpg' }],
   title: 'K-Quant',
   devtool: process.env.NODE_ENV === 'development' ? 'eval' : false,
   routes,

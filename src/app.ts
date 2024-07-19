@@ -20,7 +20,7 @@ export const layout = () => {
   //   };
   // }
   return {
-    logo,
+    logo:false,
     menu: {
       locale: true,
     },

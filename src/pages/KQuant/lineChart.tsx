@@ -92,7 +92,7 @@ const LineCharts = (props: PropsType) => {
         
         list.forEach((item) => {
           var dateTime=new Date(item.datetime);
-        dateTime=dateTime.setDate(dateTime.getDate()+21);
+        // dateTime=dateTime.setDate(dateTime.getDate()+21);
         dateTime=moment(new Date(dateTime)).format('YYYY-MM-DD');
           if (idx === 0) {
             tmp.push({
@@ -116,7 +116,7 @@ const LineCharts = (props: PropsType) => {
   const uvData = data.volume
     .map((item, idx) => {
       var dateTime=new Date(item.date);
-      dateTime=dateTime.setDate(dateTime.getDate()+21);
+      // dateTime=dateTime.setDate(dateTime.getDate()+21);
       dateTime=moment(new Date(dateTime)).format('YYYY-MM-DD');
       return {
         date:dateTime,
