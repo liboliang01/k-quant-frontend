@@ -8,7 +8,6 @@ import {
   Radio,
   Row,
   Space,
-  Statistic,
   Table,
   Tooltip,
 } from 'antd';
@@ -272,7 +271,11 @@ const FinKGUpdate: React.FC = () => {
         let key = Object.keys(item)[0];
         const val = item[key];
         // 删除ensemble_retrain和Perfomance_based_ensemble
-        if (key === 'ensemble_retrain' || key === 'Perfomance_based_ensemble' ||key === 'blend') {
+        if (
+          key === 'ensemble_retrain' ||
+          key === 'Perfomance_based_ensemble' ||
+          key === 'blend'
+        ) {
           return 'delete';
         }
         // 将ensemble_no_retrain改名为ensemble_retrain
@@ -282,7 +285,7 @@ const FinKGUpdate: React.FC = () => {
         if (key === 'dynamic_ensemble') {
           key = 'blend';
         }
-        
+
         return {
           name: key,
           ...val,
@@ -350,15 +353,14 @@ const FinKGUpdate: React.FC = () => {
     }
   };
 
-
   const onModelChangeNew = (value: string[]) => {
-    if(actionType === 'get_update_data'){
-      const da_value = JSON.parse(JSON.stringify(value))
-      value.forEach(item=>{
-        da_value.push(item+'_DA')
-      })
-      setCurrModelList(da_value)
-    }else{
+    if (actionType === 'get_update_data') {
+      const da_value = JSON.parse(JSON.stringify(value));
+      value.forEach((item) => {
+        da_value.push(item + '_DA');
+      });
+      setCurrModelList(da_value);
+    } else {
       setCurrModelList(value);
     }
     form.validateFields().then((values) => {
@@ -443,21 +445,19 @@ const FinKGUpdate: React.FC = () => {
   };
 
   const startEndTime: [string, string] = useMemo(() => {
-    switch (duration) {
-      case 'THERE_MONTH':
-        return ['2024-03-20', '2024-06-20'];
-      case 'SIX_MONTH':
-        return ['2023-12-20', '2024-06-20'];
-      case 'ONE_YEAR':
-        return ['2023-06-20', '2024-06-20'];
-      default:
-        return ['', ''];
+    if (multiGraphDataList != undefined) {
+      const start = multiGraphDataList.volume[0]['datetime'];
+      const end =
+        multiGraphDataList.volume[multiGraphDataList.volume.length - 1][
+          'datetime'
+        ];
+      return [start, end];
+    } else {
+      return [0, 0];
     }
-  }, [duration]);
+  }, [multiGraphDataList]);
 
   const get_multi_graph_data = useCallback(() => {}, []);
-
-console.log('currModelList',currModelList)
 
   return (
     <BasicLayout backgroundColor="#f5f5f5">
@@ -575,7 +575,7 @@ console.log('currModelList',currModelList)
               </Radio>
             </Radio.Group>
           </Form.Item>
-          <Form.Item>
+          <Form.Item style={{marginBottom:'3px'}}>
             <Row>
               <Col span={4}></Col>
               <Col>
@@ -585,6 +585,14 @@ console.log('currModelList',currModelList)
                   </Button>
                   <Button onClick={onReset}>重置</Button>
                 </Space>
+              </Col>
+            </Row>
+          </Form.Item>
+          <Form.Item>
+            <Row>
+              <Col span={4}></Col>
+              <Col style={{fontWeight:'bold'}}>
+                本结果仅用于成果展示，不构成任何投资建议。股市有风险，入市需谨慎！
               </Col>
             </Row>
           </Form.Item>

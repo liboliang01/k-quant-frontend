@@ -5,6 +5,7 @@ import axios from 'axios';
 import moment from 'moment';
 import React, { useCallback, useEffect, useState } from 'react';
 import ReactJson from 'react-json-view';
+import latest_new from '../../../public/json/update_news.json';
 import KGContainer from '../../components/KG';
 import InfoCircleCard from './InfoCircleCard';
 import entities from './img/entities.png';
@@ -342,7 +343,7 @@ const KB: React.FC = () => {
     const r = j_res.map(
       (item: { head_code: any; tail_code: any; relation: any; time: any }) => {
         var dateTime = new Date(item.time);
-        dateTime = dateTime.setDate(dateTime.getDate() + 10);
+        // dateTime = dateTime.setDate(dateTime.getDate() + 10);
         dateTime = moment(new Date(dateTime)).format('YYYY-MM-DD');
         return {
           head_code: item.head_code,
@@ -386,6 +387,7 @@ const KB: React.FC = () => {
       title: '原始新闻',
       dataIndex: 'news',
       key: 'news',
+      render: (item) => <div dangerouslySetInnerHTML={{ __html: item }} />,
     },
     {
       title: '发布时间',
@@ -396,78 +398,6 @@ const KB: React.FC = () => {
   ];
 
   const title_list = ['知识抽取', '知识融合', '知识更新'];
-
-  const table_data = [
-    {
-      news: (
-        <div>
-          A股银行今年首现大股东减持，
-          <span style={{ color: 'red' }}>齐鲁银行</span>遭
-          <span style={{ color: 'red' }}>重庆华宇</span>
-          “顶格减持”1.32%股权，套现资金约3个亿
-        </div>
-      ),
-      time: '2024-07-10',
-    },
-    {
-      news: (
-        <div>
-          <span style={{ color: 'red' }}>小米</span>紧急回应“被
-          <span style={{ color: 'red' }}>格力</span>
-          起诉”,知情人:被诉者系小米供应商
-        </div>
-      ),
-      time: '2024-07-10',
-    },
-    {
-      news: (
-        <div>
-          “油罐车混装”事件持续发酵 多家上市公司紧急回应，
-          <span style={{ color: 'red' }}>西王食品</span>、
-          <span style={{ color: 'red' }}>道道全</span>涨停
-        </div>
-      ),
-      time: '2024-07-10',
-    },
-    {
-      news: (
-        <div>
-          <span style={{ color: 'red' }}>富奥股份</span>子公司智慧能源拟与
-          <span style={{ color: 'red' }}>天奇金泰阁</span>共同出资设立合资公司
-        </div>
-      ),
-      time: '2024-07-10',
-    },
-    {
-      news: (
-        <div>
-          上半年<span style={{ color: 'red' }}>宁德时代</span>
-          磷酸铁锂电池装车量反超<span style={{ color: 'red' }}>比亚迪</span>
-          ｜动力电池月度排名?
-        </div>
-      ),
-      time: '2024-07-10',
-    },
-    {
-      news: (
-        <div>
-          <span style={{ color: 'red' }}>大唐发电</span>预计中期盈利增超8成，
-          <span style={{ color: 'red' }}>农夫山泉</span>股东计划增持最多20亿港元
-        </div>
-      ),
-      time: '2024-07-09',
-    },
-    {
-      news: (
-        <div>
-          国务院食安办：彻查罐车运输食用油乱象问题！
-          <span style={{ color: 'red' }}>金龙鱼</span>、
-          <span style={{ color: 'red' }}>鲁花</span>等多个品牌回应
-        </div>
-      ),
-      time: '2024-07-09',
-    },
-  ];
 
   const onClickNode = (item: any) => {
     setNode(item);
@@ -524,6 +454,10 @@ const KB: React.FC = () => {
             {/* <Image src={KB_Compare} preview={false} height={400} /> */}
           </div>
         </div>
+        <div className={styles.title}>
+          本周知识更新四元组数量：
+          <span className={styles.red}>92</span>
+        </div>
         <div className={styles.attributes}>
           {attributes_list.map((item) => {
             return <InfoCircleCard {...item} />;
@@ -534,7 +468,7 @@ const KB: React.FC = () => {
         <Title level={3}>原始新闻</Title>
         <Table
           columns={columns}
-          dataSource={table_data}
+          dataSource={latest_new}
           pagination={false}
           bordered
         />

@@ -536,7 +536,7 @@ const Coming: React.FC = () => {
             <Form.Item
               label="交易日"
               name="date"
-              initialValue={'2024-07-09'}
+              initialValue={'2024-07-25'}
               rules={[{ required: true }]}
             >
               <Select
@@ -615,7 +615,8 @@ const Coming: React.FC = () => {
                         </div>
                       ) : null}
                       <div>
-                        股票排名({newData.origin.rank}/{newData.origin.total})
+                        股票排名({newData.origin.rank}/300)
+                        {/* 股票排名({newData.origin.rank}/{newData.origin.total}) */}
                       </div>
                       {sameStock !== '' ? (
                         <div>
